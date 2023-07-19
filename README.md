@@ -78,3 +78,13 @@ Dementsprechend ist die eigentliche API des Backends unter localhost:8086/api er
 
 # Docker Desktop
 Die Laufenden Container können in Docker Desktop eingesehen werden. Dort kann auch der Status der Container angezeigt werden. Außerdem kann man sich über diese Oberfläche auch in die Container mit einem Terminal verbinden.
+
+
+# Technical stuff
+## Hostname
+Moodle erfordert Docker internen (Backend) und externen (Docker-Host) Zugriff über denselben Hostnamen. Es gibt einige Möglichkeiten, dies zu erreichen:
+- host.docker.internal: Sollte theoretisch funktionieren, da dieser Hostname auf dem Docker-Host und innerhalb der Docker-Container verfügbar ist. Wenn er innerhalb eines Containers nicht verfügbar ist (was aus verschiedenen Gründen manchmal vorkommen kann), kann er über `extra_hosts: host.docker.internal:host-gateway` gesetzt werden. Nach einiger Zeit funktionierte dies auf meinem System und Test-VM nicht mehr (Eintrag im Hostsystem hatte die falsche IP).
+- localhost: Der aktuelle Ansatz, der derzeit gut zu funktionieren scheint. Aus irgendeinem Grund scheint es gut zu funktionieren, localhost auf zwei verschiedene IPs in der Hosts-Datei des Backend-Containers zu setzen (siehe [Commit](https://github.com/ProjektAdLer/AdlerTestEnvironment/commit/f6947345beb9a52f64d66d385d24a8c9e9da2b64)). Kein Zugriff über LAN möglich.
+- Hostsystem-Hostname: Sollte innerhalb der Container verfügbar sein und falls nicht, kann er über extra_hosts übergeben werden. Offensichtlich auch auf dem Hostsystem verfügbar. Würde auch den Zugriff über LAN ermöglichen. Das Templating ist jedoch nur mit Swarm verfügbar ([1](https://github.com/docker/compose/issues/4964), [2](https://docs.docker.com/engine/reference/commandline/service_create/#create-services-using-templates)) -> würde eine manuelle Konfiguration auf jedem Host erfordern (eine Variable setzen).
+- Benutzerdefinierte Domain: erfordert erheblichen zusätzlichen Aufwand (ähnlich wie der Hostsystem-Hostname + mehr).
+- Hostsystem-IP oder 127.10.0.1: Die Host-IP ändert sich je nach Netzwerk, etc. Würde den LAN-Zugriff ermöglichen, aber es wäre lästig, wenn sie sich ändert (diese Änderung könnte auch die Moodle-Installation beeinträchtigen). Der Docker host_gateway (standardmäßig 127.10.0.1) könnte gut funktionieren, aber nur für localhost, nicht für LAN.
