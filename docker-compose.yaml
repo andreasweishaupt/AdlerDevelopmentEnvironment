@@ -73,6 +73,8 @@ services:
     depends_on:
       - db_backend
     restart: unless-stopped
+    extra_hosts:
+      - ${_DOMAIN}:host-gateway
 
   frontend:
     image: ghcr.io/projektadler/2d_3d_adler:latest

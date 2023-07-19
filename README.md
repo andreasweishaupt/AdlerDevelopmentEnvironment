@@ -57,14 +57,14 @@ Username: user
 Password: User1234!1234
 
 # URL
-- URL MOODLE: `host.docker.internal:8085`
-- URL BACKEND: `host.docker.internal:8086`
-- URL Frontend: `host.docker.internal:8087`
-- URL phpMyAdmin: `host.docker.internal:8088`
+- URL MOODLE: `localhost:8085`
+- URL BACKEND: `localhost:8086`
+- URL Frontend: `localhost:8087`
+- URL phpMyAdmin: `localhost:8088`
 
 **Wichtig**: localhost funktioniert NICHT. Also müssen die oben genannten URLs verwendet werden!
 
-Dementsprechend ist die eigentliche API des Backends unter host.docker.internal:8086/api erreichbar.
+Dementsprechend ist die eigentliche API des Backends unter localhost:8086/api erreichbar.
 
 # Starten der Umgebung
 1. Repo Clonen
