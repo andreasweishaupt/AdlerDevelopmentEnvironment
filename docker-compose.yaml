@@ -19,8 +19,8 @@ services:
       MOODLE_HOST: ${_URL_MOODLE}
       PHP_POST_MAX_SIZE: 2048M
       PHP_UPLOAD_MAX_FILESIZE: 2048M
-      USER_NAME: user,manager
-      USER_PASSWORD: User1234!1234,Manager1234!1234
+      USER_NAME: student,manager
+      USER_PASSWORD: Student1234!1234,Manager1234!1234
       USER_ROLE: false,manager
     volumes:
       - moodle_moodle:/bitnami/moodle

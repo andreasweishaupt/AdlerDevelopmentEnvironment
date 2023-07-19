@@ -53,8 +53,8 @@ Username: manager
 Password: Manager1234!1234
 
 ## User (Student)
-Username: user
-Password: User1234!1234
+Username: student
+Password: Student1234!1234
 
 # URL
 - URL MOODLE: `localhost:8085`
