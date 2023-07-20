@@ -84,7 +84,7 @@ services:
       API_URL: "http://${_URL_BACKEND}/api"
     restart: unless-stopped
 
-  phpmyadmin_wsl:
+  phpmyadmin:
     image: phpmyadmin/phpmyadmin
     environment:
       PMA_HOSTS: db_moodle,db_backend
