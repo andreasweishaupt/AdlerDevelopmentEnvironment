@@ -64,7 +64,7 @@ Folgende User werden automatisch erstellt:
 - **Username:** student
 - **Password:** Student1234!1234
 
-# URL
+# URLs
 
 - URL MOODLE: `localhost:8085`
 - URL BACKEND: `localhost:8086`
@@ -89,6 +89,7 @@ Dementsprechend ist die eigentliche API des Backends unter `localhost:8086/api` 
 # Docker Desktop
 
 Die laufenden Container können in Docker Desktop eingesehen werden. Dort kann auch der Status der Container angezeigt werden. Außerdem kann man sich über diese Oberfläche auch in die Container mit einem Terminal verbinden.
+
 
 # Technical stuff
 
