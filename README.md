@@ -52,7 +52,7 @@ Folgende User werden automatisch erstellt:
 ## Admin (Kann keine Kurse erstellen)
 
 - **Username:** admin
-- **Password:** admin
+- **Password:** pass
 
 ## Manager (Kann Kurse erstellen)
 
@@ -71,9 +71,7 @@ Folgende User werden automatisch erstellt:
 - URL Frontend: `localhost:8087`
 - URL phpMyAdmin: `localhost:8088`
 
-**Wichtig**: localhost funktioniert NICHT. Also müssen die oben genannten URLs verwendet werden!
-
-Dementsprechend ist die eigentliche API des Backends unter `localhost:8086/api` erreichbar.
+Dementsprechend ist die eigentliche API des Backends unter `localhost:8086/api` erreichbar. Diese Adresse wird dann auch im AMG verwendet.
 
 # Starten der Umgebung
 
@@ -89,7 +87,6 @@ Dementsprechend ist die eigentliche API des Backends unter `localhost:8086/api` 
 # Docker Desktop
 
 Die laufenden Container können in Docker Desktop eingesehen werden. Dort kann auch der Status der Container angezeigt werden. Außerdem kann man sich über diese Oberfläche auch in die Container mit einem Terminal verbinden.
-
 
 # Technical stuff
 
