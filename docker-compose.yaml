@@ -17,6 +17,7 @@ services:
       MOODLE_USERNAME: ${_MOODLE_USER}
       MOODLE_PASSWORD: ${_MOODLE_PW}
       MOODLE_HOST: ${_URL_MOODLE}
+      BITNAMI_DEBUG: true
       PHP_POST_MAX_SIZE: 2048M
       PHP_UPLOAD_MAX_FILESIZE: 2048M
       USER_NAME: student,manager
