@@ -51,3 +51,8 @@ Info: Die ATF (oder auch DSL) Datei befindet sich in der MBZ Datei. Dafür einfa
 6. **Anfrage senden**
 
     `Senden` klicken, um die Dateien hochzuladen.
+
+7. **Fertig**
+    
+        Die Antwort sollte `200 OK` sein. In Moodle sollte nun der neue Kurs erscheinen.
+        
