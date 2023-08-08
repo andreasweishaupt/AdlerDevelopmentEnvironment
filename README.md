@@ -71,7 +71,7 @@ Folgende User werden automatisch erstellt:
 - URL Frontend: `localhost:8087`
 - URL phpMyAdmin: `localhost:8088`
 
-Dementsprechend ist die eigentliche API des Backends unter `localhost:8086/api` erreichbar. Diese Adresse wird dann auch im AMG verwendet.
+Dementsprechend ist die eigentliche API des Backends unter `http://localhost:8086/api` erreichbar. Diese Adresse wird dann auch im AMG verwendet.
 
 # Starten der Umgebung
 
