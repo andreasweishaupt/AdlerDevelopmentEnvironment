@@ -13,6 +13,7 @@
 9. Die Moodle URL öffnen (localhost:8085) und warten, bis Moodle gestartet ist
 
 ## Anleitung zum Hochladen von mbz-Dateien mit Postman
+Info: Die ATF (oder auch DSL) Datei befindet sich in der MBZ Datei. Dafür einfach die .mbz mit einem Zip Programm öffnen.
 
 1. **Login durchführen**
 
