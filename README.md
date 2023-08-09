@@ -73,6 +73,9 @@ Folgende User werden automatisch erstellt:
 
 Dementsprechend ist die eigentliche API des Backends unter `http://localhost:8086/api` erreichbar. Diese Adresse wird dann auch im AMG verwendet.
 
+## Ändern der URLs
+Um die Lokale Umgebung unter einer anderen URL (und somit auch von einem anderen Gerät im selben Netzwerk) zu erreichen , muss die Datei `.env` angepasst werden. Dafür in Zeile 11 die Variable  `_DOMAIN` mit der eigenen IP ersetzen.
+
 # Starten der Umgebung
 
 1. Repo klonen
