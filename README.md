@@ -76,6 +76,8 @@ Dementsprechend ist die eigentliche API des Backends unter `http://localhost:808
 ## Ändern der URLs
 Um die Lokale Umgebung unter einer anderen URL (und somit auch von einem anderen Gerät im selben Netzwerk) zu erreichen , muss die Datei `.env` angepasst werden. Dafür in Zeile 11 die Variable  `_DOMAIN` mit der eigenen IP ersetzen.
 
+> :warning: Wenn die lokale IP ohne weiteres gesetzt wird, funktioniert das zwar, man kann aber davon ausgehen, dass sich die lokale IP ändert. Dann muss die `.env` Datei erneut angepasst werden.
+
 # Starten der Umgebung
 
 1. Repo klonen
