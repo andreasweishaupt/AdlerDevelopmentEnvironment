@@ -30,8 +30,7 @@ sudo sed -i 's#export APACHE_RUN_GROUP=www-data#export APACHE_RUN_GROUP=$WSL_USE
 echo "max_input_vars = 5000" | sudo tee /etc/php/8.1/cli/conf.d/moodle.ini
 sudo ln -s  /etc/php/8.1/cli/conf.d/moodle.ini /etc/php/8.1/apache2/conf.d/moodle.ini
 
-echo "
-[XDebug]
+echo "[XDebug]
 # https://xdebug.org/docs/all_settings
 zend_extension = xdebug
 
@@ -45,7 +44,9 @@ xdebug.client_host=172.18.48.1
 ; idekey value is specific to PhpStorm
 xdebug.idekey=phpstorm
 
-xdebug.start_with_request=true
+// TODO: always enabling debugging slows down the web interface significantly.
+// Instead prefer to enable debugging only when needed. See README.md for more information.
+;xdebug.start_with_request=true
 " | sudo tee /etc/php/8.1/apache2/conf.d/20-xdebug.ini
 sudo rm /etc/php/8.1/cli/conf.d/20-xdebug.ini
 sudo ln -s  /etc/php/8.1/apache2/conf.d/20-xdebug.ini /etc/php/8.1/cli/conf.d/20-xdebug.ini
@@ -78,7 +79,7 @@ echo "
 @error_reporting(E_ALL | E_STRICT); // NOT FOR PRODUCTION SERVERS!
 @ini_set('display_errors', '1');    // NOT FOR PRODUCTION SERVERS!
 \$CFG->debug = (E_ALL | E_STRICT);   // === DEBUG_DEVELOPER - NOT FOR PRODUCTION SERVERS!
-// \$CFG->debugdisplay = 1;             // NOT FOR PRODUCTION SERVERS!
+\$CFG->debugdisplay = 1;             // NOT FOR PRODUCTION SERVERS!
 
 // Force result of checks used to determine whether a site is considered \"public\" or not (such as for site registration).
 // \$CFG->site_is_public = false;
