@@ -41,10 +41,11 @@ For PHPStorm path mapping to work it is required to set an environment variable 
 ## Environment Setup
 This section will describe how to setup and reset the development environment.
 
-1. The guide and script assumes you are using the user "markus". 
+1. Enter WSL. This guide will use shell commands and therefore does not work with the Windows console.
+2. ⚠️ The guide and script assumes you are using the user "markus". 
 As this is likely not the case for you, replace "markus" with your WSL username on all occurrences, in the following steps **and in the scripts**.
-2. Clone this repository to a place of your choice (eg `/home/markus/AdlerDevelopmentEnvironment`).
-3. continue with the following sections
+3. Clone this repository to a place of your choice (eg `/home/markus/AdlerDevelopmentEnvironment`).
+4. continue with the following sections
 
 **Note**: I am not sure whether the scripts will work when cloning on a windows system (and yes i know this environment is only for windows).
 Should you have trouble executing the script (something with ^M), delete the repository, 
