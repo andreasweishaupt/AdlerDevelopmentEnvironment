@@ -28,7 +28,7 @@ services:
     depends_on:
       - db_moodle
     ports:
-      - 8088:80
+      - 8078:80
 
 volumes:
   db_moodle_data:
