@@ -27,6 +27,14 @@ else
   exit 1
 fi
 
+# Drop the existing database, if it exists
+echo "Dropping existing Moodle database..."
+mysql -h localhost -P 3312 -u root -p"$_DB_ROOT_PW" -e "DROP DATABASE IF EXISTS $_DB_MOODLE_NAME;"
+if [ $? -ne 0 ]; then
+  echo "Failed to drop the existing Moodle database. Exiting."
+  exit 1
+fi
+
 # Temporary directory for restoration
 restore_dir="/tmp/moodle_restore_$(date +'%Y-%m-%d_%H-%M-%S')"
 
