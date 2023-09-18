@@ -14,7 +14,13 @@ if [ "$#" -ne 1 ]; then
 fi
 
 # Load environment variables
+set -o allexport
 source .env
+set +o allexport
+
+echo "First, backup everything."
+# Execute the backup_data.sh script
+backup_data.sh
 
 # Set variables
 backup_archive="$1"
@@ -36,10 +42,8 @@ if [ -z "$tables_to_drop" ]; then
   echo "No tables found in database. Skipping the drop tables step."
 else
   tables_to_drop=\`$(echo $tables_to_drop | sed 's/ /`,`/g')\`
-#  tables_to_drop="`$tables_to_drop`"
-
   sql_statement="SET FOREIGN_KEY_CHECKS = 0; DROP TABLE IF EXISTS $tables_to_drop; SET FOREIGN_KEY_CHECKS = 1;"
-  echo "$sql_statement"
+#  echo "$sql_statement"
 
   mysql -h localhost -P 3312 -u root -p"$_DB_ROOT_PW" $_DB_MOODLE_NAME -e "$sql_statement"
   if [ $? -ne 0 ]; then
