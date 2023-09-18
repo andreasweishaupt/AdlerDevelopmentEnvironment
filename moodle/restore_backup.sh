@@ -1,6 +1,8 @@
 #!/bin/bash
 MOODLE_PARENT_DIRECTORY=/home/markus
 
+cd "$(dirname "$0")"
+
 echo "-----------------------------------------"
 echo "!!!This script is not properly tested.!!!"
 echo "!!!Use at your own risk.!!!"
@@ -12,7 +14,7 @@ if [ "$#" -ne 1 ]; then
 fi
 
 # Load environment variables
-source "$(dirname "$0")/.env"
+source .env
 
 # Set variables
 backup_archive="$1"
@@ -27,13 +29,25 @@ else
   exit 1
 fi
 
-# Drop the existing database, if it exists
-echo "Dropping existing Moodle database..."
-mysql -h localhost -P 3312 -u root -p"$_DB_ROOT_PW" -e "DROP DATABASE IF EXISTS $_DB_MOODLE_NAME;"
-if [ $? -ne 0 ]; then
-  echo "Failed to drop the existing Moodle database. Exiting."
-  exit 1
+# Empty the existing Moodle database
+echo "Emptying existing Moodle database..."
+tables_to_drop=$(mysql -h localhost -P 3312 -u root -p"$_DB_ROOT_PW" $_DB_MOODLE_NAME -sN -e 'SHOW TABLES')
+if [ -z "$tables_to_drop" ]; then
+  echo "No tables found in database. Skipping the drop tables step."
+else
+  tables_to_drop=\`$(echo $tables_to_drop | sed 's/ /`,`/g')\`
+#  tables_to_drop="`$tables_to_drop`"
+
+  sql_statement="SET FOREIGN_KEY_CHECKS = 0; DROP TABLE IF EXISTS $tables_to_drop; SET FOREIGN_KEY_CHECKS = 1;"
+  echo "$sql_statement"
+
+  mysql -h localhost -P 3312 -u root -p"$_DB_ROOT_PW" $_DB_MOODLE_NAME -e "$sql_statement"
+  if [ $? -ne 0 ]; then
+    echo "Failed to empty the existing Moodle database. Exiting."
+    exit 1
+  fi
 fi
+
 
 # Temporary directory for restoration
 restore_dir="/tmp/moodle_restore_$(date +'%Y-%m-%d_%H-%M-%S')"

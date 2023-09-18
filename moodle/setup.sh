@@ -2,6 +2,8 @@
 WSL_USER=markus
 MOODLE_PARENT_DIRECTORY=/home/$WSL_USER
 
+cd "$(dirname "$0")"
+
 # load additional environment variables from .env to be as close to non-moodle as possible
 set -o allexport
 source .env
@@ -91,6 +93,7 @@ echo "
 " >> $MOODLE_PARENT_DIRECTORY/moodle/config.php
 
 # configure cron job
+echo adding cron job
 echo "*/1 * * * * $WSL_USER php $MOODLE_PARENT_DIRECTORY/moodle/admin/cli/cron.php > /dev/null 2>> $MOODLE_PARENT_DIRECTORY/moodledata/moodle-cron.log" | sudo tee /etc/cron.d/moodle
 
 

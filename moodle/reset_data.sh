@@ -1,15 +1,17 @@
 #!/bin/bash
 MOODLE_PARENT_DIRECTORY=/home/markus
 
+cd "$(dirname "$0")"
+
 # Load additional environment variables from .env to be as close to non-moodle as possible
 set -o allexport
-source "$(dirname "$0")/.env"
+source .env
 set +o allexport
 
 echo "First, backup everything."
 
 # Execute the backup_data.sh script
-./backup_data.sh
+backup_data.sh
 
 echo "Now reset everything."
 
