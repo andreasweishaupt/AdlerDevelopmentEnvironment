@@ -91,3 +91,7 @@ Workaround ([see this issue](https://github.com/microsoft/WSL/issues/4585#issuec
 ### uninstall script
 To reset the environment run the [reset_data.sh](reset_data.sh) script.
 It will not undo all changes made by the installation script, just delete all data so the setup-script can be run again.
+
+### backup and restore scripts
+- [backup_data.sh](backup_data.sh): Creates a backup of Moodle data and database. Run using ./backup_data.sh.
+- [restore_data.sh](restore_data.sh): Restores Moodle from a backup. Use it like ./restore_data.sh /path/to/backup.
