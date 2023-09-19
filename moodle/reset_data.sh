@@ -11,7 +11,7 @@ set +o allexport
 echo "First, backup everything."
 
 # Execute the backup_data.sh script
-backup_data.sh
+./backup_data.sh
 
 echo "Now reset everything."
 
