@@ -23,10 +23,10 @@ while ! mysqladmin ping -hlocalhost -P3312 --silent 2>/dev/null; do echo "db is 
 echo "db is up"
 
 # configure apache
-sudo sed -i 's#<Directory /var/www/>#<Directory $MOODLE_PARENT_DIRECTORY/>#g'  /etc/apache2/apache2.conf
-sudo sed -i 's#DocumentRoot /var/www/html#DocumentRoot $MOODLE_PARENT_DIRECTORY/moodle#g' /etc/apache2/sites-enabled/000-default.conf
-sudo sed -i 's#export APACHE_RUN_USER=www-data#export APACHE_RUN_USER=$WSL_USER#g' /etc/apache2/envvars
-sudo sed -i 's#export APACHE_RUN_GROUP=www-data#export APACHE_RUN_GROUP=$WSL_USER#g' /etc/apache2/envvars
+sudo sed -i "s#<Directory /var/www/>#<Directory $MOODLE_PARENT_DIRECTORY/>#g"  /etc/apache2/apache2.conf
+sudo sed -i "s#DocumentRoot /var/www/html#DocumentRoot $MOODLE_PARENT_DIRECTORY/moodle#g" /etc/apache2/sites-enabled/000-default.conf
+sudo sed -i "s#export APACHE_RUN_USER=www-data#export APACHE_RUN_USER=$WSL_USER#g" /etc/apache2/envvars
+sudo sed -i "s#export APACHE_RUN_GROUP=www-data#export APACHE_RUN_GROUP=$WSL_USER#g" /etc/apache2/envvars
 
 # configure php
 echo "max_input_vars = 5000" | sudo tee /etc/php/8.1/cli/conf.d/moodle.ini
