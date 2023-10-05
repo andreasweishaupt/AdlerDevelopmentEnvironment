@@ -33,7 +33,7 @@ Some Linux knowledge will be very helpful to resolve potential issues.
   If you are already using apache in the WSL instance, you might want to use another `--distribution` for this approach.
   Note that you will likely also have to change the port of the apache server in this case.
 - To resolve any issues with shell scripts (typically ^M errors), disable automatic line ending conversion in git by running:
-- `git config --global core.autocrlf false` or `git config --global core.autocrlf auto`
+- `git config --global core.autocrlf false` or `git config --global core.autocrlf input`
 
 **Debug shell scripts manually executed in WSL**:
 For PHPStorm path mapping to work it is required to set an environment variable in the WSL instance before executing the PHP script: `export PHP_IDE_CONFIG="serverName=localhost"`
