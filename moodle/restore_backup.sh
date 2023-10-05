@@ -68,9 +68,13 @@ backup_folder_name=$(ls "$restore_dir")
 # Full path to the backup data
 full_restore_path="$restore_dir/$backup_folder_name"
 
+# clear moodledata and moodledata_phpu
+rm -rf $MOODLE_PARENT_DIRECTORY/moodledata/*
+rm -rf $MOODLE_PARENT_DIRECTORY/moodledata_phpu/*
+
 # Restore files and database
-cp -r "$full_restore_path/moodledata" $MOODLE_PARENT_DIRECTORY/moodledata
-cp -r "$full_restore_path/moodledata_phpu" $MOODLE_PARENT_DIRECTORY/moodledata_phpu
+cp -r "$full_restore_path/moodledata" $MOODLE_PARENT_DIRECTORY/
+cp -r "$full_restore_path/moodledata_phpu" $MOODLE_PARENT_DIRECTORY/
 cp "$full_restore_path/config.php" $MOODLE_PARENT_DIRECTORY/moodle/config.php
 mysql -h localhost -P 3312 -u root -p"$_DB_ROOT_PW" $_DB_MOODLE_NAME < "$full_restore_path/moodle_database.sql"
 
