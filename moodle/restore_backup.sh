@@ -18,6 +18,12 @@ set -o allexport
 source .env
 set +o allexport
 
+# check if backup archive exists
+if [ ! -f "$1" ]; then
+  echo "Backup archive not found."
+  exit 1
+fi
+
 echo "First, backup everything."
 # Execute the backup_data.sh script
 ./backup_data.sh
