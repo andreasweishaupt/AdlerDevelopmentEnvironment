@@ -57,7 +57,7 @@ services:
     restart: unless-stopped
 
   backend:
-    image: ghcr.io/projektadler/adlerbackend:main
+    image: ghcr.io/projektadler/adlerbackend:dev_Adaptivity
     ports:
       - 8086:80
     environment:
@@ -69,6 +69,7 @@ services:
       ASPNETCORE_DBPORT: 3306
       ASPNETCORE_ADLER_MOODLEURL: http://${_URL_MOODLE}
       ASPNETCORE_ADLER_HTTPPORT: 80
+      ASPNETCORE_ADLER_ADLERENGINEURL: http://${_URL_3D}
     volumes:
       - backend_wwwroot:/app/wwwroot
     depends_on:
@@ -94,7 +95,7 @@ services:
       PMA_PASSWORD: ${_DB_ROOT_PW}
     restart: unless-stopped
     depends_on:
-      - db_backend
+      # - db_backend
       - db_moodle
     ports:
       - 8088:80
