@@ -63,7 +63,7 @@ php $MOODLE_PARENT_DIRECTORY/moodle/admin/cli/install.php --lang=DE --wwwroot=ht
 git clone https://github.com/Glutamat42/moodle-docker /tmp/moodle-docker
 cp -r /tmp/moodle-docker/opt/adler/moodle/adler_setup $MOODLE_PARENT_DIRECTORY/moodle/
 rm -rf /tmp/moodle-docker
-php $MOODLE_PARENT_DIRECTORY/moodle/adler_setup/setup.php --first_run=true --user_name=student,manager --user_password='Student1234!1234,Manager1234!1234' --user_role=false,manager --develop_dont_install_plugins=true
+php $MOODLE_PARENT_DIRECTORY/moodle/adler_setup/setup.php --first_run=true --user_name=${_USER_NAME} --user_password=${_USER_PASSWORD} --user_role=${_USER_ROLE} --develop_dont_install_plugins=true
 
 # moodle config.php
 # If changing anything: absolutely pay attention to escape $ (if shouln't be evaluated) and "
