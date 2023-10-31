@@ -1,11 +1,11 @@
 version: '3'
 services:
-  # if needed add additional services here. It should be possible to just copy and paste them from non-moodle/docker-compose.yaml
+  # if needed, add additional services here. It should be possible to just copy and paste them from non-moodle/docker-compose.yaml
   # note that not required env variables have been removed, so you might need to add them back in when copying services over.
   db_moodle:
     image: docker.io/bitnami/mariadb:10.6
     ports:
-      - 3312:3306
+      - "3312:3306"
     environment:
       MARIADB_USER: ${_DB_MOODLE_USER}
       MARIADB_PASSWORD: ${_DB_MOODLE_PW}
@@ -28,7 +28,7 @@ services:
     depends_on:
       - db_moodle
     ports:
-      - 8078:80
+      - "8078:80"
 
 volumes:
   db_moodle_data:
