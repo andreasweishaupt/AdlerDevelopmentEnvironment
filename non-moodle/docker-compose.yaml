@@ -4,7 +4,7 @@ services:
     build:
       context: github.com/Glutamat42/moodle-docker.git
       args:
-        PLUGIN_VERSION: 2.0.0-rc
+        PLUGIN_VERSION: main
         MOODLE_VERSION: 4.2
     ports:
       - "8085:8080"
@@ -57,7 +57,7 @@ services:
     restart: unless-stopped
 
   backend:
-    image: ghcr.io/projektadler/adlerbackend:2.0.0-rc.1
+    image: ghcr.io/projektadler/adlerbackend:dev_Adaptivity
     ports:
       - "8086:80"
     environment:
@@ -79,7 +79,7 @@ services:
       - ${_DOMAIN}:host-gateway
 
   frontend:
-    image: ghcr.io/projektadler/2d_3d_adler:2.0.0-rc.1
+    image: ghcr.io/projektadler/2d_3d_adler:latest
     ports:
       - "8087:80"
     environment:
