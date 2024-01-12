@@ -4,8 +4,8 @@ services:
     build:
       context: github.com/Glutamat42/moodle-docker.git
       args:
-        PLUGIN_VERSION: main
-        MOODLE_VERSION: 4.2
+        PLUGIN_VERSION: 3.0.0
+        MOODLE_VERSION: 4.3
     ports:
       - "8085:8080"
     environment:
