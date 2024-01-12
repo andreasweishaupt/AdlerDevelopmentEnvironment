@@ -57,7 +57,7 @@ services:
     restart: unless-stopped
 
   backend:
-    image: ghcr.io/projektadler/adlerbackend:dev_Adaptivity
+    image: ghcr.io/projektadler/adlerbackend:latest
     ports:
       - "8086:80"
     environment:
