@@ -36,7 +36,10 @@ Some Linux knowledge will be very helpful to resolve potential issues.
 - `git config --global core.autocrlf false` or `git config --global core.autocrlf input`
 
 **Debug shell scripts manually executed in WSL**:
-For PHPStorm path mapping to work it is required to set an environment variable in the WSL instance before executing the PHP script: `export PHP_IDE_CONFIG="serverName=localhost"`
+For PHPStorm path mapping to work it is required to set an environment variable in the WSL instance before executing the PHP script: `export PHP_IDE_CONFIG="serverName=localhost"` \
+"localhost" is the name of the server configured in PHPStorm.
+
+It might be necessary to manually set the idekey: `export XDEBUG_CONFIG="idekey=blub"`. The value itself ("blub") is irrelevant. 
 
 ## Environment Setup
 This section will describe how to setup and reset the development environment.
