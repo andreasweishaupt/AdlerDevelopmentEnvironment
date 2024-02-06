@@ -98,3 +98,49 @@ It will not undo all changes made by the installation script, just delete all da
 ### backup and restore scripts
 - [backup_data.sh](backup_data.sh): Creates a backup of Moodle data and database. Run using ./backup_data.sh.
 - [restore_data.sh](restore_data.sh): Restores Moodle from a backup. Use it like ./restore_data.sh /path/to/backup.
+
+
+## Configuring Moodle Behat Tests in Windows Subsystem for Linux (WSL)
+
+This documentation outlines the approach I followed to set up Behat tests for Moodle within the WSL environment. It's designed to facilitate the running of UI applications using WSLg, crucial for executing Behat tests that require a graphical user interface.
+
+### Prerequisites
+- Ensure WSLg (Windows Subsystem for Linux with GUI support) is enabled to run UI applications in WSL. This feature is necessary for executing tests that involve a graphical user interface.
+
+### Setup Instructions
+1. **Moodle Environment Setup:**
+    - Follow the official [Moodle setup guide for Behat](https://moodledev.io/general/development/tools/behat/running) to configure your environment for running Behat tests.
+
+2. **Selenium with Chrome:**
+    - Attempts to use Selenium with Firefox resulted in errors related to user profile creation.
+    - **Chrome Setup:**
+        - Download an older version of Chrome that is compatible with the latest chromedriver from [here](http://mirror.cs.uchicago.edu/google-chrome/pool/main/g/google-chrome-stable/).
+        - Use chromedriver directly, as chromedriver-wrapper has not been tested in this setup.
+
+3. **Configuration Adjustments in Moodle's `config.php`:**
+    - Updated the Moodle `config.php` file with the following settings to define the Behat testing environment:
+      ```php
+      $CFG->behat_wwwroot = 'http://127.0.0.1';
+      $CFG->behat_prefix = 'bht_';
+      $CFG->behat_dataroot = '/path/to/your/moodledata_bht';
+      
+      // Include these lines at the end of the file
+      require_once('/path/to/your/moodle/moodle-browser-config/init.php');
+      require_once(__DIR__ . '/lib/setup.php'); // Do not edit this line
+      ```
+      Replace `/path/to/your/` with the actual path to your Moodle installation and data directory.
+
+4. **Driver and Selenium Server Setup:**
+    - Download the respective driver and moodle-browser-config to your moodle root directory.
+    - Add the path to chromedriver (or geckodriver, if using Firefox) to your system's `PATH` environment variable:
+      ```bash
+      export PATH="/path/to/your/moodle/:$PATH"
+      ```
+    - Launch the Selenium server with the following command:
+      ```bash
+      java -jar path/to/selenium-server-4.17.0.jar standalone
+      ```
+      Ensure to adjust the path and version number to match the location and version of your Selenium server jar file.
+
+### Running Tests
+With the setup complete, you're now ready to run your Behat tests in the WSL environment. 
