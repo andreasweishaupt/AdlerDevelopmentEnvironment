@@ -51,7 +51,7 @@ else
   sql_statement="SET FOREIGN_KEY_CHECKS = 0; DROP TABLE IF EXISTS $tables_to_drop; SET FOREIGN_KEY_CHECKS = 1;"
 #  echo "$sql_statement"
 
-  mysql -h localhost -P 3312 -u root -p"$_DB_ROOT_PW" $_DB_MOODLE_NAME -e "$sql_statement"
+  mysql -h 127.0.0.1 -P 3312 -u root -p"$_DB_ROOT_PW" $_DB_MOODLE_NAME -e "$sql_statement"
   if [ $? -ne 0 ]; then
     echo "Failed to empty the existing Moodle database. Exiting."
     exit 1
@@ -80,7 +80,7 @@ rm -rf $MOODLE_PARENT_DIRECTORY/moodledata/*
 # Restore files and database
 cp -r "$full_restore_path/moodledata" $MOODLE_PARENT_DIRECTORY/
 cp "$full_restore_path/config.php" $MOODLE_PARENT_DIRECTORY/moodle/config.php
-mysql -h localhost -P 3312 -u root -p"$_DB_ROOT_PW" $_DB_MOODLE_NAME < "$full_restore_path/moodle_database.sql"
+mysql -h 127.0.0.1 -P 3312 -u root -p"$_DB_ROOT_PW" $_DB_MOODLE_NAME < "$full_restore_path/moodle_database.sql"
 
 # Clean up
 rm -rf "$restore_dir"

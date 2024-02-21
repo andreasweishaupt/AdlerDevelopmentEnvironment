@@ -39,7 +39,7 @@ cp -r $MOODLE_PARENT_DIRECTORY/moodledata $backup_dir/
 cp $MOODLE_PARENT_DIRECTORY/moodle/config.php $backup_dir/config.php
 
 # Backup database
-mysqldump -h localhost -P 3312 -u root -p"$_DB_ROOT_PW" $_DB_MOODLE_NAME > $backup_dir/moodle_database.sql
+mysqldump -h 127.0.0.1 -P 3312 -u root -p"$_DB_ROOT_PW" $_DB_MOODLE_NAME > $backup_dir/moodle_database.sql
 
 # Create compressed archive
 start=$(date +%s%N)
