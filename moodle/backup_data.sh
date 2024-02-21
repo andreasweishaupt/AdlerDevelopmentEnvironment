@@ -36,7 +36,6 @@ mkdir -p $backup_dir
 
 # Backup files
 cp -r $MOODLE_PARENT_DIRECTORY/moodledata $backup_dir/
-cp -r $MOODLE_PARENT_DIRECTORY/moodledata_phpu $backup_dir/
 cp $MOODLE_PARENT_DIRECTORY/moodle/config.php $backup_dir/config.php
 
 # Backup database

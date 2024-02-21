@@ -76,11 +76,9 @@ full_restore_path="$restore_dir/$backup_folder_name"
 
 # clear moodledata and moodledata_phpu
 rm -rf $MOODLE_PARENT_DIRECTORY/moodledata/*
-rm -rf $MOODLE_PARENT_DIRECTORY/moodledata_phpu/*
 
 # Restore files and database
 cp -r "$full_restore_path/moodledata" $MOODLE_PARENT_DIRECTORY/
-cp -r "$full_restore_path/moodledata_phpu" $MOODLE_PARENT_DIRECTORY/
 cp "$full_restore_path/config.php" $MOODLE_PARENT_DIRECTORY/moodle/config.php
 mysql -h localhost -P 3312 -u root -p"$_DB_ROOT_PW" $_DB_MOODLE_NAME < "$full_restore_path/moodle_database.sql"
 
@@ -89,4 +87,10 @@ rm -rf "$restore_dir"
 
 
 # Print success message
+echo "----------------------------------"
 echo "Data restored from $backup_archive"
+
+# Print info about test environments
+echo "There is no point in backing up and restoring phpu and bht. Use moodle commands to initialize them."
+echo "php admin/tool/phpunit/cli/init.php"
+echo "php admin/tool/behat/cli/init.php"
