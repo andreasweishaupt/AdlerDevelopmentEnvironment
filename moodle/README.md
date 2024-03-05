@@ -64,7 +64,26 @@ Workaround ([see this issue](https://github.com/microsoft/WSL/issues/4585#issuec
 
 ⚠️ This has to be done after every reboot.
 
+### Installation Script
+⚠️ **Run this script only once. To run again, execute the uninstall script first.**
+⚠️ **All Paths in this Step are hardcoded. So use them as they are mentioned here!**
+1. **Download Moodle**:
+    - Download and place the Moodle folder in `/home/markus/moodle`.
+    - Download plugins and copy them to respective folders in `/home/markus/moodle`. If installing without plugins the section "setup for plugins" of the setup script will fail.
+
+2. **Execute the Script**:  
+   The [setup.sh bash script](setup.sh) sets up your environment, including installing required packages, setting up the database, and configuring Apache and PHP.
+
+### uninstall script
+To reset the environment run the [reset_data.sh](reset_data.sh) script.
+It will not undo all changes made by the installation script, just delete all data so the setup-script can be run again.
+
+### backup and restore scripts
+- [backup_data.sh](backup_data.sh): Creates a backup of Moodle data and database. Run using ./backup_data.sh.
+- [restore_data.sh](restore_data.sh): Restores Moodle from a backup. Use it like ./restore_data.sh /path/to/backup.
+
 ### PHPStorm setup
+0. **Make sure, moodle is installed via the installation script**
 1. **WSL PHP Interpreter**:
 - Navigate to Settings -> PHP -> CLI interpreter
 - Click 3 dots -> "+" -> From Docker, Vagrant, ... -> WSL
@@ -80,24 +99,6 @@ Workaround ([see this issue](https://github.com/microsoft/WSL/issues/4585#issuec
 - Check "Use path mappings (...)"
 - Add the following path mapping:  
   `\\wsl$\\Ubuntu\\home\\markus\\moodle -> /home/markus/moodle`
-
-### Installation Script
-⚠️ **Run this script only once. To run again, execute the uninstall script first.**
-
-1. **Download Moodle**:
-    - Download and place the Moodle folder in `/home/markus/moodle`.
-    - Download plugins and copy them to respective folders in `/home/markus/moodle`. If installing without plugins the section "setup for plugins" of the setup script will fail.
-
-2. **Execute the Script**:  
-   The [setup.sh bash script](setup.sh) sets up your environment, including installing required packages, setting up the database, and configuring Apache and PHP.
-
-### uninstall script
-To reset the environment run the [reset_data.sh](reset_data.sh) script.
-It will not undo all changes made by the installation script, just delete all data so the setup-script can be run again.
-
-### backup and restore scripts
-- [backup_data.sh](backup_data.sh): Creates a backup of Moodle data and database. Run using ./backup_data.sh.
-- [restore_data.sh](restore_data.sh): Restores Moodle from a backup. Use it like ./restore_data.sh /path/to/backup.
 
 
 ## Configuring Moodle Behat Tests in Windows Subsystem for Linux (WSL)
