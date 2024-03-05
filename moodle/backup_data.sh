@@ -15,7 +15,7 @@ backup_dir="/tmp/${backup_datetime}_moodle_backup"
 if command -v zstd &> /dev/null; then
   compression_format="zstd"
   compression_extension="tar.zst"
-  compression_command="zstd -6 --threads=0"
+  compression_command="zstd --long=31 -6 --threads=0"
 else
   compression_format="gzip"
   compression_extension="tar.gz"
