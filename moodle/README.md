@@ -144,4 +144,8 @@ This documentation outlines the approach I followed to set up Behat tests for Mo
       Ensure to adjust the path and version number to match the location and version of your Selenium server jar file.
 
 ### Running Tests
-With the setup complete, you're now ready to run your Behat tests in the WSL environment. 
+After Setup to run tests the following steps have to be followed
+
+1) add driver path to PATH variable: `export PATH="/path/to/your/moodle/:$PATH"`
+2) start Selenium: `java -jar path/to/selenium-server-4.17.0.jar standalone`
+3) run test: `vendor/bin/behat --config /home/markus/moodledata_bht/behatrun/behat/behat.yml --profile chrome`

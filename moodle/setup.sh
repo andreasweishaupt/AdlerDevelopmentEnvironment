@@ -14,7 +14,7 @@ set +o allexport
 sudo apt install -y apache2 php8.1 php8.1-curl php8.1-zip composer php8.1-gd php8.1-dom php8.1-xml php8.1-mysqli php8.1-soap php8.1-xmlrpc php8.1-intl php8.1-xdebug mariadb-client-10.6
 
 # create moodle folders
-mkdir $MOODLE_PARENT_DIRECTORY/moodle $MOODLE_PARENT_DIRECTORY/moodledata $MOODLE_PARENT_DIRECTORY/moodledata_phpu
+mkdir $MOODLE_PARENT_DIRECTORY/moodle $MOODLE_PARENT_DIRECTORY/moodledata $MOODLE_PARENT_DIRECTORY/moodledata_phpu $MOODLE_PARENT_DIRECTORY/moodledata_bht
 # download moodle to $MOODLE_PARENT_DIRECTORY/moodle
 
 # setup database
@@ -90,6 +90,9 @@ echo "
 \$CFG->langstringcache = 0;
 \$CFG->cachetemplates = 0;
 \$CFG->cachejs = 0;
+
+\$CFG->behat_prefix = 'bht_';
+\$CFG->behat_dataroot = '$MOODLE_PARENT_DIRECTORY/moodledata_bht';
 " >> $MOODLE_PARENT_DIRECTORY/moodle/config.php
 
 # configure cron job
@@ -99,3 +102,10 @@ echo "*/1 * * * * $WSL_USER php $MOODLE_PARENT_DIRECTORY/moodle/admin/cli/cron.p
 
 echo moodle login data: username: ${_MOODLE_USER} password: ${_MOODLE_PW}
 echo db root pass: ${_DB_ROOT_PW}
+
+
+# TODO untested
+cd $MOODLE_PARENT_DIRECTORY/moodle
+composer i
+php admin/tool/phpunit/cli/init.php
+php admin/tool/behat/cli/init.php

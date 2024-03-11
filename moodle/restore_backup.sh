@@ -91,6 +91,6 @@ echo "----------------------------------"
 echo "Data restored from $backup_archive"
 
 # Print info about test environments
-echo "There is no point in backing up and restoring phpu and bht. Use moodle commands to initialize them."
+echo "There is no point in backing up and restoring phpu and bht. Use moodle commands to initialize them. For bht you have to empty the data directory first (if it exists): 'rm -r <path to mooodledata_bht>/*'."
 echo "php admin/tool/phpunit/cli/init.php"
 echo "php admin/tool/behat/cli/init.php"
