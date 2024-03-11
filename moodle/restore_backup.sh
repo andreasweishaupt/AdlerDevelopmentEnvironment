@@ -33,7 +33,7 @@ backup_archive="$1"
 
 # Decide which decompression command to use based on the file extension
 if [[ $backup_archive == *.tar.zst ]]; then
-  decompression_command="zstd -d --stdout"
+  decompression_command="zstd -d --memory=2048MB --stdout"
 elif [[ $backup_archive == *.tar.gz ]]; then
   decompression_command="gzip -d -c"
 else
@@ -43,7 +43,7 @@ fi
 
 # Empty the existing Moodle database
 echo "Emptying existing Moodle database..."
-tables_to_drop=$(mysql -h localhost -P 3312 -u root -p"$_DB_ROOT_PW" $_DB_MOODLE_NAME -sN -e 'SHOW TABLES')
+tables_to_drop=$(mysql -h 127.0.0.1 -P 3312 -u root -p"$_DB_ROOT_PW" $_DB_MOODLE_NAME -sN -e 'SHOW TABLES')
 if [ -z "$tables_to_drop" ]; then
   echo "No tables found in database. Skipping the drop tables step."
 else
