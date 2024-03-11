@@ -82,7 +82,9 @@ Um die Lokale Umgebung unter einer anderen URL (und somit auch von einem anderen
 
 1. Repo klonen
 2. Terminal im Ordner öffnen (Unter Windows Shift + Rechtsklick -> "Terminal öffnen")
-3. `docker compose up -d --build` ausführen
+   Sollte bereits eine Instanz laufen, nicht vergessen, vorher die Umgebung zu stoppen.
+3. `docker compose pull` ausführen. 
+4. `docker compose up -d --build` ausführen
 
 # Stoppen der Umgebung
 
