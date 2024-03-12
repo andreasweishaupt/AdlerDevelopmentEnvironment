@@ -69,7 +69,11 @@ Workaround ([see this issue](https://github.com/microsoft/WSL/issues/4585#issuec
 ⚠️ **All Paths in this Step are hardcoded. So use them as they are mentioned here!**
 1. **Download Moodle**:
     - Download and place the Moodle folder in `/home/markus/moodle`.
+    `curl -o moodle-latest-403.zip https://download.moodle.org/download.php/direct/stable403/moodle-latest-403.zip && unzip moodle-latest-403.zip && rm moodle-latest-403.zip`
+
     - Download plugins and copy them to respective folders in `/home/markus/moodle`. If installing without plugins the section "setup for plugins" of the setup script will fail.
+    
+    The Plugins are located in the AdLer Repo. The Respetive Folders are mentioned in this Article: [[Moodle Plugins]](https://moodledev.io/docs/apis/plugintypes)
 
 2. **Execute the Script**:  
    The [setup.sh bash script](setup.sh) sets up your environment, including installing required packages, setting up the database, and configuring Apache and PHP.
