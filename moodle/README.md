@@ -50,7 +50,7 @@ As this is likely not the case for you, replace "markus" with your WSL username 
 3. Clone this repository to a place of your choice (eg `/home/markus/AdlerDevelopmentEnvironment`).
 4. continue with the following sections
 
-**Note**: I am not sure whether the scripts will work when cloning on a windows system (and yes i know this environment is only for windows).
+**Note**: I am not sure whether the scripts will work when cloning on a Windows system (and yes i know this environment is only for windows).
 Should you have trouble executing the script (something with ^M), delete the repository, 
 disable automatic line ending conversion in git (`git config --global core.autocrlf input`) and clone again.
 
@@ -60,7 +60,7 @@ Therefore, no incoming network connections from WSL to Windows are allowed.
 
 Workaround ([see this issue](https://github.com/microsoft/WSL/issues/4585#issuecomment-610061194):
 1. Open Windows terminal as admin
-2. Run `New-NetFirewallRule -DisplayName "WSL" -Direction Inbound  -InterfaceAlias "vEthernet (WSL)"  -Action Allow` (`New-NetFirewallRule -DisplayName "WSL" -Direction Inbound -Action Allow`)
+2. Run `New-NetFirewallRule -DisplayName "WSL" -Direction Inbound  -InterfaceAlias "vEthernet (WSL)"  -Action Allow` (or this in case the command does not work: `New-NetFirewallRule -DisplayName "WSL" -Direction Inbound -Action Allow`)
 
 ⚠️ This has to be done after every reboot.
 
@@ -100,6 +100,36 @@ It will not undo all changes made by the installation script, just delete all da
 - Add the following path mapping:  
   `\\wsl$\\Ubuntu\\home\\markus\\moodle -> /home/markus/moodle`
 
+## Postgresql
+The default `docker-compose.yml` file uses a MariaDB database. 
+If you want to use a Postgresql database, you can use the `docker-compose-postgres.yml` file instead.
+It is configured as similar as possible to the MariaDB database.
+At the moment there is no way to migrate the data between the two databases.
+Take a backup of the data before switching to Postgresql, so you can restore it later.
+
+⚠️⚠️ **Danger** ⚠️⚠️
+- It is not possible to back up a Postgresql with the provided backup script.
+- It is not possible to restore a backup from a MariaDB database to a Postgresql database with the provided restore script.
+
+When switching to Postgresql, you have to modify the config.php file in the moodle folder (see the example below).
+You also have to delete the content of the moodledata folder (backup it before).
+You probably also have to install additional system dependencies in the WSL instance: `php-pgsql`.
+Restart the apache server after installing the dependencies: `sudo systemctl restart apache2`.
+```php
+$CFG->dbtype    = 'pgsql';
+$CFG->dblibrary = 'native';
+$CFG->dbhost    = '127.0.0.1';
+$CFG->dbname    = 'bitnami_moodle';
+$CFG->dbuser    = 'bitnami_moodle';
+$CFG->dbpass    = 'c';
+$CFG->prefix    = 'mdl_';
+$CFG->dboptions = array (
+    'dbpersist' => 0,
+    'dbport' => 5432, // default PostgreSQL port
+    'dbsocket' => '',
+    'dbcollation' => 'en_US.utf8', // adjust this according to your PostgreSQL server configuration
+);
+```
 
 ## Configuring Moodle Behat Tests in Windows Subsystem for Linux (WSL)
 
@@ -149,3 +179,7 @@ After Setup to run tests the following steps have to be followed
 1) add driver path to PATH variable: `export PATH="/path/to/your/moodle/:$PATH"`
 2) start Selenium: `java -jar path/to/selenium-server-4.17.0.jar standalone`
 3) run test: `vendor/bin/behat --config /home/markus/moodledata_bht/behatrun/behat/behat.yml --profile chrome`
+
+### Adding a new feature (.feature file)
+After adding a new feature file, behat test environment has to be recreated. This can be done by running the following command:
+`php admin/tool/behat/cli/init.php`
