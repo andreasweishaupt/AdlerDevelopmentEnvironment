@@ -2,7 +2,7 @@ version: '3'
 services:
   moodle:
     build:
-      context: github.com/Glutamat42/moodle-docker.git
+      context: github.com/ProjektAdLer/moodle-docker.git
       args:
         PLUGIN_VERSION: 3.1.0
         MOODLE_VERSION: 4.3

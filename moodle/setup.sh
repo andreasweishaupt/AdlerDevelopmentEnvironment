@@ -60,7 +60,7 @@ sudo service apache2 restart
 php $MOODLE_PARENT_DIRECTORY/moodle/admin/cli/install.php --lang=DE --wwwroot=http://localhost --dataroot=$MOODLE_PARENT_DIRECTORY/moodledata --dbtype=mariadb --dbhost=127.0.0.1 --dbport=3312 --dbuser=${_DB_MOODLE_USER} --dbpass=${_DB_MOODLE_PW} --dbname=${_DB_MOODLE_NAME} --fullname=fullname --shortname=shortname --adminuser=${_MOODLE_USER} --adminpass=${_MOODLE_PW} --adminemail=admin@blub.blub --supportemail=admin@blub.blub --non-interactive --agree-license
 
 # setup for plugins (but don't download them, they have be present in the moodle folder already)
-git clone https://github.com/Glutamat42/moodle-docker /tmp/moodle-docker
+git clone https://github.com/ProjektAdLer/moodle-docker /tmp/moodle-docker
 cp -r /tmp/moodle-docker/opt/adler/moodle/adler_setup $MOODLE_PARENT_DIRECTORY/moodle/
 rm -rf /tmp/moodle-docker
 php $MOODLE_PARENT_DIRECTORY/moodle/adler_setup/setup.php --first_run=true --user_name=${_USER_NAME} --user_password=${_USER_PASSWORD} --user_role=${_USER_ROLE} --develop_dont_install_plugins=true
