@@ -15,7 +15,7 @@ sudo apt install -y apache2 php8.1 php8.1-curl php8.1-zip composer php8.1-gd php
 
 # install locales
 sudo sed -i 's/^# de_DE.UTF-8 UTF-8$/de_DE.UTF-8 UTF-8/' /etc/locale.gen
-sudo sed -i 's/^# en_AU UTF-8 UTF-8$/en_AU UTF-8 UTF-8/' /etc/locale.gen   # hardcoded for some testing stuff in moodle
+sudo sed -i 's/^# en_AU.UTF-8 UTF-8$/en_AU.UTF-8 UTF-8/' /etc/locale.gen   # hardcoded for some testing stuff in moodle
 locale-gen
 
 
