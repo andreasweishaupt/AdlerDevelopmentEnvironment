@@ -14,8 +14,8 @@ set +o allexport
 sudo apt install -y apache2 php8.1 php8.1-curl php8.1-zip composer php8.1-gd php8.1-dom php8.1-xml php8.1-mysqli php8.1-soap php8.1-xmlrpc php8.1-intl php8.1-xdebug mariadb-client-10.6 default-jre zstd
 
 # install locales
-RUN sed -i 's/^# de_DE.UTF-8 UTF-8$/de_DE.UTF-8 UTF-8/' /etc/locale.gen
-RUN sed -i 's/^# en_AU UTF-8 UTF-8$/en_AU UTF-8 UTF-8/' /etc/locale.gen   # hardcoded for some testing stuff in moodle
+sudo sed -i 's/^# de_DE.UTF-8 UTF-8$/de_DE.UTF-8 UTF-8/' /etc/locale.gen
+sudo sed -i 's/^# en_AU UTF-8 UTF-8$/en_AU UTF-8 UTF-8/' /etc/locale.gen   # hardcoded for some testing stuff in moodle
 locale-gen
 
 
