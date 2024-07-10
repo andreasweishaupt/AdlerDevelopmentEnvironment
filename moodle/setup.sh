@@ -13,6 +13,13 @@ set +o allexport
 # install dependencies
 sudo apt install -y apache2 php8.1 php8.1-curl php8.1-zip composer php8.1-gd php8.1-dom php8.1-xml php8.1-mysqli php8.1-soap php8.1-xmlrpc php8.1-intl php8.1-xdebug mariadb-client-10.6 default-jre zstd
 
+# install locales
+RUN sed -i 's/^# de_DE.UTF-8 UTF-8$/de_DE.UTF-8 UTF-8/' /etc/locale.gen
+RUN sed -i 's/^# en_AU UTF-8$/en_AU UTF-8/' /etc/locale.gen
+locale-gen
+
+
+
 # create moodle folders
 mkdir $MOODLE_PARENT_DIRECTORY/moodle $MOODLE_PARENT_DIRECTORY/moodledata $MOODLE_PARENT_DIRECTORY/moodledata_phpu $MOODLE_PARENT_DIRECTORY/moodledata_bht
 # download moodle to $MOODLE_PARENT_DIRECTORY/moodle
