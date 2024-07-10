@@ -1,6 +1,6 @@
 #!/bin/bash
-WSL_USER=markus
-MOODLE_PARENT_DIRECTORY=/home/$WSL_USER
+WSL_USER=$(id -nu 1000)
+MOODLE_PARENT_DIRECTORY=$(getent passwd 1000 | cut -d: -f6)
 
 cd "$(dirname "$0")"
 

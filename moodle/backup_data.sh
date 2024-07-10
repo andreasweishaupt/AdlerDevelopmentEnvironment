@@ -1,5 +1,5 @@
 #!/bin/bash
-MOODLE_PARENT_DIRECTORY=/home/markus
+MOODLE_PARENT_DIRECTORY=$(getent passwd 1000 | cut -d: -f6)
 
 # Load additional environment variables from .env
 set -o allexport

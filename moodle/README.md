@@ -45,10 +45,8 @@ It might be necessary to manually set the idekey: `export XDEBUG_CONFIG="idekey=
 This section will describe how to setup and reset the development environment.
 
 1. Enter WSL. This guide will use shell commands and therefore does not work with the Windows console.
-2. ⚠️ The guide and script assumes you are using the user "markus". 
-As this is likely not the case for you, replace "markus" with your WSL username on all occurrences, in the following steps **and in the scripts**.
-3. Clone this repository to a place of your choice (eg `/home/markus/AdlerDevelopmentEnvironment`).
-4. continue with the following sections
+2. Clone this repository to a place of your choice (eg `/home/<wsl username>/AdlerDevelopmentEnvironment`).
+3. continue with the following sections
 
 **Note**: I am not sure whether the scripts will work when cloning on a Windows system (and yes i know this environment is only for windows).
 Should you have trouble executing the script (something with ^M), delete the repository, 
@@ -68,10 +66,10 @@ Workaround ([see this issue](https://github.com/microsoft/WSL/issues/4585#issuec
 ⚠️ **Run this script only once. To run again, execute the uninstall script first.**
 ⚠️ **All Paths in this Step are hardcoded. So use them as they are mentioned here!**
 1. **Download Moodle**:
-    - Download and place the Moodle folder in `/home/markus/moodle`.
+    - Download and place the Moodle folder in `/home/<wsl username>/moodle`.
     `curl -o moodle-latest-403.zip https://download.moodle.org/download.php/direct/stable403/moodle-latest-403.zip && unzip moodle-latest-403.zip && rm moodle-latest-403.zip`
 
-    - Download plugins and copy them to respective folders in `/home/markus/moodle`. If installing without plugins the section "setup for plugins" of the setup script will fail.
+    - Download plugins and copy them to respective folders in `/home/<wsl username>/moodle`. If installing without plugins the section "setup for plugins" of the setup script will fail.
     
     The Plugins are located in the AdLer Repo. The Respetive Folders are mentioned in this Article: [[Moodle Plugins]](https://moodledev.io/docs/apis/plugintypes)
 
@@ -102,7 +100,7 @@ It will not undo all changes made by the installation script, just delete all da
 - On the first incoming debugging connection, this entry should be created. If not, add it manually (Host: localhost, Port: 80, Debugger: Xdebug).
 - Check "Use path mappings (...)"
 - Add the following path mapping:  
-  `\\wsl$\\Ubuntu\\home\\markus\\moodle -> /home/markus/moodle`
+  `\\wsl$\\Ubuntu\\home\\<wsl username>\\moodle -> /home/<wsl username>/moodle`
 
 ## Postgresql
 The default `docker-compose.yml` file uses a MariaDB database. 
@@ -153,6 +151,7 @@ This documentation outlines the approach I followed to set up Behat tests for Mo
         - Use chromedriver directly, as chromedriver-wrapper has not been tested in this setup.
 
 3. **Configuration Adjustments in Moodle's `config.php`:**
+# todo now partially automated
     - Updated the Moodle `config.php` file with the following settings to define the Behat testing environment:
       ```php
       $CFG->behat_wwwroot = 'http://127.0.0.1';
@@ -182,7 +181,7 @@ After Setup to run tests the following steps have to be followed
 
 1) add driver path to PATH variable: `export PATH="/path/to/your/moodle/:$PATH"`
 2) start Selenium: `java -jar path/to/selenium-server-4.17.0.jar standalone`
-3) run test: `vendor/bin/behat --config /home/markus/moodledata_bht/behatrun/behat/behat.yml --profile chrome`
+3) run test: `vendor/bin/behat --config /home/<wsl username>/moodledata_bht/behatrun/behat/behat.yml --profile chrome`
 
 ### Adding a new feature (.feature file)
 After adding a new feature file, behat test environment has to be recreated. This can be done by running the following command:
