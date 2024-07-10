@@ -1,4 +1,3 @@
-version: '3'
 services:
   # if needed, add additional services here. It should be possible to just copy and paste them from non-moodle/docker-compose.yaml
   # note that not required env variables have been removed, so you might need to add them back in when copying services over.
