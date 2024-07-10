@@ -100,7 +100,7 @@ echo "
 \$CFG->behat_prefix = 'bht_';
 \$CFG->behat_dataroot = '$MOODLE_PARENT_DIRECTORY/moodledata_bht';
 
-require_once('/home/markus/moodle/moodle-browser-config/init.php');
+require_once('$MOODLE_PARENT_DIRECTORY/moodle/moodle-browser-config/init.php');
 require_once(__DIR__ . '/lib/setup.php'); // Do not edit
 " >> $MOODLE_PARENT_DIRECTORY/moodle/config.php
 
