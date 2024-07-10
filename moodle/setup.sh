@@ -91,8 +91,17 @@ echo "
 \$CFG->cachetemplates = 0;
 \$CFG->cachejs = 0;
 
+//=========================================================================
+// 11. BEHAT SUPPORT
+//=========================================================================
+// Behat test site needs a unique www root, data directory and database prefix:
+//
+\$CFG->behat_wwwroot = 'http://127.0.0.1';
 \$CFG->behat_prefix = 'bht_';
 \$CFG->behat_dataroot = '$MOODLE_PARENT_DIRECTORY/moodledata_bht';
+
+require_once('/home/markus/moodle/moodle-browser-config/init.php');
+require_once(__DIR__ . '/lib/setup.php'); // Do not edit
 " >> $MOODLE_PARENT_DIRECTORY/moodle/config.php
 
 # configure cron job
