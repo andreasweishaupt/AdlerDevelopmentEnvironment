@@ -11,7 +11,7 @@ set +o allexport
 
 
 # install dependencies
-sudo apt install -y apache2 php8.1 php8.1-curl php8.1-zip composer php8.1-gd php8.1-dom php8.1-xml php8.1-mysqli php8.1-soap php8.1-xmlrpc php8.1-intl php8.1-xdebug mariadb-client-10.6
+sudo apt install -y apache2 php8.1 php8.1-curl php8.1-zip composer php8.1-gd php8.1-dom php8.1-xml php8.1-mysqli php8.1-soap php8.1-xmlrpc php8.1-intl php8.1-xdebug mariadb-client-10.6 default-jre zstd
 
 # create moodle folders
 mkdir $MOODLE_PARENT_DIRECTORY/moodle $MOODLE_PARENT_DIRECTORY/moodledata $MOODLE_PARENT_DIRECTORY/moodledata_phpu $MOODLE_PARENT_DIRECTORY/moodledata_bht
@@ -109,12 +109,19 @@ echo adding cron job
 echo "*/1 * * * * $WSL_USER php $MOODLE_PARENT_DIRECTORY/moodle/admin/cli/cron.php > /dev/null 2>> $MOODLE_PARENT_DIRECTORY/moodledata/moodle-cron.log" | sudo tee /etc/cron.d/moodle
 
 
+cd $MOODLE_PARENT_DIRECTORY/moodle
+# install composer dependencies
+composer i
+
+#clone behat test browser config repo
+git clone https://github.com/andrewnicols/moodle-browser-config
+
+# setup test environments
+php admin/tool/phpunit/cli/init.php
+php admin/tool/behat/cli/init.php
+
 echo moodle login data: username: ${_MOODLE_USER} password: ${_MOODLE_PW}
 echo db root pass: ${_DB_ROOT_PW}
 
 
-# TODO untested
-cd $MOODLE_PARENT_DIRECTORY/moodle
-composer i
-php admin/tool/phpunit/cli/init.php
-php admin/tool/behat/cli/init.php
+
