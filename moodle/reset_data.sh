@@ -16,7 +16,7 @@ echo "First, backup everything."
 echo "Now reset everything."
 
 # Remove files and directories
-sudo rm -r $MOODLE_PARENT_DIRECTORY/moodledata $MOODLE_PARENT_DIRECTORY/moodledata_phpu
+sudo rm -r $MOODLE_PARENT_DIRECTORY/moodledata $MOODLE_PARENT_DIRECTORY/moodledata_phpu $MOODLE_PARENT_DIRECTORY/moodledata_bht
 sudo rm $MOODLE_PARENT_DIRECTORY/moodle/config.php
 
 # Stop and remove Docker containers and volumes
