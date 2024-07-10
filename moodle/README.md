@@ -2,29 +2,15 @@
 This file will show a short summary of different approaches to set up a development environment for Moodle on Windows 
 and describe the steps to set up the environment.
 
-## Evaluation of different approaches to develop for moodle on windows
-**Running moodle webserver on Windows**: All approaches where the webserver runs on Windows have the common problem that the performance is very bad.
-The following variants of this approach were tested: [Moodle on Windows](https://docs.moodle.org/402/de/Vollst%C3%A4ndiges_Installationspaket_f%C3%BCr_Windows), own setup with XAMPP with database from XAMPP (DB had problem starting sometimes) and DB in WSL.
-
-**Running moodle webserver in WSL**: This approach works well. This is the approach I followed the most time.
-Windows 10 had a bug where WSL hung up regularly (probably caused by switching monitor configuration).
-
-**Running moodle in docker**: In theory a well working approach. Should provide the same performance as the WSL approach and setup should be easier.
-In practice there were too many problems with this approach.
-
-
-## approach WSL
-This documentation outlines the steps to set up a Moodle PHP development environment
-using Windows Subsystem for Linux (WSL2) and Docker Desktop. Other potential approaches are
-described and evaluated below.
-
-**Note**: Although this approach is nearly fully automated,
-it is not as reliable as the 3D, AMG and Backend dev environment.
-Some Linux knowledge will be very helpful to resolve potential issues.
+For information about why this approach was chosen, see the [approach evaluation document](alternative_approaches.md).
 
 ## Requirements
 - WSL2
 - Docker Desktop
+- WSL disto Ubuntu 22.04  
+  ⚠️ Other Distros likely will not work out of the box as of dependency issues.
+
+
 
 ## Warnings / Hints
 - This approach expects port 80 to be unused.
@@ -33,7 +19,7 @@ Some Linux knowledge will be very helpful to resolve potential issues.
   If you are already using apache in the WSL instance, you might want to use another `--distribution` for this approach.
   Note that you will likely also have to change the port of the apache server in this case.
 - To resolve any issues with shell scripts (typically ^M errors), disable automatic line ending conversion in git by running:
-- `git config --global core.autocrlf false` or `git config --global core.autocrlf input`
+`git config --global core.autocrlf false` or `git config --global core.autocrlf input`
 
 **Debug shell scripts manually executed in WSL**:
 For PHPStorm path mapping to work it is required to set an environment variable in the WSL instance before executing the PHP script: `export PHP_IDE_CONFIG="serverName=localhost"` \
@@ -41,7 +27,7 @@ For PHPStorm path mapping to work it is required to set an environment variable 
 
 It might be necessary to manually set the idekey: `export XDEBUG_CONFIG="idekey=blub"`. The value itself ("blub") is irrelevant. 
 
-## Environment Setup
+## Preparations
 This section will describe how to setup and reset the development environment.
 
 1. Enter WSL. This guide will use shell commands and therefore does not work with the Windows console.
@@ -62,18 +48,15 @@ Workaround ([see this issue](https://github.com/microsoft/WSL/issues/4585#issuec
 
 ⚠️ This has to be done after every reboot.
 
+### Download moodle script
+To download moodle, run the following script: `./download_moodle.sh`. It is downloading moodle to `/home/<wsl username>/moodle` and
+installs all plugins of the "main" release set ([found here](https://github.com/ProjektAdLer/moodle-docker/blob/main/plugin-releases.json)).
+The plugins are installed as git repository, therefore it is possible to directly start developing on them.
+
 ### Installation Script
 ⚠️ **Run this script only once. To run again, execute the uninstall script first.**
 ⚠️ **All Paths in this Step are hardcoded. So use them as they are mentioned here!**
-1. **Download Moodle**:
-    - Download and place the Moodle folder in `/home/<wsl username>/moodle`.
-    `curl -o moodle-latest-403.zip https://download.moodle.org/download.php/direct/stable403/moodle-latest-403.zip && unzip moodle-latest-403.zip && rm moodle-latest-403.zip`
-
-    - Download plugins and copy them to respective folders in `/home/<wsl username>/moodle`. If installing without plugins the section "setup for plugins" of the setup script will fail.
-    
-    The Plugins are located in the AdLer Repo. The Respetive Folders are mentioned in this Article: [[Moodle Plugins]](https://moodledev.io/docs/apis/plugintypes)
-
-2. **Execute the Script**:  
+1. **Execute the setup Script**:  
    The [setup.sh bash script](setup.sh) sets up your environment, including installing required packages, setting up the database, and configuring Apache and PHP.
 
 ### uninstall script
@@ -114,8 +97,7 @@ Take a backup of the data before switching to Postgresql, so you can restore it 
 - It is not possible to restore a backup from a MariaDB database to a Postgresql database with the provided restore script.
 
 When switching to Postgresql, you have to modify the config.php file in the moodle folder (see the example below).
-You also have to delete the content of the moodledata folder (backup it before).
-You probably also have to install additional system dependencies in the WSL instance: `php-pgsql`.
+You also have to delete the content of the moodledata folder (back it up before).
 Restart the apache server after installing the dependencies: `sudo systemctl restart apache2`.
 ```php
 $CFG->dbtype    = 'pgsql';
@@ -141,47 +123,45 @@ This documentation outlines the approach I followed to set up Behat tests for Mo
 - Ensure WSLg (Windows Subsystem for Linux with GUI support) is enabled to run UI applications in WSL. This feature is necessary for executing tests that involve a graphical user interface.
 
 ### Setup Instructions
-1. **Moodle Environment Setup:**
-    - Follow the official [Moodle setup guide for Behat](https://moodledev.io/general/development/tools/behat/running) to configure your environment for running Behat tests.
+Read the [Moodle setup guide for Behat](https://moodledev.io/general/development/tools/behat/running) to understand the requirements and setup steps for Behat tests.
 
-2. **Selenium with Chrome:**
+1. **Selenium with Chrome:**
     - Attempts to use Selenium with Firefox resulted in errors related to user profile creation.
     - **Chrome Setup:**
-        - Download an older version of Chrome that is compatible with the latest chromedriver from [here](http://mirror.cs.uchicago.edu/google-chrome/pool/main/g/google-chrome-stable/).
-        - Use chromedriver directly, as chromedriver-wrapper has not been tested in this setup.
+        - There are two potential paths. Both are equally valid
+        - **Old Chrome Version:**
+            - Download an [older version of Chrome](http://mirror.cs.uchicago.edu/google-chrome/pool/main/g/google-chrome-stable/) 
+            - that is compatible with [the latest chromedriver](https://old.chromedriver.getwebdriver.com/index.html).
+            - Place the downloaded chromedriver in the moodle root directory.
+            - Note: Use chromedriver directly, as chromedriver-wrapper has not been tested in this setup.
+        - **Current Chrome Version:**
+            - Download [chromedriver](https://getwebdriver.com/chromedriver#stable) version.
+            - Extract the downloaded chromedriver archive and place the chromedriver file in the moodle root directory.
+            - Download the [corresponding version of Chrome](http://mirror.cs.uchicago.edu/google-chrome/pool/main/g/google-chrome-stable/).
+        - Install Chrome using the following command:
+            ```bash
+            sudo apt install -y ./<filename of the downloaded Chrome package>
+            ```
+        - Prevent Chrome from updating by running the following command (as unintended updates will break compatibility with chromedriver):
+            ```bash
+            sudo apt-mark hold google-chrome-stable
+            ```
+        - Run `google-chrome-stable` to verify the setup. If a Chrome window opens, the setup was successful.
 
-3. **Configuration Adjustments in Moodle's `config.php`:**
-# todo now partially automated
-    - Updated the Moodle `config.php` file with the following settings to define the Behat testing environment:
-      ```php
-      $CFG->behat_wwwroot = 'http://127.0.0.1';
-      $CFG->behat_prefix = 'bht_';
-      $CFG->behat_dataroot = '/path/to/your/moodledata_bht';
-      
-      // Include these lines at the end of the file
-      require_once('/path/to/your/moodle/moodle-browser-config/init.php');
-      require_once(__DIR__ . '/lib/setup.php'); // Do not edit this line
-      ```
-      Replace `/path/to/your/` with the actual path to your Moodle installation and data directory.
-
-4. **Driver and Selenium Server Setup:**
-    - Download the respective driver and moodle-browser-config to your moodle root directory.
-    - Add the path to chromedriver (or geckodriver, if using Firefox) to your system's `PATH` environment variable:
-      ```bash
-      export PATH="/path/to/your/moodle/:$PATH"
-      ```
-    - Launch the Selenium server with the following command:
-      ```bash
-      java -jar path/to/selenium-server-4.17.0.jar standalone
-      ```
-      Ensure to adjust the path and version number to match the location and version of your Selenium server jar file.
+4. **Download Selenium Server:**
+    - Download the latest `Selenium Server (Grid)` jar file from the [official Selenium website](https://www.selenium.dev/downloads/).
+    - Place it in the moodle root directory.
 
 ### Running Tests
-After Setup to run tests the following steps have to be followed
 
-1) add driver path to PATH variable: `export PATH="/path/to/your/moodle/:$PATH"`
-2) start Selenium: `java -jar path/to/selenium-server-4.17.0.jar standalone`
-3) run test: `vendor/bin/behat --config /home/<wsl username>/moodledata_bht/behatrun/behat/behat.yml --profile chrome`
+1) navigate to the moodle root directory `cd /home/<wsl username>/moodle`
+2) start Selenium: `PATH=./:$PATH java -jar <filename of the downloaded selenium file> standalone`
+3) in a new terminal window, run the following command to start the Behat test:
+    ```bash
+    vendor/bin/behat --config /home/<wsl username>/moodledata_bht/behatrun/behat/behat.yml --profile chrome
+    ```
+   This is just for testing, it will run all moodle tests. After some tests a Chrome window will open (not all tests actually need
+   a browser). If this happens the tests are running correctly.
 
 ### Adding a new feature (.feature file)
 After adding a new feature file, behat test environment has to be recreated. This can be done by running the following command:

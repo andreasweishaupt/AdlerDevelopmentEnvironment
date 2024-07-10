@@ -1,3 +1,22 @@
+# This sections covers the decision for the used approach and notes (for reference) for alternative approaches.
+
+## Evaluation of different approaches to develop for moodle on windows
+**Running moodle webserver on Windows**: All approaches where the webserver runs on Windows have the common problem that the performance is very bad.
+The following variants of this approach were tested: [Moodle on Windows](https://docs.moodle.org/402/de/Vollst%C3%A4ndiges_Installationspaket_f%C3%BCr_Windows), own setup with XAMPP with database from XAMPP (DB had problem starting sometimes) and DB in WSL.
+
+**Running moodle webserver in WSL**: This approach works well. This is the approach I followed the most time.
+Windows 10 had a bug where WSL hung up regularly (probably caused by switching monitor configuration).
+
+**Running moodle in docker**: In theory a well working approach. Should provide the same performance as the WSL approach and setup should be easier.
+In practice there were too many problems with this approach.
+
+
+## approach WSL
+This documentation outlines the steps to set up a Moodle PHP development environment
+using Windows Subsystem for Linux (WSL2) and Docker Desktop. Other potential approaches are
+described and evaluated below.
+
+
 ### docker compose approach
 These are my notes for the docker-compose approach. It never fully worked. Just here for future reference.
 

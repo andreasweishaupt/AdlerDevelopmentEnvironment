@@ -11,7 +11,7 @@ set +o allexport
 
 
 # install dependencies
-sudo apt install -y apache2 php8.1 php8.1-curl php8.1-zip composer php8.1-gd php8.1-dom php8.1-xml php8.1-mysqli php8.1-soap php8.1-xmlrpc php8.1-intl php8.1-xdebug mariadb-client-10.6 default-jre zstd
+sudo apt install -y apache2 php8.1 php8.1-curl php8.1-zip composer php8.1-gd php8.1-dom php8.1-xml php8.1-mysqli php8.1-soap php8.1-xmlrpc php8.1-intl php8.1-xdebug php8.1-pgsql mariadb-client-10.6 default-jre zstd
 
 # install locales
 sudo sed -i 's/^# de_DE.UTF-8 UTF-8$/de_DE.UTF-8 UTF-8/' /etc/locale.gen
@@ -73,7 +73,9 @@ rm -rf /tmp/moodle-docker
 php $MOODLE_PARENT_DIRECTORY/moodle/adler_setup/setup.php --first_run=true --user_name=${_USER_NAME} --user_password=${_USER_PASSWORD} --user_role=${_USER_ROLE} --develop_dont_install_plugins=true
 
 # moodle config.php
-# If changing anything: absolutely pay attention to escape $ (if shouln't be evaluated) and "
+# remove the require_once line as it has to be at the end of the file
+sed -i "/require_once(__DIR__ . '\/lib\/setup.php');/d" $MOODLE_PARENT_DIRECTORY/moodle/config.php
+# If changing anything on this template: absolutely pay attention to escape $ (if shouln't be evaluated) and "
 echo "
 //=========================================================================
 // 7. SETTINGS FOR DEVELOPMENT SERVERS - not intended for production use!!!
@@ -128,7 +130,7 @@ php admin/tool/phpunit/cli/init.php
 php admin/tool/behat/cli/init.php
 
 echo moodle login data: username: ${_MOODLE_USER} password: ${_MOODLE_PW}
-echo db root pass: ${_DB_ROOT_PW}
+echo db root password: ${_DB_ROOT_PW}
 
 
 
