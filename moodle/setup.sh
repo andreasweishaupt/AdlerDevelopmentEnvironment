@@ -27,7 +27,7 @@ mkdir $MOODLE_PARENT_DIRECTORY/moodledata $MOODLE_PARENT_DIRECTORY/moodledata_ph
 
 # setup database
 sudo --preserve-env docker compose up -d
-while ! mysqladmin ping -h $DB_HOST -P3312 --silent 2>/dev/null; do echo "db is starting" && sleep 1; done
+while ! mysqladmin ping -h $DB_HOST -P3312 --connect-timeout=5 --silent 2>/dev/null; do echo "db is starting" && sleep 1; done
 echo "db is up"
 
 # configure apache
