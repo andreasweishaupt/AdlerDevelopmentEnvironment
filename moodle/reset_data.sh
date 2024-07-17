@@ -1,6 +1,18 @@
 #!/bin/bash
 MOODLE_PARENT_DIRECTORY=$(getent passwd 1000 | cut -d: -f6)
 
+# Default value for DB_HOST
+DB_HOST="127.0.0.1"
+
+# Parse command line arguments for DB_HOST
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        --dbhost|-d) DB_HOST="$2"; shift ;;
+        *) ;;
+    esac
+    shift
+done
+
 cd "$(dirname "$0")"
 
 # Load additional environment variables from .env to be as close to non-moodle as possible
@@ -11,7 +23,7 @@ set +o allexport
 echo "First, backup everything."
 
 # Execute the backup_data.sh script
-./backup_data.sh
+./backup_data.sh --dbhost $DB_HOST
 
 echo "Now reset everything."
 
