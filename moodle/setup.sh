@@ -9,9 +9,10 @@ set -o allexport
 source .env
 set +o allexport
 
-
 # install dependencies
-sudo apt install -y apache2 php8.1 php8.1-curl php8.1-zip composer php8.1-gd php8.1-dom php8.1-xml php8.1-mysqli php8.1-soap php8.1-xmlrpc php8.1-intl php8.1-xdebug php8.1-pgsql mariadb-client-10.6 default-jre zstd
+sudo apt install -y apache2 php8.1 php8.1-curl php8.1-zip composer php8.1-gd php8.1-dom php8.1-xml php8.1-mysqli php8.1-soap php8.1-xmlrpc php8.1-intl php8.1-xdebug php8.1-pgsql mariadb-client-10.6 default-jre zstd iproute2
+
+DB_HOST=$(ip -4 route show default | cut -d' ' -f3)  # This is required if the script is executed in a Docker container (Pipelines) and does no harm if executed in WSL
 
 # install locales
 sudo sed -i 's/^# de_DE.UTF-8 UTF-8$/de_DE.UTF-8 UTF-8/' /etc/locale.gen
@@ -26,7 +27,7 @@ mkdir $MOODLE_PARENT_DIRECTORY/moodledata $MOODLE_PARENT_DIRECTORY/moodledata_ph
 
 # setup database
 sudo docker compose up -d
-while ! mysqladmin ping -h 127.0.0.1 -P3312 --silent 2>/dev/null; do echo "db is starting" && sleep 1; done
+while ! mysqladmin ping -h $DB_HOST -P3312 --silent 2>/dev/null; do echo "db is starting" && sleep 1; done
 echo "db is up"
 
 # configure apache
@@ -64,7 +65,7 @@ sudo ln -s  /etc/php/8.1/apache2/conf.d/20-xdebug.ini /etc/php/8.1/cli/conf.d/20
 sudo service apache2 restart
 
 # install moodle
-php $MOODLE_PARENT_DIRECTORY/moodle/admin/cli/install.php --lang=DE --wwwroot=http://localhost --dataroot=$MOODLE_PARENT_DIRECTORY/moodledata --dbtype=mariadb --dbhost=127.0.0.1 --dbport=3312 --dbuser=${_DB_MOODLE_USER} --dbpass=${_DB_MOODLE_PW} --dbname=${_DB_MOODLE_NAME} --fullname=fullname --shortname=shortname --adminuser=${_MOODLE_USER} --adminpass=${_MOODLE_PW} --adminemail=admin@blub.blub --supportemail=admin@blub.blub --non-interactive --agree-license
+php $MOODLE_PARENT_DIRECTORY/moodle/admin/cli/install.php --lang=DE --wwwroot=http://localhost --dataroot=$MOODLE_PARENT_DIRECTORY/moodledata --dbtype=mariadb --dbhost=$DB_HOST --dbport=3312 --dbuser=${_DB_MOODLE_USER} --dbpass=${_DB_MOODLE_PW} --dbname=${_DB_MOODLE_NAME} --fullname=fullname --shortname=shortname --adminuser=${_MOODLE_USER} --adminpass=${_MOODLE_PW} --adminemail=admin@blub.blub --supportemail=admin@blub.blub --non-interactive --agree-license
 
 # setup for plugins (but don't download them, they have be present in the moodle folder already)
 git clone https://github.com/ProjektAdLer/moodle-docker /tmp/moodle-docker
