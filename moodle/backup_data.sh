@@ -1,6 +1,18 @@
 #!/bin/bash
 MOODLE_PARENT_DIRECTORY=$(getent passwd 1000 | cut -d: -f6)
 
+# Default value for DB_HOST
+DB_HOST="127.0.0.1"
+
+# Parse command line arguments for DB_HOST
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        --dbhost|-d) DB_HOST="$2"; shift ;;
+        *) ;;
+    esac
+    shift
+done
+
 # Load additional environment variables from .env
 set -o allexport
 source "$(dirname "$0")/.env"
@@ -39,7 +51,7 @@ cp -r $MOODLE_PARENT_DIRECTORY/moodledata $backup_dir/
 cp $MOODLE_PARENT_DIRECTORY/moodle/config.php $backup_dir/config.php
 
 # Backup database
-mysqldump -h 127.0.0.1 -P 3312 -u root -p"$_DB_ROOT_PW" $_DB_MOODLE_NAME > $backup_dir/moodle_database.sql
+mysqldump -h $DB_HOST -P 3312 -u root -p"$_DB_ROOT_PW" $_DB_MOODLE_NAME > $backup_dir/moodle_database.sql
 
 # Create compressed archive
 start=$(date +%s%N)

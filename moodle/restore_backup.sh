@@ -1,6 +1,18 @@
 #!/bin/bash
 MOODLE_PARENT_DIRECTORY=$(getent passwd 1000 | cut -d: -f6)
 
+# Default value for DB_HOST
+DB_HOST="127.0.0.1"
+
+# Parse command line arguments for DB_HOST
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        --dbhost|-d) DB_HOST="$2"; shift ;;
+        *) ;;
+    esac
+    shift
+done
+
 cd "$(dirname "$0")"
 
 echo "-----------------------------------------"
@@ -26,7 +38,7 @@ fi
 
 echo "First, backup everything."
 # Execute the backup_data.sh script
-./backup_data.sh
+./backup_data.sh --dbhost $DB_HOST
 
 # Set variables
 backup_archive="$1"
@@ -43,7 +55,7 @@ fi
 
 # Empty the existing Moodle database
 echo "Emptying existing Moodle database..."
-tables_to_drop=$(mysql -h 127.0.0.1 -P 3312 -u root -p"$_DB_ROOT_PW" $_DB_MOODLE_NAME -sN -e 'SHOW TABLES')
+tables_to_drop=$(mysql -h $DB_HOST -P 3312 -u root -p"$_DB_ROOT_PW" $_DB_MOODLE_NAME -sN -e 'SHOW TABLES')
 if [ -z "$tables_to_drop" ]; then
   echo "No tables found in database. Skipping the drop tables step."
 else
@@ -51,7 +63,7 @@ else
   sql_statement="SET FOREIGN_KEY_CHECKS = 0; DROP TABLE IF EXISTS $tables_to_drop; SET FOREIGN_KEY_CHECKS = 1;"
 #  echo "$sql_statement"
 
-  mysql -h 127.0.0.1 -P 3312 -u root -p"$_DB_ROOT_PW" $_DB_MOODLE_NAME -e "$sql_statement"
+  mysql -h $DB_HOST -P 3312 -u root -p"$_DB_ROOT_PW" $_DB_MOODLE_NAME -e "$sql_statement"
   if [ $? -ne 0 ]; then
     echo "Failed to empty the existing Moodle database. Exiting."
     exit 1
@@ -80,7 +92,7 @@ rm -rf $MOODLE_PARENT_DIRECTORY/moodledata/*
 # Restore files and database
 cp -r "$full_restore_path/moodledata" $MOODLE_PARENT_DIRECTORY/
 cp "$full_restore_path/config.php" $MOODLE_PARENT_DIRECTORY/moodle/config.php
-mysql -h 127.0.0.1 -P 3312 -u root -p"$_DB_ROOT_PW" $_DB_MOODLE_NAME < "$full_restore_path/moodle_database.sql"
+mysql -h $DB_HOST -P 3312 -u root -p"$_DB_ROOT_PW" $_DB_MOODLE_NAME < "$full_restore_path/moodle_database.sql"
 
 # Clean up
 rm -rf "$restore_dir"
