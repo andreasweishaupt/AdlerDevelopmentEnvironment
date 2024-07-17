@@ -20,4 +20,4 @@ sudo rm -r $MOODLE_PARENT_DIRECTORY/moodledata $MOODLE_PARENT_DIRECTORY/moodleda
 sudo rm $MOODLE_PARENT_DIRECTORY/moodle/config.php
 
 # Stop and remove Docker containers and volumes
-sudo docker compose down -v
+sudo --preserve-env docker compose down -v
