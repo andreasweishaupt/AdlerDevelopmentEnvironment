@@ -2,6 +2,18 @@
 WSL_USER=$(id -nu 1000)
 MOODLE_PARENT_DIRECTORY=$(getent passwd 1000 | cut -d: -f6)
 
+# Default value for DB_HOST
+DB_HOST="127.0.0.1"
+
+# Parse command line arguments for DB_HOST
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        --dbhost|-d) DB_HOST="$2"; shift ;;
+        *) ;;
+    esac
+    shift
+done
+
 cd "$(dirname "$0")"
 
 # load additional environment variables from .env to be as close to non-moodle as possible
@@ -10,15 +22,12 @@ source .env
 set +o allexport
 
 # install dependencies
-sudo apt install -y apache2 php8.1 php8.1-curl php8.1-zip composer php8.1-gd php8.1-dom php8.1-xml php8.1-mysqli php8.1-soap php8.1-xmlrpc php8.1-intl php8.1-xdebug php8.1-pgsql mariadb-client-10.6 default-jre zstd iproute2
-
-DB_HOST=$(ip -4 route show default | cut -d' ' -f3)  # This is required if the script is executed in a Docker container (Pipelines) and does no harm if executed in WSL
+sudo apt install -y apache2 php8.1 php8.1-curl php8.1-zip composer php8.1-gd php8.1-dom php8.1-xml php8.1-mysqli php8.1-soap php8.1-xmlrpc php8.1-intl php8.1-xdebug php8.1-pgsql mariadb-client-10.6 default-jre zstd
 
 # install locales
 sudo sed -i 's/^# de_DE.UTF-8 UTF-8$/de_DE.UTF-8 UTF-8/' /etc/locale.gen
 sudo sed -i 's/^# en_AU.UTF-8 UTF-8$/en_AU.UTF-8 UTF-8/' /etc/locale.gen   # hardcoded for some testing stuff in moodle
 sudo locale-gen
-
 
 
 # create moodle folders
