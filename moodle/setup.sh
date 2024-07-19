@@ -47,8 +47,13 @@ sudo sed -i "s#export APACHE_RUN_USER=www-data#export APACHE_RUN_USER=$WSL_USER#
 sudo sed -i "s#export APACHE_RUN_GROUP=www-data#export APACHE_RUN_GROUP=$WSL_USER#g" /etc/apache2/envvars
 
 # configure php
-echo "max_input_vars = 5000" | sudo tee /etc/php/8.1/cli/conf.d/moodle.ini
+## conf.d/moodle.ini
+echo "max_input_vars = 5000" | sudo tee /conf.d/moodle.ini
 sudo ln -s  /etc/php/8.1/cli/conf.d/moodle.ini /etc/php/8.1/apache2/conf.d/moodle.ini
+## apache/php.ini
+sudo sed -i 's/^\(\s*;\?\s*\)upload_max_filesize\s*=\s*[0-9]*M/\1upload_max_filesize = 2048M/' /etc/php/8.1/apache2/php.ini
+sudo sed -i 's/^\(\s*;\?\s*\)post_max_size\s*=\s*[0-9]*M/\post_max_size = 2048M/' /etc/php/8.1/apache2/php.ini
+
 
 echo "[XDebug]
 # https://xdebug.org/docs/all_settings
