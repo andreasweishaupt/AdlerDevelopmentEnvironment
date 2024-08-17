@@ -2,7 +2,7 @@
 
 MOODLE_RELEASE=MOODLE_404_STABLE
 
-MOODLE_PARENT_DIRECTORY=$(getent passwd 1000 | cut -d: -f6)  # /home/<user>
+MOODLE_PARENT_DIRECTORY=$(getent passwd 1001 | cut -d: -f6)  # /home/<user>
 
 sudo apt update && sudo apt -y install git jq
 
