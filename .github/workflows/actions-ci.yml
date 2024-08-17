@@ -31,6 +31,8 @@ jobs:
       - name: Set up development environment
         run: |
           cd moodle
+          chmod +x ./download_adler_moodle.sh
+          ./download_adler_moodle.sh
           chmod +x ./setup.sh
           ./setup.sh --dbhost localhost
 
