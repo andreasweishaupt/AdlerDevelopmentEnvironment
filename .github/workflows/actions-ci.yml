@@ -27,16 +27,31 @@ jobs:
         with:
           repository: ProjektAdLer/AdlerDevelopmentEnvironment
 
-      # Runs a single command using the runners shell
-      - name: Set up development environment
+      - name: Set up environment variables
         run: |
-          sudo mkdir -p /home/runneradmin/moodle
-          sudo chown -R $USER:$USER /home/runneradmin/moodle
+          echo "MOODLE_PARENT_DIRECTORY=$HOME" >> $GITHUB_ENV
+          echo "WSL_USER=$USER" >> $GITHUB_ENV
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y apache2 php8.1 php8.1-curl php8.1-zip composer php8.1-gd php8.1-dom php8.1-xml php8.1-mysqli php8.1-soap php8.1-xmlrpc php8.1-intl php8.1-xdebug php8.1-pgsql mariadb-client-10.6 default-jre zstd git jq
+
+      - name: Set up locales
+        run: |
+          sudo sed -i 's/^# de_DE.UTF-8 UTF-8$/de_DE.UTF-8 UTF-8/' /etc/locale.gen
+          sudo sed -i 's/^# en_AU.UTF-8 UTF-8$/en_AU.UTF-8 UTF-8/' /etc/locale.gen
+          sudo locale-gen
+          
+      - name: Download Moodle
+        run: |
           cd moodle
           chmod +x ./download_adler_moodle.sh
           ./download_adler_moodle.sh
+
+      - name: Set up Moodle
+        run: |
+          cd moodle
           chmod +x ./setup.sh
           ./setup.sh --dbhost localhost
-        env:
-          USER: runneradmin
 
