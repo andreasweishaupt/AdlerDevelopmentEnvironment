@@ -42,19 +42,21 @@ jobs:
           sudo sed -i 's/^# de_DE.UTF-8 UTF-8$/de_DE.UTF-8 UTF-8/' /etc/locale.gen
           sudo sed -i 's/^# en_AU.UTF-8 UTF-8$/en_AU.UTF-8 UTF-8/' /etc/locale.gen
           sudo locale-gen
+
+      - name: Prepare Moodle directory
+        run: |
+          sudo mkdir -p $HOME/moodle
+          sudo chown -R $USER:$USER $HOME/moodle
           
       - name: Download Moodle
         run: |
-          cd moodle
-          chmod +x ./download_adler_moodle.sh
-          ./download_adler_moodle.sh
-          env:
-            MOODLE_PARENT_DIRECTORY: /home/runneradmin
-            WSL_USER: runneradmin
+          cd $HOME
+          chmod +x $GITHUB_WORKSPACE/moodle/download_adler_moodle.sh
+          $GITHUB_WORKSPACE/moodle/download_adler_moodle.sh
 
       - name: Set up Moodle
         run: |
-          cd moodle
-          chmod +x ./setup.sh
-          ./setup.sh --dbhost localhost
+          cd $HOME/moodle
+          chmod +x $GITHUB_WORKSPACE/moodle/setup.sh
+          $GITHUB_WORKSPACE/moodle/setup.sh --dbhost localhost
 
