@@ -30,6 +30,8 @@ jobs:
       # Runs a single command using the runners shell
       - name: Set up development environment
         run: |
+          sudo mkdir -p ~/moodle
+          sudo chown -R $USER:$USER ~/moodle
           cd moodle
           chmod +x ./download_adler_moodle.sh
           ./download_adler_moodle.sh
