@@ -1,6 +1,6 @@
 #!/bin/bash
-WSL_USER=$(id -nu 1000)
-MOODLE_PARENT_DIRECTORY=$(getent passwd 1000 | cut -d: -f6)
+WSL_USER=$(id -nu 1001)
+MOODLE_PARENT_DIRECTORY=$(getent passwd 1001 | cut -d: -f6)
 
 # Default value for DB_HOST
 DB_HOST="127.0.0.1"
