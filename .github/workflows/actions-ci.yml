@@ -45,6 +45,8 @@ jobs:
 
       - name: Prepare Moodle directory
         run: |
+          getent passwd
+          getent passwd 1000
           sudo mkdir -p $HOME/moodle
           sudo chown -R $USER:$USER $HOME/moodle
           
