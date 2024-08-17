@@ -37,4 +37,6 @@ jobs:
           ./download_adler_moodle.sh
           chmod +x ./setup.sh
           ./setup.sh --dbhost localhost
+        env:
+          USER: runneradmin
 
