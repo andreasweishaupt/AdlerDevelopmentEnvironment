@@ -48,6 +48,9 @@ jobs:
           cd moodle
           chmod +x ./download_adler_moodle.sh
           ./download_adler_moodle.sh
+          env:
+            MOODLE_PARENT_DIRECTORY: /home/runneradmin
+            WSL_USER: runneradmin
 
       - name: Set up Moodle
         run: |
