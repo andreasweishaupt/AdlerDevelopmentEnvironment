@@ -12,18 +12,42 @@ on:
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+  
+env:
+  CHROME_VERSION: "114.0.5735.90"
+  CHROME_DEB: "google-chrome-stable_114.0.5735.90-1_amd64.deb"
+  CHROME_URL: "https://mirror.cs.uchicago.edu/google-chrome/pool/main/g/google-chrome-stable/google-chrome-stable_114.0.5735.90-1_amd64.deb"
+  CHROMEDRIVER_ZIP: "chromedriver_linux64.zip"
+  CHROMEDRIVER_URL: "https://old.chromedriver.getwebdriver.com/114.0.5735.90/chromedriver_linux64.zip"
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  build:
+  build-and-test:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+
+    services:
+      mariadb:
+        image: mariadb:latest
+        ports:
+          - 3306:3306
+        env:
+          MYSQL_ROOT_PASSWORD: rootpassword
+          MYSQL_DATABASE: moodle
+          MYSQL_USER: moodleuser
+          MYSQL_PASSWORD: moodlepass
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          extensions: curl, zip, gd, dom, xml, mysqli, soap, xmlrpc, intl, xdebug, pgsql
 
       - name: Set up environment variables
         run: |
@@ -34,12 +58,22 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y apache2 php8.1 php8.1-curl php8.1-zip composer php8.1-gd php8.1-dom php8.1-xml php8.1-mysqli php8.1-soap php8.1-xmlrpc php8.1-intl php8.1-xdebug php8.1-pgsql mariadb-client-10.6 default-jre zstd git jq
+          sudo apt-get install -y git locales docker-ce-cli wget unzip default-jre zstd
+          sudo locale-gen de_DE.UTF-8 en_AU.UTF-8
 
       - name: Set up locales
         run: |
           sudo sed -i 's/^# de_DE.UTF-8 UTF-8$/de_DE.UTF-8 UTF-8/' /etc/locale.gen
           sudo sed -i 's/^# en_AU.UTF-8 UTF-8$/en_AU.UTF-8 UTF-8/' /etc/locale.gen
           sudo locale-gen
+
+      - name: Install Chrome and ChromeDriver
+        run: |
+          wget -q "${CHROME_URL}" -O "/tmp/${CHROME_DEB}"
+          sudo apt install -y "/tmp/${CHROME_DEB}"
+          wget -q "${CHROMEDRIVER_URL}" -O "/tmp/${CHROMEDRIVER_ZIP}"
+          unzip -o "/tmp/${CHROMEDRIVER_ZIP}" -d /tmp && sudo mv /tmp/chromedriver /usr/bin/chromedriver && sudo chmod +x /usr/bin/chromedriver
+          chromedriver --version
 
       - name: Prepare Moodle directory
         run: |
