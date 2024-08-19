@@ -69,6 +69,7 @@ jobs:
 
       - name: Install Chrome and ChromeDriver
         run: |
+          sudo apt-get autoremove -y google-chrome-stable
           wget -q "${CHROME_URL}" -O "/tmp/${CHROME_DEB}"
           sudo apt install -y "/tmp/${CHROME_DEB}" --allow-downgrades
           wget -q "${CHROMEDRIVER_URL}" -O "/tmp/${CHROMEDRIVER_ZIP}"
