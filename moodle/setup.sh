@@ -49,6 +49,7 @@ sudo sed -i "s#export APACHE_RUN_GROUP=www-data#export APACHE_RUN_GROUP=$WSL_USE
 # configure php
 ## conf.d/moodle.ini
 echo "max_input_vars = 5000" | sudo tee /etc/php/8.1/cli/conf.d/moodle.ini
+tree /etc/php/8.1/
 sudo ln -s  /etc/php/8.1/cli/conf.d/moodle.ini /etc/php/8.1/apache2/conf.d/moodle.ini
 ## apache/php.ini
 sudo sed -i 's/^\(\s*;\?\s*\)upload_max_filesize\s*=\s*[0-9]*M/\1upload_max_filesize = 2048M/' /etc/php/8.1/apache2/php.ini
