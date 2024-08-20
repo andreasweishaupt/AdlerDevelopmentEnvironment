@@ -76,7 +76,8 @@ jobs:
           sudo apt-get update
           wget -q "${CHROME_URL}" -O "/tmp/${CHROME_DEB}"
           sudo dpkg -i "/tmp/${CHROME_DEB}"
-          sudo apt-get install -f
+          sudo apt-mark hold google-chrome-stable
+          sudo apt-get install -f -y
           wget -q "${CHROMEDRIVER_URL}" -O "/tmp/${CHROMEDRIVER_ZIP}"
           unzip -o "/tmp/${CHROMEDRIVER_ZIP}" -d /tmp
           sudo mv /tmp/chromedriver /usr/bin/chromedriver
