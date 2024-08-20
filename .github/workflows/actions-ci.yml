@@ -137,7 +137,7 @@ jobs:
         export LIBGL_ALWAYS_SOFTWARE=1
 
         sudo apt-get install -y iproute2
-        ip addr add 127.0.0.1 dev lo
+        sudo ip addr add 127.0.0.1 dev lo
 
         sudo apt-get install -y libxtst6 xdg-utils libatspi2.0-0 libsecret-1-0 
         
