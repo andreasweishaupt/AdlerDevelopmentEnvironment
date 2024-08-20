@@ -108,51 +108,46 @@ jobs:
           cat $MOODLE_PARENT_DIRECTORY/moodle/admin/cli/install.php
           chmod +x $GITHUB_WORKSPACE/moodle/setup.sh
           $GITHUB_WORKSPACE/moodle/setup.sh --dbhost localhost
+          
+  autorentool:
+    runs-on: ubuntu-latest
 
-  download-and-build-authoring-tool:
-    runs-on: windows-latest
     steps:
-      - name: Download latest Autorentool release
-        shell: powershell
-        run: |
-          $latestRelease = Invoke-RestMethod -Uri "https://api.github.com/repos/ProjektAdLer/Autorentool/releases/latest"
-          $downloadUrl = $latestRelease.assets | Where-Object { $_.name -like "*.zip" } | Select-Object -ExpandProperty browser_download_url -First 1
-          Invoke-WebRequest -Uri $downloadUrl -OutFile autorentool.zip
-          Expand-Archive -Path autorentool.zip -DestinationPath autorentool
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
-      - name: Install dependencies
-        run: |
-          choco install -y autohotkey
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y wget unzip xvfb libgtk-3-0 libnotify4 libgconf-2-4 libnss3 libxss1 libasound2 xdotool
 
-      - name: Run Autorentool and simulate interactions
-        shell: powershell
-        run: |
-          Start-Process .\autorentool\Autorentool.exe
-          Start-Sleep -Seconds 10  # Warten Sie, bis das Tool geladen ist
+    - name: Download latest Autorentool release
+      run: |
+        LATEST_RELEASE=$(curl -s https://api.github.com/repos/ProjektAdLer/Autorentool/releases/latest)
+        DOWNLOAD_URL=$(echo $LATEST_RELEASE | jq -r '.assets[] | select(.name | endswith(".zip")) | .browser_download_url')
+        wget -O autorentool.zip $DOWNLOAD_URL
+        unzip autorentool.zip -d autorentool
 
-          # Hier fügen Sie AutoHotkey-Skripte ein, um Interaktionen zu simulieren
-          $ahkScript = @"
-          WinWait, Autorentool
-          WinActivate, Autorentool
-          Sleep, 2000
-          Send, {Tab}
-          Sleep, 500
-          Send, {Enter}
-          Sleep, 1000
-          Send, Test Input
-          Sleep, 500
-          Send, {Enter}
-          Sleep, 5000
-          WinClose, Autorentool
-          "@
+    - name: Run Autorentool
+      run: |
+        Xvfb :99 &
+        export DISPLAY=:99
+        ./autorentool/Autorentool &
+        sleep 10  # Wait for the tool to load
 
-          $ahkScript | Out-File -FilePath interact.ahk -Encoding ascii
-          Start-Process AutoHotkey -ArgumentList "interact.ahk" -Wait
+    - name: Simulate interactions
+      run: |
+        xdotool search --onlyvisible --name "Autorentool" windowactivate --sync key Tab key Return
+        sleep 2
+        xdotool type "Test Input"
+        sleep 2
+        xdotool key Return
+        sleep 2
+        xdotool search --onlyvisible --name "Autorentool" windowclose
 
-      - name: Check for errors
-        run: |
-          # Hier können Sie Logs überprüfen oder andere Überprüfungen durchführen
-          if (Test-Path .\autorentool\error.log) {
-            Get-Content .\autorentool\error.log
-            exit 1
-          }
+    - name: Check for errors
+      run: |
+        if [ -f ./autorentool/error.log ]; then
+          cat ./autorentool/error.log
+          exit 1
+        fi
