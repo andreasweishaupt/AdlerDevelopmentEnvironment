@@ -119,35 +119,35 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y wget unzip xvfb libgtk-3-0 libnotify4 libgconf-2-4 libnss3 libxss1 libasound2 xdotool
+        sudo apt-get install -y wget xvfb libgtk-3-0 libnotify4 libgconf-2-4 libnss3 libxss1 libasound2 xdotool
 
     - name: Download latest Autorentool release
       run: |
         LATEST_RELEASE=$(curl -s https://api.github.com/repos/ProjektAdLer/Autorentool/releases/latest)
-        DOWNLOAD_URL=$(echo $LATEST_RELEASE | jq -r '.assets[] | select(.name | endswith(".zip")) | .browser_download_url')
-        wget -O autorentool.zip $DOWNLOAD_URL
-        unzip autorentool.zip -d autorentool
+        DOWNLOAD_URL=$(echo $LATEST_RELEASE | jq -r '.assets[] | select(.name | endswith(".AppImage")) | .browser_download_url')
+        wget -O AuthoringTool.AppImage $DOWNLOAD_URL
+        chmod +x AuthoringTool.AppImage
 
     - name: Run Autorentool
       run: |
         Xvfb :99 &
         export DISPLAY=:99
-        ./autorentool/Autorentool &
+        ./AuthoringTool.AppImage &
         sleep 10  # Wait for the tool to load
 
     - name: Simulate interactions
       run: |
-        xdotool search --onlyvisible --name "Autorentool" windowactivate --sync key Tab key Return
+        xdotool search --onlyvisible --name "AuthoringTool" windowactivate --sync key Tab key Return
         sleep 2
         xdotool type "Test Input"
         sleep 2
         xdotool key Return
         sleep 2
-        xdotool search --onlyvisible --name "Autorentool" windowclose
+        xdotool search --onlyvisible --name "AuthoringTool" windowclose
 
     - name: Check for errors
       run: |
-        if [ -f ./autorentool/error.log ]; then
-          cat ./autorentool/error.log
+        if [ -f ./error.log ]; then
+          cat ./error.log
           exit 1
         fi
