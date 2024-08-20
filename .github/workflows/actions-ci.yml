@@ -124,16 +124,17 @@ jobs:
     - name: Download latest Autorentool release
       run: |
         LATEST_RELEASE=$(curl -s https://api.github.com/repos/ProjektAdLer/Autorentool/releases/latest)
-        DOWNLOAD_URL=$(echo $LATEST_RELEASE | jq -r '.assets[] | select(.name | endswith("arm64.AppImage")) | .browser_download_url')
+        DOWNLOAD_URL=$(echo $LATEST_RELEASE | jq -r '.assets[] | select(.name | endswith("linux-unpacked.tar.gz")) | .browser_download_url')
         echo "$DOWNLOAD_URL"
-        wget -q -O AuthoringTool.AppImage $DOWNLOAD_URL
-        chmod +x AuthoringTool.AppImage
+        wget -q -O AuthoringTool.tar.gz $DOWNLOAD_URL
+        tar -xvzf AuthoringTool.tag.gz
+        #chmod +x AuthoringTool.AppImage
 
     - name: Run Autorentool
       run: |
         Xvfb :99 &
         export DISPLAY=:99
-        ./AuthoringTool.AppImage &
+        ./linux-unpacked/authoring-tool &
         sleep 10  # Wait for the tool to load
 
     - name: Simulate interactions
