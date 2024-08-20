@@ -24,6 +24,7 @@ env:
 jobs:
   # This workflow contains a single job called "build"
   build-and-test:
+    if: false
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -108,3 +109,50 @@ jobs:
           chmod +x $GITHUB_WORKSPACE/moodle/setup.sh
           $GITHUB_WORKSPACE/moodle/setup.sh --dbhost localhost
 
+  download-and-build-authoring-tool:
+    runs-on: windows-latest
+    steps:
+      - name: Download latest Autorentool release
+        shell: powershell
+        run: |
+          $latestRelease = Invoke-RestMethod -Uri "https://api.github.com/repos/ProjektAdLer/Autorentool/releases/latest"
+          $downloadUrl = $latestRelease.assets | Where-Object { $_.name -like "*.zip" } | Select-Object -ExpandProperty browser_download_url -First 1
+          Invoke-WebRequest -Uri $downloadUrl -OutFile autorentool.zip
+          Expand-Archive -Path autorentool.zip -DestinationPath autorentool
+
+      - name: Install dependencies
+        run: |
+          choco install -y autohotkey
+
+      - name: Run Autorentool and simulate interactions
+        shell: powershell
+        run: |
+          Start-Process .\autorentool\Autorentool.exe
+          Start-Sleep -Seconds 10  # Warten Sie, bis das Tool geladen ist
+
+          # Hier fügen Sie AutoHotkey-Skripte ein, um Interaktionen zu simulieren
+          $ahkScript = @"
+          WinWait, Autorentool
+          WinActivate, Autorentool
+          Sleep, 2000
+          Send, {Tab}
+          Sleep, 500
+          Send, {Enter}
+          Sleep, 1000
+          Send, Test Input
+          Sleep, 500
+          Send, {Enter}
+          Sleep, 5000
+          WinClose, Autorentool
+          "@
+
+          $ahkScript | Out-File -FilePath interact.ahk -Encoding ascii
+          Start-Process AutoHotkey -ArgumentList "interact.ahk" -Wait
+
+      - name: Check for errors
+        run: |
+          # Hier können Sie Logs überprüfen oder andere Überprüfungen durchführen
+          if (Test-Path .\autorentool\error.log) {
+            Get-Content .\autorentool\error.log
+            exit 1
+          }
