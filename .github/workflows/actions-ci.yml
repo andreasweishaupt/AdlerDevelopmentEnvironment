@@ -127,7 +127,7 @@ jobs:
         DOWNLOAD_URL=$(echo $LATEST_RELEASE | jq -r '.assets[] | select(.name | endswith("linux-unpacked.tar.gz")) | .browser_download_url')
         echo "$DOWNLOAD_URL"
         wget -q -O AuthoringTool.tar.gz $DOWNLOAD_URL
-        tar -xvzf AuthoringTool.tag.gz
+        tar -xvzf AuthoringTool.tar.gz
         #chmod +x AuthoringTool.AppImage
 
     - name: Run Autorentool
