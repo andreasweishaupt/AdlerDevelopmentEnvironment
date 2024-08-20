@@ -31,7 +31,7 @@ jobs:
       mariadb:
         image: mariadb:latest
         ports:
-          - 3312:3306
+          - 3306:3306
         env:
           MYSQL_ROOT_PASSWORD: rootpassword
           MYSQL_DATABASE: moodle
@@ -104,6 +104,7 @@ jobs:
       - name: Set up Moodle
         run: |
           cd $HOME/moodle
+          cat $MOODLE_PARENT_DIRECTORY/moodle/admin/cli/install.php
           chmod +x $GITHUB_WORKSPACE/moodle/setup.sh
           $GITHUB_WORKSPACE/moodle/setup.sh --dbhost localhost
 
