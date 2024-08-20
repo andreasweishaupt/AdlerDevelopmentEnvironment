@@ -57,7 +57,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y apache2 php8.1 php8.1-curl php8.1-zip composer php8.1-gd php8.1-dom php8.1-xml php8.1-mysqli php8.1-soap php8.1-xmlrpc php8.1-intl php8.1-xdebug php8.1-pgsql libapache2-mod-php mariadb-client-10.6 default-jre zstd git jq
+          sudo apt-get install -y apache2 php8.1 php8.1-curl php8.1-zip composer php8.1-gd php8.1-dom php8.1-xml php8.1-mysqli php8.1-soap php8.1-xmlrpc php8.1-intl php8.1-xdebug php8.1-pgsql libapache2-mod-php8.1 mariadb-client-10.6 default-jre zstd git jq
           sudo apt-get install -y git locales docker-ce-cli wget unzip default-jre zstd
           sudo locale-gen de_DE.UTF-8 en_AU.UTF-8
 
