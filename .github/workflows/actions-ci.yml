@@ -57,7 +57,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y apache2 php8.1 php8.1-curl php8.1-zip composer php8.1-gd php8.1-dom php8.1-xml php8.1-mysqli php8.1-soap php8.1-xmlrpc php8.1-intl php8.1-xdebug php8.1-pgsql mariadb-client-10.6 default-jre zstd git jq
+          sudo apt-get install -y apache2 php8.1 php8.1-curl php8.1-zip composer php8.1-gd php8.1-dom php8.1-xml php8.1-mysqli php8.1-soap php8.1-xmlrpc php8.1-intl php8.1-xdebug php8.1-pgsql libapache2-mod-php mariadb-client-10.6 default-jre zstd git jq
           sudo apt-get install -y git locales docker-ce-cli wget unzip default-jre zstd
           sudo locale-gen de_DE.UTF-8 en_AU.UTF-8
 
@@ -80,7 +80,7 @@ jobs:
           echo "checkpoint1"
           sudo apt-get install -f -y
           echo "checkpoint2"
-          wget --user-agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.5735.90 Safari/537.36" "${CHROMEDRIVER_URL}" -O "/tmp/${CHROMEDRIVER_ZIP}"
+          wget -q --user-agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.5735.90 Safari/537.36" "${CHROMEDRIVER_URL}" -O "/tmp/${CHROMEDRIVER_ZIP}"
           echo "checkpoint3"
           unzip -o "/tmp/${CHROMEDRIVER_ZIP}" -d /tmp
           echo "checkpoint4"
