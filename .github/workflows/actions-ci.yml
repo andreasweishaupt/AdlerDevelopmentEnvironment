@@ -28,21 +28,15 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      #mariadb:
-        #image: mariadb:latest
-        #ports:
-        #  - 3306:3306
-        #env:
-        #  MYSQL_ROOT_PASSWORD: rootpassword
-        #  MYSQL_DATABASE: moodle
-        #  MYSQL_USER: moodleuser
-        #  MYSQL_PASSWORD: moodlepass
-      docker:
-        image: docker:dind
+      mariadb:
+        image: mariadb:latest
         ports:
-          - "2376:2376"
+          - 3312:3306
         env:
-          DOCKER_TLS_CERTDIR: /certs  
+          MYSQL_ROOT_PASSWORD: rootpassword
+          MYSQL_DATABASE: moodle
+          MYSQL_USER: moodleuser
+          MYSQL_PASSWORD: moodlepass     
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
