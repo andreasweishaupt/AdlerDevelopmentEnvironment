@@ -80,7 +80,7 @@ jobs:
           echo "checkpoint1"
           sudo apt-get install -f -y
           echo "checkpoint2"
-          wget -q "${CHROMEDRIVER_URL}" -O "/tmp/${CHROMEDRIVER_ZIP}"
+          wget "${CHROMEDRIVER_URL}" -O "/tmp/${CHROMEDRIVER_ZIP}"
           echo "checkpoint3"
           unzip -o "/tmp/${CHROMEDRIVER_ZIP}" -d /tmp
           echo "checkpoint4"
