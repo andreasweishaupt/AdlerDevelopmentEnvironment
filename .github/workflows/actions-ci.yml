@@ -124,8 +124,9 @@ jobs:
     - name: Download latest Autorentool release
       run: |
         LATEST_RELEASE=$(curl -s https://api.github.com/repos/ProjektAdLer/Autorentool/releases/latest)
-        DOWNLOAD_URL=$(echo $LATEST_RELEASE | jq -r '.assets[] | select(.name | endswith("AppImage")) | .browser_download_url')
-        wget -O AuthoringTool.AppImage $DOWNLOAD_URL
+        DOWNLOAD_URL=$(echo $LATEST_RELEASE | jq -r '.assets[] | select(.name | endswith("arm64.AppImage")) | .browser_download_url')
+        echo "$DOWNLOAD_URL"
+        wget -q -O AuthoringTool.AppImage $DOWNLOAD_URL
         chmod +x AuthoringTool.AppImage
 
     - name: Run Autorentool
