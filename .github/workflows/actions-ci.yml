@@ -154,11 +154,15 @@ jobs:
       run: |
         Xvfb :99 &
         export DISPLAY=:99
-        xdpyinfo -display :99
         echo "Waiting for Xvfb to be ready..."
         while ! xdpyinfo -display :99 >/dev/null 2>&1; do
-          sleep 0.1
+        for attempt in $(seq 1 30); do
+          if xdpyinfo -display :99 >/dev/null 2>&1; then
+            echo "Xvfb is ready after $attempt attempt(s)"
+          fi
+          sleep 0.5
         done
+        xdpyinfo -display :99
         echo "Xvfb is ready"
         ffmpeg -f x11grab -video_size 1024x768 -i :99 -codec:v libx264 -r 30 screen_recording.mp4 &
         echo $! > ffmpeg_pid.txt
