@@ -153,6 +153,7 @@ jobs:
       run: |
         Xvfb :99 &
         export DISPLAY=:99
+        xdpyinfo -display :99
         echo "Waiting for Xvfb to be ready..."
         while ! xdpyinfo -display :99 >/dev/null 2>&1; do
           sleep 0.1
