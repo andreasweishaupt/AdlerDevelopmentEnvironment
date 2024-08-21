@@ -150,7 +150,8 @@ jobs:
 
         export LIBGL_ALWAYS_SOFTWARE=1
 
-    - name: Start screen and recording
+
+    - name: Start and check Xvfb
       run: |
         Xvfb :99 &
         export DISPLAY=:99
@@ -158,11 +159,15 @@ jobs:
         for attempt in $(seq 1 30); do
           if xdpyinfo -display :99 >/dev/null 2>&1; then
             echo "Xvfb is ready after $attempt attempt(s)"
+            break
           fi
           sleep 0.5
         done
         xdpyinfo -display :99
         echo "Xvfb is ready"
+        
+    - name: Start screen and recording
+      run: |
         ffmpeg -f x11grab -video_size 1024x768 -i :99 -codec:v libx264 -r 30 screen_recording.mp4 &
         echo $! > ffmpeg_pid.txt
     
