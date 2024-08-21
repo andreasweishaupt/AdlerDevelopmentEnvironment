@@ -179,6 +179,10 @@ jobs:
 
     - name: Simulate interactions
       run: |
+        echo "DISPLAY is set to $DISPLAY"
+        ps aux | grep Xvfb
+        ls -l /tmp/.X11-unix/
+        DISPLAY=:99 xdotool search authoring || echo "No window found"
         xdotool search authoring 
         xdotool search --onlyvisible --name "AuthoringTool" windowactivate --sync key Tab key Return
         sleep 2
