@@ -182,6 +182,7 @@ jobs:
       run: |
         echo "DISPLAY is set to $DISPLAY"
         ps aux | grep Xvfb
+        ps aux | grep authoring
         ls -l /tmp/.X11-unix/
         DISPLAY=:99 xdotool search authoring || echo "No window found"
         xdotool search authoring 
