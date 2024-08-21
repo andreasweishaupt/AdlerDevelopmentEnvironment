@@ -179,6 +179,7 @@ jobs:
 
     - name: Simulate interactions
       run: |
+        xdotool search authoring 
         xdotool search --onlyvisible --name "AuthoringTool" windowactivate --sync key Tab key Return
         sleep 2
         xdotool type "Test Input"
