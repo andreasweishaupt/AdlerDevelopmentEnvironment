@@ -144,6 +144,8 @@ jobs:
         
         export ELECTRON_DISABLE_SANDBOX=1
 
+        export LIBGL_ALWAYS_SOFTWARE=1
+
     - name: Run Autorentool
       run: |
         Xvfb :99 &
