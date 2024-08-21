@@ -196,7 +196,7 @@ jobs:
 
     - name: Upload screen recording
       if: always()
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: screen-recording
         path: screen_recording.mp4
