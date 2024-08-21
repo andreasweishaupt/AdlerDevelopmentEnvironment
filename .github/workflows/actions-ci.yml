@@ -148,6 +148,7 @@ jobs:
 
     - name: Start screen recording
       run: |
+        sudo apt-get install -y ffmpeg
         Xvfb :99 &
         export DISPLAY=:99
         ffmpeg -f x11grab -video_size 1024x768 -i :99 -codec:v libx264 -r 30 screen_recording.mp4 &
