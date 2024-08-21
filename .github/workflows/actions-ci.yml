@@ -154,7 +154,6 @@ jobs:
     - name: Start and check Xvfb
       run: |
         Xvfb :99 -screen 0 1024x768x24 &
-        export DISPLAY=:99
         echo "Waiting for Xvfb to be ready..."
         for attempt in $(seq 1 30); do
           if xdpyinfo -display :99 >/dev/null 2>&1; then
@@ -174,6 +173,7 @@ jobs:
     
     - name: Run Autorentool
       run: |
+        export DISPLAY=:99
         ./linux-unpacked/authoring-tool &
         sleep 10  # Wait for the tool to load
 
