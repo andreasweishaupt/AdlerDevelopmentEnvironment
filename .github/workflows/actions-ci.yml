@@ -146,6 +146,13 @@ jobs:
 
         export LIBGL_ALWAYS_SOFTWARE=1
 
+    - name: Start screen recording
+      run: |
+        Xvfb :99 &
+        export DISPLAY=:99
+        ffmpeg -f x11grab -video_size 1024x768 -i :99 -codec:v libx264 -r 30 screen_recording.mp4 &
+        echo $! > ffmpeg_pid.txt
+    
     - name: Run Autorentool
       run: |
         Xvfb :99 &
@@ -162,6 +169,19 @@ jobs:
         xdotool key Return
         sleep 2
         xdotool search --onlyvisible --name "AuthoringTool" windowclose
+
+    - name: Stop screen recording
+      if: always()
+      run: |
+        kill $(cat ffmpeg_pid.txt)
+        sleep 5  # Give ffmpeg time to finish writing
+
+    - name: Upload screen recording
+      if: always()
+      uses: actions/upload-artifact@v2
+      with:
+        name: screen-recording
+        path: screen_recording.mp4
 
     - name: Check for errors
       run: |
