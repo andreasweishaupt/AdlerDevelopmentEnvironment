@@ -151,13 +151,13 @@ jobs:
 
     - name: Start screen and recording
       run: |
-        Xvfb :99 -screen 0 1024x768x16 &
+        Xvfb :99 &
+        export DISPLAY=:99
         echo "Waiting for Xvfb to be ready..."
         while ! xdpyinfo -display :99 >/dev/null 2>&1; do
           sleep 0.1
         done
         echo "Xvfb is ready"
-        export DISPLAY=:99
         ffmpeg -f x11grab -video_size 1024x768 -i :99 -codec:v libx264 -r 30 screen_recording.mp4 &
         echo $! > ffmpeg_pid.txt
     
