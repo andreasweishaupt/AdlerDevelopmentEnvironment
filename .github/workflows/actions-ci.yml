@@ -155,7 +155,6 @@ jobs:
         Xvfb :99 &
         export DISPLAY=:99
         echo "Waiting for Xvfb to be ready..."
-        while ! xdpyinfo -display :99 >/dev/null 2>&1; do
         for attempt in $(seq 1 30); do
           if xdpyinfo -display :99 >/dev/null 2>&1; then
             echo "Xvfb is ready after $attempt attempt(s)"
