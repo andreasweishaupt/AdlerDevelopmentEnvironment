@@ -164,6 +164,8 @@ jobs:
         done
         xdpyinfo -display :99
         echo "Xvfb is ready"
+        echo "DISPLAY=:99" >> $GITHUB_ENV
+        
         
     - name: Start screen and recording
       run: |
@@ -173,7 +175,6 @@ jobs:
     
     - name: Run Autorentool
       run: |
-        export DISPLAY=:99
         ./linux-unpacked/authoring-tool &
         sleep 10  # Wait for the tool to load
 
