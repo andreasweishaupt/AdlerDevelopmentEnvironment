@@ -153,7 +153,7 @@ jobs:
 
     - name: Start and check Xvfb
       run: |
-        Xvfb :99 &
+        Xvfb :99 -screen 0 1024x768x24 &
         export DISPLAY=:99
         echo "Waiting for Xvfb to be ready..."
         for attempt in $(seq 1 30); do
@@ -168,8 +168,9 @@ jobs:
         
     - name: Start screen and recording
       run: |
-        ffmpeg -f x11grab -video_size 1024x768 -i :99 -codec:v libx264 -r 30 screen_recording.mp4 &
+        ffmpeg -f x11grab -video_size 1024x768 -i :99 -codec:v libx264 -r 30 -v verbose screen_recording.mp4 &
         echo $! > ffmpeg_pid.txt
+        sleep 2
     
     - name: Run Autorentool
       run: |
@@ -189,8 +190,9 @@ jobs:
     - name: Stop screen recording
       if: always()
       run: |
+        sleep 2
         kill $(cat ffmpeg_pid.txt)
-        sleep 5  # Give ffmpeg time to finish writing
+        sleep 10  # Give ffmpeg time to finish writing
 
     - name: Upload screen recording
       if: always()
