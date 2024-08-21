@@ -148,7 +148,7 @@ jobs:
 
     - name: Run Autorentool
       run: |
-        Xvfb :99 &
+        Xvfb :99 -screen 0 1024x768x16 &
         export DISPLAY=:99
         ./linux-unpacked/authoring-tool &
         sleep 10  # Wait for the tool to load
