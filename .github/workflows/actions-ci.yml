@@ -12,13 +12,7 @@ on:
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-  
-env:
-  CHROME_VERSION: "114.0.5735.90"
-  CHROME_DEB: "google-chrome-stable_114.0.5735.90-1_amd64.deb"
-  CHROME_URL: "https://mirror.cs.uchicago.edu/google-chrome/pool/main/g/google-chrome-stable/google-chrome-stable_114.0.5735.90-1_amd64.deb"
-  CHROMEDRIVER_ZIP: "chromedriver_linux64.zip"
-  CHROMEDRIVER_URL: "https://old.chromedriver.getwebdriver.com/114.0.5735.90/chromedriver_linux64.zip"
+
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -88,6 +82,12 @@ jobs:
           sudo mv /tmp/chromedriver /usr/bin/chromedriver
           sudo chmod +x /usr/bin/chromedriver
           chromedriver --version
+        env:
+          CHROME_VERSION: "114.0.5735.90"
+          CHROME_DEB: "google-chrome-stable_114.0.5735.90-1_amd64.deb"
+          CHROME_URL: "https://mirror.cs.uchicago.edu/google-chrome/pool/main/g/google-chrome-stable/google-chrome-stable_114.0.5735.90-1_amd64.deb"
+          CHROMEDRIVER_ZIP: "chromedriver_linux64.zip"
+          CHROMEDRIVER_URL: "https://old.chromedriver.getwebdriver.com/114.0.5735.90/chromedriver_linux64.zip"
 
       - name: Prepare Moodle directory
         run: |
