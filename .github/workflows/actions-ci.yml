@@ -120,7 +120,7 @@ jobs:
       run: |
         lscpu
         sudo apt-get update
-        sudo apt-get install -y wget xvfb libgtk-3-0 libnotify4 libgconf-2-4 libnss3 libxss1 libasound2 xdotool libgbm1
+        sudo apt-get install -y wget xvfb libgtk-3-0 libnotify4 libgconf-2-4 libnss3 libxss1 libasound2 xdotool libgbm1 ffmpeg
 
     - name: Download latest Autorentool release
       run: |
@@ -146,18 +146,15 @@ jobs:
 
         export LIBGL_ALWAYS_SOFTWARE=1
 
-    - name: Start screen recording
+    - name: Start screen and recording
       run: |
-        sudo apt-get install -y ffmpeg
-        Xvfb :99 &
+        Xvfb :99 -screen 0 1024x768x16 &
         export DISPLAY=:99
         ffmpeg -f x11grab -video_size 1024x768 -i :99 -codec:v libx264 -r 30 screen_recording.mp4 &
         echo $! > ffmpeg_pid.txt
     
     - name: Run Autorentool
       run: |
-        Xvfb :99 &
-        export DISPLAY=:99
         ./linux-unpacked/authoring-tool &
         sleep 10  # Wait for the tool to load
 
