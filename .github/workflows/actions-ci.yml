@@ -196,9 +196,11 @@ jobs:
           echo "AuthoringTool window not found"
           exit 1
         fi
-        DISPLAY=:99 xdotool search authoring || echo "No window found"
-        xdotool search authoring 
-        xdotool search --onlyvisible --name "Autorentool v2.1.7" windowactivate --sync key Tab key Return
+        sleep 1
+        DISPLAY=:99 xdotool getmouselocation
+        xdotool getmouselocation
+        DISPLAY=:99 xdotool mousemove_relative 10 15 
+        xdotool mousemove_relative -15 10 
         sleep 2
         xdotool type "Test Input"
         sleep 2
