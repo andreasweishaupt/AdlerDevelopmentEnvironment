@@ -202,7 +202,9 @@ jobs:
         xdotool getmouselocation
         DISPLAY=:99 xdotool mousemove_relative 10 15 
         sleep 1
-        DISPLAY=:99 xdotool mousemove 900 300 click 1 sleep 2 type "testWorld" sleep 1 key "Return"
+        DISPLAY=:99 xdotool mousemove 900 300 click 1 sleep 2 
+        DISPLAY=:99 xdotool type "testWorld" sleep 1 
+        DISPLAY=:99 xdotool key "Return"
         sleep 2
 
     - name: Stop screen recording
