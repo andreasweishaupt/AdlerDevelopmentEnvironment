@@ -187,7 +187,6 @@ jobs:
 
         DISPLAY=:99 xwininfo -root -tree
         echo "---"
-        DISPLAY=:99 xdotool search "." windowlist --name
         
         window_id=$(DISPLAY=:99 xdotool search --name "Autorentool v2.1.7" | head -n 1)
         if [ -n "$window_id" ]; then
