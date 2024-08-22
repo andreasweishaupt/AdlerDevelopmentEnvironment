@@ -189,7 +189,7 @@ jobs:
         echo "---"
         DISPLAY=:99 xdotool search "." windowlist --name
         
-        window_id=$(DISPLAY=:99 xdotool search --name "AuthoringTool" | head -n 1)
+        window_id=$(DISPLAY=:99 xdotool search --name "Autorentool v2.1.7" | head -n 1)
         if [ -n "$window_id" ]; then
           echo "Window found with ID: $window_id"
           DISPLAY=:99 xdotool windowactivate $window_id
@@ -199,7 +199,7 @@ jobs:
         fi
         DISPLAY=:99 xdotool search authoring || echo "No window found"
         xdotool search authoring 
-        xdotool search --onlyvisible --name "AuthoringTool" windowactivate --sync key Tab key Return
+        xdotool search --onlyvisible --name "Autorentool v2.1.7" windowactivate --sync key Tab key Return
         sleep 2
         xdotool type "Test Input"
         sleep 2
