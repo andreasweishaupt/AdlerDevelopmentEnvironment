@@ -201,13 +201,9 @@ jobs:
         DISPLAY=:99 xdotool getmouselocation
         xdotool getmouselocation
         DISPLAY=:99 xdotool mousemove_relative 10 15 
-        xdotool mousemove_relative -15 10 
+        sleep 1
+        DISPLAY=:99 xdotool mousemove 900 250 click 1 sleep 2 type "testWorld" sleep 1 key "Return"
         sleep 2
-        xdotool type "Test Input"
-        sleep 2
-        xdotool key Return
-        sleep 2
-        xdotool search --onlyvisible --name "AuthoringTool" windowclose
 
     - name: Stop screen recording
       if: always()
