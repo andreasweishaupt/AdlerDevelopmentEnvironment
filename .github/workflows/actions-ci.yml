@@ -175,7 +175,8 @@ jobs:
     
     - name: Run Autorentool
       run: |
-        ./linux-unpacked/authoring-tool &
+        pkill authoring-tool || true
+        xvfb-run -a ./linux-unpacked/authoring-tool &
         sleep 15  # Wait for the tool to load
 
     - name: Simulate interactions
