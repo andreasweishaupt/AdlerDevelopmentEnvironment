@@ -184,6 +184,11 @@ jobs:
         ps aux | grep Xvfb
         ps aux | grep authoring
         ls -l /tmp/.X11-unix/
+
+        DISPLAY=:99 xwininfo -root -tree
+        echo "---"
+        DISPLAY=:99 xdotool search "." windowlist --name
+        
         window_id=$(DISPLAY=:99 xdotool search --name "AuthoringTool" | head -n 1)
         if [ -n "$window_id" ]; then
           echo "Window found with ID: $window_id"
@@ -216,7 +221,13 @@ jobs:
         name: screen-recording
         path: screen_recording.mp4
 
+    - name: Check Authoring Tool logs
+      if: always()
+      run: |
+        cat /home/runner/.config/authoring-tool/logs/main.log || echo "Log file not found"
+
     - name: Check for errors
+      if: always()
       run: |
         if [ -f ./error.log ]; then
           cat ./error.log
