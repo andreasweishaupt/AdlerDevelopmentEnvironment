@@ -177,6 +177,36 @@ jobs:
       run: |
         ./linux-unpacked/authoring-tool &
         sleep 10  # Wait for the tool to load
+        max_attempts=5
+        for attempt in $(seq 1 $max_attempts); do
+          echo "Attempt $attempt of $max_attempts to start Authoring Tool"
+          ./linux-unpacked/authoring-tool &
+          tool_pid=$!
+          sleep 10
+          if curl -s http://localhost:8001 > /dev/null; then
+            echo "Authoring Tool started successfully on attempt $attempt"
+            break
+          else
+            echo "Attempt $attempt failed"
+        
+            if [ $attempt -eq $max_attempts ]; then
+              echo "All $max_attempts attempts failed. Aborting pipeline."
+              exit 1
+            else
+              echo "Killing process and retrying..."
+              kill $tool_pid
+              sleep 5  # Wait for process to be fully terminated
+            fi
+          fi
+        done
+
+        # Check if the tool is actually running
+        if ! ps -p $tool_pid > /dev/null; then
+          echo "Authoring Tool process is not running. Aborting pipeline."
+          exit 1
+        fi
+        echo "Authoring Tool is running with PID $tool_pid"
+        
 
     - name: Simulate interactions
       run: |
