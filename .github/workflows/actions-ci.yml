@@ -176,7 +176,7 @@ jobs:
     - name: Run Autorentool
       run: |
         ./linux-unpacked/authoring-tool &
-        sleep 10  # Wait for the tool to load
+        sleep 15  # Wait for the tool to load
 
     - name: Simulate interactions
       run: |
@@ -184,6 +184,14 @@ jobs:
         ps aux | grep Xvfb
         ps aux | grep authoring
         ls -l /tmp/.X11-unix/
+        window_id=$(DISPLAY=:99 xdotool search --name "AuthoringTool" | head -n 1)
+        if [ -n "$window_id" ]; then
+          echo "Window found with ID: $window_id"
+          DISPLAY=:99 xdotool windowactivate $window_id
+        else
+          echo "AuthoringTool window not found"
+          exit 1
+        fi
         DISPLAY=:99 xdotool search authoring || echo "No window found"
         xdotool search authoring 
         xdotool search --onlyvisible --name "AuthoringTool" windowactivate --sync key Tab key Return
