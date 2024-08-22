@@ -177,7 +177,7 @@ jobs:
       run: |
         pkill authoring-tool || true
         xvfb-run -a ./linux-unpacked/authoring-tool &
-        sleep 15  # Wait for the tool to load
+        sleep 10  # Wait for the tool to load
 
     - name: Simulate interactions
       run: |
@@ -192,7 +192,8 @@ jobs:
         window_id=$(DISPLAY=:99 xdotool search --name "Autorentool v2.1.7" | head -n 1)
         if [ -n "$window_id" ]; then
           echo "Window found with ID: $window_id"
-          DISPLAY=:99 xdotool windowactivate $window_id
+          DISPLAY=:99 xdotool windowfocus $window_id
+          echo "Window focused"
         else
           echo "AuthoringTool window not found"
           exit 1
