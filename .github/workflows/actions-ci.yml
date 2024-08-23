@@ -26,9 +26,8 @@ jobs:
 
       - name: Load environment variables
         run: |
-          ls -l
           echo "Loading .env file"
-          export $(grep -v '^#' AdlerDevelopmentEnvironment/moodle/.env | xargs)
+          export $(grep -v '^#' moodle/.env | xargs)
           echo "MOODLE_USER=$_MOODLE_USER" >> $GITHUB_ENV
           echo "MOODLE_PW=$_MOODLE_PW" >> $GITHUB_ENV
           echo "USER_NAME=$_USER_NAME" >> $GITHUB_ENV
