@@ -16,28 +16,60 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
+
+  prepare-environment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+        uses: actions/checkout@v4
+
+      - name: Load environment variables
+        run: |
+          echo "Loading .env file"
+          export $(grep -v '^#' AdlerDevelopmentEnvironment/moodle/.env | xargs)
+          echo "MOODLE_USER=$_MOODLE_USER" >> $GITHUB_ENV
+          echo "MOODLE_PW=$_MOODLE_PW" >> $GITHUB_ENV
+          echo "USER_NAME=$_USER_NAME" >> $GITHUB_ENV
+          echo "USER_PASSWORD=$_USER_PASSWORD" >> $GITHUB_ENV
+          echo "USER_ROLE=$_USER_ROLE" >> $GITHUB_ENV
+          echo "DB_ROOT_PW=$_DB_ROOT_PW" >> $GITHUB_ENV
+          echo "DB_MOODLE_PW=$_DB_MOODLE_PW" >> $GITHUB_ENV
+          echo "DB_MOODLE_USER=$_DB_MOODLE_USER" >> $GITHUB_ENV
+          echo "DB_MOODLE_NAME=$_DB_MOODLE_NAME" >> $GITHUB_ENV
+
+
   # This workflow contains a single job called "build"
   build-and-test:
+    needs: prepare-environment
     # if: false
     # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest 
 
     services:
-      mariadb:
-        image: mariadb:latest
+      db_moodle:
+        image: docker.io/bitnami/mariadb:10.6
         ports:
-          - 3306:3306
+          - 3312:3306
         env:
-          MYSQL_ROOT_PASSWORD: rootpassword
-          MYSQL_DATABASE: moodle
-          MYSQL_USER: moodleuser
-          MYSQL_PASSWORD: moodlepass     
+          MARIADB_USER: ${{ env.DB_MOODLE_USER }}
+          MARIADB_PASSWORD: ${{ env.DB_MOODLE_PW }}
+          MARIADB_ROOT_PASSWORD: ${{ env.DB_ROOT_PW }}
+          MARIADB_DATABASE: ${{ env.DB_MOODLE_NAME }}
+          MARIADB_CHARACTER_SET: utf8mb4
+          MARIADB_COLLATE: utf8mb4_unicode_ci
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v4
-
+      phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        ports:
+          - 8078:80
+        env:
+          PMA_HOSTS: db_moodle
+          PMA_PORT: 3306
+          PMA_USER: root
+          PMA_PASSWORD: ${{ env.DB_ROOT_PW }}
+          
+    steps:  
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
