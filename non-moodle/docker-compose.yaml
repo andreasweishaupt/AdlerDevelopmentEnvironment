@@ -3,10 +3,10 @@ services:
     build:
       context: github.com/ProjektAdLer/moodle-docker.git
       args:
-        PLUGIN_VERSION: 3.1.0
+        PLUGIN_VERSION: 3.2.0
         MOODLE_VERSION: 4.3
     ports:
-      - "8085:8080"
+      - '8085:8080'
     environment:
       MOODLE_DATABASE_HOST: db_moodle
       MOODLE_DATABASE_PORT_NUMBER: 3306
@@ -58,9 +58,9 @@ services:
   backend:
     image: ghcr.io/projektadler/adlerbackend:latest
     ports:
-      - "8086:80"
+      - '8086:80'
     environment:
-      ASPNETCORE_ENVIRONMENT: "Production"
+      ASPNETCORE_ENVIRONMENT: 'Production'
       ASPNETCORE_DBUSER: ${_DB_BACKEND_USER}
       ASPNETCORE_DBPASSWORD: ${_DB_BACKEND_PW}
       ASPNETCORE_DBNAME: ${_DB_BACKEND_NAME}
@@ -80,9 +80,9 @@ services:
   frontend:
     image: ghcr.io/projektadler/2d_3d_adler:latest
     ports:
-      - "8087:80"
+      - '8087:80'
     environment:
-      API_URL: "http://${_URL_BACKEND}/api"
+      API_URL: 'http://${_URL_BACKEND}/api'
     restart: unless-stopped
 
   phpmyadmin:
@@ -97,7 +97,7 @@ services:
       # - db_backend
       - db_moodle
     ports:
-      - "8088:80"
+      - '8088:80'
 
 volumes:
   moodle_moodle:
