@@ -32,7 +32,10 @@ sudo locale-gen
 
 
 # create moodle folders
+echo $MOODLE_PARENT_DIRECTORY
+ls -l $MOODLE_PARENT_DIRECTORY
 mkdir $MOODLE_PARENT_DIRECTORY/moodledata $MOODLE_PARENT_DIRECTORY/moodledata_phpu $MOODLE_PARENT_DIRECTORY/moodledata_bht
+ls -l $MOODLE_PARENT_DIRECTORY
 # download moodle to $MOODLE_PARENT_DIRECTORY/moodle
 
 # setup database
