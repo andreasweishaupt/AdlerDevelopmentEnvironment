@@ -22,6 +22,14 @@ set -o allexport
 source .env
 set +o allexport
 
+# check docker is available
+if ! docker &> /dev/null
+then
+    echo "Docker is not working as expected."
+    docker
+    exit
+fi
+
 # install dependencies
 sudo apt install -y apache2 php8.1 php8.1-curl php8.1-zip composer php8.1-gd php8.1-dom php8.1-xml php8.1-mysqli php8.1-soap php8.1-xmlrpc php8.1-intl php8.1-xdebug php8.1-pgsql mariadb-client-10.6 default-jre zstd
 
