@@ -83,6 +83,12 @@ jobs:
           PMA_PASSWORD: ${{ env.DB_ROOT_PW }}
           
     steps:  
+      - name: Load environment variables
+        uses: xom9ikk/dotenv@v2.3.0
+        with:
+          path: moodle
+          load-mode: strict
+          
       - name: Check Environment
         env:
           _MOODLE_USER: ${{ env._MOODLE_USER }}
