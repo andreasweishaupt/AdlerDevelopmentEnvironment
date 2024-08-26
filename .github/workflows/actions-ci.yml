@@ -79,7 +79,7 @@ jobs:
     steps:  
       - name: Check Environment
         env:
-          MOODLE_USER: ${{ env._MOODLE_USER }}
+          _MOODLE_USER: ${{ env._MOODLE_USER }}
         run: |
           echo "MOODLE_USER"
           echo "$_MOODLE_USER"
