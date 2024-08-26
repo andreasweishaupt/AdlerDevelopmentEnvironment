@@ -151,7 +151,7 @@ jobs:
 
       - name: Run behat
         run: |
-          /home/jenkins/moodle/vendor/bin/behat --config /home/jenkins/moodledata_bht/behatrun/behat/behat.yml --profile headlesschrome
+          $GITHUB_WORKSPACE/moodle/vendor/bin/behat --config $GITHUB_WORKSPACE/moodledata_bht/behatrun/behat/behat.yml --profile headlesschrome
           
   autorentool:
     if: false
