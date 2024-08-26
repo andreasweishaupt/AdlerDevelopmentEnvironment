@@ -79,20 +79,20 @@ jobs:
           echo "DB_MOODLE_NAME"
           echo "$_DB_MOODLE_NAME"
 
+      - name: Set up environment variables
+        run: |
+          echo "MOODLE_PARENT_DIRECTORY=$HOME" >> $GITHUB_ENV
+          echo "WSL_USER=$USER" >> $GITHUB_ENV
+          
       - name: Print User directory
         run: |
-          tree -L 4 $(getent passwd 1001 | cut -d: -f6)
+          tree -L 4 $MOODLE_PARENT_DIRECTORY
           
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.1'
           extensions: curl, zip, gd, dom, xml, mysqli, soap, xmlrpc, intl, xdebug, pgsql
-
-      - name: Set up environment variables
-        run: |
-          echo "MOODLE_PARENT_DIRECTORY=$HOME" >> $GITHUB_ENV
-          echo "WSL_USER=$USER" >> $GITHUB_ENV
 
       - name: Install dependencies
         run: |
@@ -149,7 +149,7 @@ jobs:
 
       - name: Print User directory
         run: |
-          tree -L 4 $(getent passwd 1001 | cut -d: -f6)
+          tree -L 4 $MOODLE_PARENT_DIRECTORY
 
       - name: Set up Moodle
         run: |
@@ -166,11 +166,11 @@ jobs:
           
       - name: Print User directory
         run: |
-          tree -L 4 $(getent passwd 1001 | cut -d: -f6)
+          tree -L 4 $MOODLE_PARENT_DIRECTORY
 
       - name: Run behat
         run: |
-          $(getent passwd 1001 | cut -d: -f6)/moodle/vendor/bin/behat --config $(getent passwd 1001 | cut -d: -f6)/moodledata_bht/behatrun/behat/behat.yml --profile headlesschrome
+          $MOODLE_PARENT_DIRECTORY/moodle/vendor/bin/behat --config $MOODLE_PARENT_DIRECTORY/moodledata_bht/behatrun/behat/behat.yml --profile headlesschrome
           
   autorentool:
     if: false
