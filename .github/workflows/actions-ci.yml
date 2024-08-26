@@ -165,7 +165,7 @@ jobs:
           
       - name: Print User directory
         run: |
-          tree -L 4 $MOODLE_PARENT_DIRECTORY
+          tree -L 3 $MOODLE_PARENT_DIRECTORY
 
       - name: Run behat
         run: |
