@@ -153,7 +153,6 @@ jobs:
 
       - name: Set up Moodle
         run: |
-          tree -L 4 $(getent passwd 1001 | cut -d: -f6)
           cd $HOME/moodle
           chmod +x $GITHUB_WORKSPACE/moodle/setup.sh
           $GITHUB_WORKSPACE/moodle/setup.sh --dbhost localhost
