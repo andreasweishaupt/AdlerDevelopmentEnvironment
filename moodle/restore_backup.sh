@@ -4,26 +4,19 @@ MOODLE_PARENT_DIRECTORY=$(getent passwd 1000 | cut -d: -f6)
 # Default value for DB_HOST
 DB_HOST="127.0.0.1"
 
-# Parse command line arguments for DB_HOST
+# Parse command line arguments for DB_HOST and backup file path
 while [[ "$#" -gt 0 ]]; do
     case $1 in
-        --dbhost|-d) DB_HOST="$2"; shift ;;
-        *) ;;
+        --dbhost|-d) DB_HOST="$2"; shift 2 ;;
+        *) backup_archive="$1"; shift ;;
     esac
-    shift
 done
 
 cd "$(dirname "$0")"
 
-echo "-----------------------------------------"
-echo "!!!This script is not properly tested.!!!"
-echo "!!!Use at your own risk.!!!"
-echo "-----------------------------------------"
-
-if [ "$#" -ne 1 ]; then
-  echo "Usage: $0 <path_to_backup_archive>"
-  exit 1
-fi
+# echo settings
+echo "DB_HOST is set to $DB_HOST"
+echo "Backup archive is set to $backup_archive"
 
 # Load environment variables
 set -o allexport
@@ -31,7 +24,7 @@ source .env
 set +o allexport
 
 # check if backup archive exists
-if [ ! -f "$1" ]; then
+if [ ! -f "$backup_archive" ]; then
   echo "Backup archive not found."
   exit 1
 fi
@@ -39,9 +32,6 @@ fi
 echo "First, backup everything."
 # Execute the backup_data.sh script
 ./backup_data.sh --dbhost $DB_HOST
-
-# Set variables
-backup_archive="$1"
 
 # Decide which decompression command to use based on the file extension
 if [[ $backup_archive == *.tar.zst ]]; then
