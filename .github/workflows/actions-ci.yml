@@ -28,15 +28,22 @@ jobs:
         run: |
           echo "Loading .env file"
           export $(grep -v '^#' moodle/.env | xargs)
-          echo "MOODLE_USER=$_MOODLE_USER" >> $GITHUB_ENV
-          echo "MOODLE_PW=$_MOODLE_PW" >> $GITHUB_ENV
-          echo "USER_NAME=$_USER_NAME" >> $GITHUB_ENV
-          echo "USER_PASSWORD=$_USER_PASSWORD" >> $GITHUB_ENV
-          echo "USER_ROLE=$_USER_ROLE" >> $GITHUB_ENV
-          echo "DB_ROOT_PW=$_DB_ROOT_PW" >> $GITHUB_ENV
-          echo "DB_MOODLE_PW=$_DB_MOODLE_PW" >> $GITHUB_ENV
-          echo "DB_MOODLE_USER=$_DB_MOODLE_USER" >> $GITHUB_ENV
-          echo "DB_MOODLE_NAME=$_DB_MOODLE_NAME" >> $GITHUB_ENV
+          
+          echo "_MOODLE_USER=$_MOODLE_USER" >> $GITHUB_ENV
+          echo "_MOODLE_PW=$_MOODLE_PW" >> $GITHUB_ENV
+          
+          echo "_USER_NAME=$_USER_NAME" >> $GITHUB_ENV
+          echo _"USER_PASSWORD=$_USER_PASSWORD" >> $GITHUB_ENV
+          echo "_USER_ROLE=$_USER_ROLE" >> $GITHUB_ENV
+          
+          echo "_DB_ROOT_PW=$_DB_ROOT_PW" >> $GITHUB_ENV
+          echo "_DB_BACKEND_PW=$_DB_BACKEND_PW" >> $GITHUB_ENV
+          echo "_DB_MOODLE_PW=$_DB_MOODLE_PW" >> $GITHUB_ENV
+          
+          echo "_DB_MOODLE_USER=$_DB_MOODLE_USER" >> $GITHUB_ENV
+          echo "_DB_MOODLE_NAME=$_DB_MOODLE_NAME" >> $GITHUB_ENV
+
+          echo "COMPOSE_PROJECT_NAME=$COMPOSE_PROJECT_NAME" >> $GITHUB_ENV
 
 
   # This workflow contains a single job called "build"
@@ -71,6 +78,8 @@ jobs:
           
     steps:  
       - name: Check Environment
+        env:
+          MOODLE_USER: ${{ env._MOODLE_USER
         run: |
           echo "MOODLE_USER"
           echo "$_MOODLE_USER"
@@ -156,6 +165,8 @@ jobs:
           $GITHUB_WORKSPACE/moodle/download_adler_moodle.sh
 
       - name: Set up Moodle
+        env:
+          
         run: |
           cd $HOME/moodle
           cat $MOODLE_PARENT_DIRECTORY/moodle/admin/cli/install.php
