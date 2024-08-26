@@ -34,6 +34,7 @@ jobs:
         run: |
           echo "MOODLE_USER"
           echo "$_MOODLE_USER"
+          echo "${{ env._MOODLE_USER }}"
           echo "MOODLE_PW"
           echo "$_MOODLE_PW"
           echo "USER_NAME"
@@ -65,7 +66,7 @@ jobs:
         ports:
           - 3312:3306
         env:
-          MARIADB_USER: ${{ env.DB_MOODLE_USER }}
+          MARIADB_USER: ${{ env._MOODLE_USER }}
           MARIADB_PASSWORD: ${{ env.DB_MOODLE_PW }}
           MARIADB_ROOT_PASSWORD: ${{ env.DB_ROOT_PW }}
           MARIADB_DATABASE: ${{ env.DB_MOODLE_NAME }}
