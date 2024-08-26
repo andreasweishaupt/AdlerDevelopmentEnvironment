@@ -165,8 +165,6 @@ jobs:
           $GITHUB_WORKSPACE/moodle/download_adler_moodle.sh
 
       - name: Set up Moodle
-        env:
-          
         run: |
           cd $HOME/moodle
           cat $MOODLE_PARENT_DIRECTORY/moodle/admin/cli/install.php
