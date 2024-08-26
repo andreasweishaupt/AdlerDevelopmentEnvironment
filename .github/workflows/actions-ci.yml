@@ -78,7 +78,9 @@ jobs:
           echo "$_DB_MOODLE_USER"
           echo "DB_MOODLE_NAME"
           echo "$_DB_MOODLE_NAME"
-          echo "-------------------"
+
+      - name: Print User directory
+        run: |
           tree -L 4 $(getent passwd 1001 | cut -d: -f6)
           
       - name: Setup PHP
@@ -145,12 +147,20 @@ jobs:
           chmod +x $GITHUB_WORKSPACE/moodle/download_adler_moodle.sh
           $GITHUB_WORKSPACE/moodle/download_adler_moodle.sh
 
+      - name: Print User directory
+        run: |
+          tree -L 4 $(getent passwd 1001 | cut -d: -f6)
+
       - name: Set up Moodle
         run: |
           tree -L 4 $(getent passwd 1001 | cut -d: -f6)
           cd $HOME/moodle
           chmod +x $GITHUB_WORKSPACE/moodle/setup.sh
           $GITHUB_WORKSPACE/moodle/setup.sh --dbhost localhost
+
+      - name: Print User directory
+        run: |
+          tree -L 4 $(getent passwd 1001 | cut -d: -f6)
 
       - name: Run behat
         run: |
