@@ -79,16 +79,16 @@ jobs:
           echo "DB_MOODLE_NAME"
           echo "$_DB_MOODLE_NAME"
           
-#      - name: Setup PHP
-#        uses: shivammathur/setup-php@v2
-#        with:
-#          php-version: '8.1'
-#          extensions: curl, zip, gd, dom, xml, mysqli, soap, xmlrpc, intl, xdebug, pgsql
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          extensions: curl, zip, gd, dom, xml, mysqli, soap, xmlrpc, intl, xdebug, pgsql
 
-#      - name: Set up environment variables
-#        run: |
-#          echo "MOODLE_PARENT_DIRECTORY=$HOME" >> $GITHUB_ENV
-#          echo "WSL_USER=$USER" >> $GITHUB_ENV
+      - name: Set up environment variables
+        run: |
+          echo "MOODLE_PARENT_DIRECTORY=$HOME" >> $GITHUB_ENV
+          echo "WSL_USER=$USER" >> $GITHUB_ENV
 
       - name: Install dependencies
         run: |
