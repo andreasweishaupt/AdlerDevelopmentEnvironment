@@ -164,8 +164,7 @@ jobs:
 
       - name: Run behat
         run: |
-          echo "$GITHUB_WORKSPACE"
-          $GITHUB_WORKSPACE/moodle/vendor/bin/behat --config $GITHUB_WORKSPACE/moodledata_bht/behatrun/behat/behat.yml --profile headlesschrome
+          $(getent passwd 1001 | cut -d: -f6)/moodle/vendor/bin/behat --config $(getent passwd 1001 | cut -d: -f6)/moodledata_bht/behatrun/behat/behat.yml --profile headlesschrome
           
   autorentool:
     if: false
