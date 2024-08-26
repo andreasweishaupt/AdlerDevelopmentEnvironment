@@ -70,6 +70,17 @@ jobs:
           PMA_PASSWORD: ${{ env.DB_ROOT_PW }}
           
     steps:  
+      - name: Check Environment
+        run: |
+          echo "MOODLE_USER=$_MOODLE_USER"
+          echo "MOODLE_PW=$_MOODLE_PW"
+          echo "USER_NAME=$_USER_NAME"
+          echo "USER_PASSWORD=$_USER_PASSWORD"
+          echo "USER_ROLE=$_USER_ROLE"
+          echo "DB_ROOT_PW=$_DB_ROOT_PW"
+          echo "DB_MOODLE_PW=$_DB_MOODLE_PW"
+          echo "DB_MOODLE_USER=$_DB_MOODLE_USER"
+          echo "DB_MOODLE_NAME=$_DB_MOODLE_NAME"
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
