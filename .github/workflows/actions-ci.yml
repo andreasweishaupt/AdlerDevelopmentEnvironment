@@ -79,7 +79,7 @@ jobs:
           echo "DB_MOODLE_NAME"
           echo "$_DB_MOODLE_NAME"
           echo "-------------------"
-          tree -L 4 $GITHUB_WORKSPACE
+          tree -L 4 $(getent passwd 1001 | cut -d: -f6)
           
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -147,7 +147,7 @@ jobs:
 
       - name: Set up Moodle
         run: |
-          tree -L 4 $GITHUB_WORKSPACE
+          tree -L 4 $(getent passwd 1001 | cut -d: -f6)
           cd $HOME/moodle
           chmod +x $GITHUB_WORKSPACE/moodle/setup.sh
           $GITHUB_WORKSPACE/moodle/setup.sh --dbhost localhost
