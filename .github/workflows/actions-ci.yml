@@ -60,28 +60,28 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest 
 
-    services:
-      db_moodle:
-        image: docker.io/bitnami/mariadb:10.6
-        ports:
-          - 3312:3306
-        env:
-          MARIADB_USER: ${{ env._MOODLE_USER }}
-          MARIADB_PASSWORD: ${{ env.DB_MOODLE_PW }}
-          MARIADB_ROOT_PASSWORD: ${{ env.DB_ROOT_PW }}
-          MARIADB_DATABASE: ${{ env.DB_MOODLE_NAME }}
-          MARIADB_CHARACTER_SET: utf8mb4
-          MARIADB_COLLATE: utf8mb4_unicode_ci
-
-      phpmyadmin:
-        image: phpmyadmin/phpmyadmin
-        ports:
-          - 8078:80
-        env:
-          PMA_HOSTS: db_moodle
-          PMA_PORT: 3306
-          PMA_USER: root
-          PMA_PASSWORD: ${{ env.DB_ROOT_PW }}
+#    services:
+#      db_moodle:
+#        image: docker.io/bitnami/mariadb:10.6
+#        ports:
+#          - 3312:3306
+#        env:
+#          MARIADB_USER: ${{ env._MOODLE_USER }}
+#          MARIADB_PASSWORD: ${{ env.DB_MOODLE_PW }}
+#          MARIADB_ROOT_PASSWORD: ${{ env.DB_ROOT_PW }}
+#          MARIADB_DATABASE: ${{ env.DB_MOODLE_NAME }}
+#          MARIADB_CHARACTER_SET: utf8mb4
+#          MARIADB_COLLATE: utf8mb4_unicode_ci
+#
+#      phpmyadmin:
+#        image: phpmyadmin/phpmyadmin
+#        ports:
+#          - 8078:80
+#        env:
+#          PMA_HOSTS: db_moodle
+#          PMA_PORT: 3306
+#          PMA_USER: root
+#          PMA_PASSWORD: ${{ env.DB_ROOT_PW }}
           
     steps:  
       - name: Checkout repository
@@ -117,16 +117,16 @@ jobs:
           echo "DB_MOODLE_NAME"
           echo "$_DB_MOODLE_NAME"
           
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.1'
-          extensions: curl, zip, gd, dom, xml, mysqli, soap, xmlrpc, intl, xdebug, pgsql
+#      - name: Setup PHP
+#        uses: shivammathur/setup-php@v2
+#        with:
+#          php-version: '8.1'
+#          extensions: curl, zip, gd, dom, xml, mysqli, soap, xmlrpc, intl, xdebug, pgsql
 
-      - name: Set up environment variables
-        run: |
-          echo "MOODLE_PARENT_DIRECTORY=$HOME" >> $GITHUB_ENV
-          echo "WSL_USER=$USER" >> $GITHUB_ENV
+#      - name: Set up environment variables
+#        run: |
+#          echo "MOODLE_PARENT_DIRECTORY=$HOME" >> $GITHUB_ENV
+#          echo "WSL_USER=$USER" >> $GITHUB_ENV
 
       - name: Install dependencies
         run: |
@@ -184,7 +184,6 @@ jobs:
       - name: Set up Moodle
         run: |
           cd $HOME/moodle
-          cat $MOODLE_PARENT_DIRECTORY/moodle/admin/cli/install.php
           chmod +x $GITHUB_WORKSPACE/moodle/setup.sh
           $GITHUB_WORKSPACE/moodle/setup.sh --dbhost localhost
           
