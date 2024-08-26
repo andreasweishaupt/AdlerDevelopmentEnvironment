@@ -158,6 +158,12 @@ jobs:
           chmod +x $GITHUB_WORKSPACE/moodle/setup.sh
           $GITHUB_WORKSPACE/moodle/setup.sh --dbhost localhost
 
+      - name: Download Selenium
+        run: |
+          cd $(getent passwd 1001 | cut -d: -f6)/moodle
+          wget -N https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.23.0/selenium-server-4.23.0.jar
+          PATH=./:$PATH java -jar selenium-server-4.23.0.jar standalone &
+          
       - name: Print User directory
         run: |
           tree -L 4 $(getent passwd 1001 | cut -d: -f6)
