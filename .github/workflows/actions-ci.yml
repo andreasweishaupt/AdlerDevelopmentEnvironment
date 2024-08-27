@@ -333,7 +333,7 @@ jobs:
         xdotool getmouselocation
         DISPLAY=:99 xdotool mousemove_relative 10 15 
         sleep 1
-        coordinates=$(GET_POSITION "add-learning-world")
+        coordinates=$(GET_POSITION "add-learning-world" "MyLearningWorldsOverview")
         IFS=',' read -ra coords <<< "$coordinates"
         DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 2 click 1
         DISPLAY=:99 xdotool mousemove 900 300 click 1 sleep 2 
