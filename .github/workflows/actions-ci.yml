@@ -324,6 +324,7 @@ jobs:
           echo "Window focused"
         else
           echo "AuthoringTool window not found"
+          echo "$(curl -s http://localhost:8001)"
           exit 1
         fi
         echo "---"
