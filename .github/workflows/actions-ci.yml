@@ -18,7 +18,7 @@ on:
 jobs:
 
   build-and-test:
-    # if: false
+    if: false
     # The type of runner that the job will run on
     runs-on: ubuntu-latest 
 
@@ -179,6 +179,11 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+
     - name: Install dependencies
       run: |
         lscpu
@@ -188,6 +193,15 @@ jobs:
           libx11-xcb1 libxcb-dri3-0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 \
           libxcb-randr0 libxcb-render-util0 libxcb-shape0 libxcb-xfixes0 libxcb-xinerama0 libxcb-xkb1 \
           x11-utils libxkbcommon-x11-0
+        python -m pip install --upgrade pip
+        pip install selenium
+
+    - name: Define GET_POSITION function
+      run: |
+        chmod +x $GITHUB_WORKSPACE/.github/workflows/find_element.py
+        GET_POSITION() {
+          python $GITHUB_WORKSPACE/.github/workflows/find_element.py "$1" "$2"
+        }
 
     - name: Download latest Autorentool release
       run: |
@@ -293,6 +307,9 @@ jobs:
         xdotool getmouselocation
         DISPLAY=:99 xdotool mousemove_relative 10 15 
         sleep 1
+        coordinates=$(GET_POSITION "add-learning-world")
+        IFS=',' read -ra coords <<< "$coordinates"
+        DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 2 click 1
         DISPLAY=:99 xdotool mousemove 900 300 click 1 sleep 2 
         DISPLAY=:99 xdotool type "testWorld"
         DISPLAY=:99 xdotool sleep 1 key "Return"
