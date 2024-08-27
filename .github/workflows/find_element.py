@@ -12,7 +12,7 @@ def find_element_coordinates(class_name, path=None):
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
 
-    service = Service('/usr/local/bin/chromedriver')
+    service = Service('/usr/bin/chromedriver')
     driver = webdriver.Chrome(service=service, options=chrome_options)
 
     try:
