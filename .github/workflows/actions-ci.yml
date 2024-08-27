@@ -281,7 +281,7 @@ jobs:
           tool_pid=$!
           sleep 10
           response=$(curl -s http://localhost:8001)
-          if [[ $response == *"Neue Lernwelt erstellen"* ]]; then
+          if [[ $response == *"german-flag.png"* ]]; then
             echo "Authoring Tool started successfully and loaded correctly on attempt $attempt"
             break
           else
