@@ -6,7 +6,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-def find_element_coordinates(class_name, path=None, offset_x=0, offset_y=0):
+def find_element_coordinates(class_name, path=None, offset_x=360, offset_y=140):
     chrome_options = Options()
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--no-sandbox")
