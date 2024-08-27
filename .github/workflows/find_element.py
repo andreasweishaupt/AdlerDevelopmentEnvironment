@@ -5,9 +5,11 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import StaleElementReferenceException
+import time
 
 def find_element_coordinates(class_name, path=None, offset_x=0, offset_y=0):
-    max_retries=3
+    max_retries = 3
     chrome_options = Options()
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--no-sandbox")
@@ -17,16 +19,29 @@ def find_element_coordinates(class_name, path=None, offset_x=0, offset_y=0):
     driver = webdriver.Chrome(service=service, options=chrome_options)
 
     try:
-        # Set the URL based on the optional path parameter
         url = "http://localhost:8001/app" if path is None else f"http://localhost:8001/{path}"
         driver.get(url)
 
-        element = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.CLASS_NAME, class_name))
-        )
-
-        location = element.location
-        return location['x'] + offset_x, location['y'] + offset_y
+        for attempt in range(max_retries):
+            try:
+                # Wait for the element to be present and visible
+                element = WebDriverWait(driver, 10).until(
+                    EC.visibility_of_element_located((By.CLASS_NAME, class_name))
+                )
+                
+                # Add a small delay to ensure the page is stable
+                time.sleep(0.5)
+                
+                # Get element location
+                location = element.location
+                return location['x'] + offset_x, location['y'] + offset_y
+            except StaleElementReferenceException:
+                if attempt < max_retries - 1:
+                    print(f"Stale element, retrying (attempt {attempt + 1})")
+                    time.sleep(1)  # Wait a bit before retrying
+                else:
+                    print("Max retries reached, element still stale")
+                    raise
     finally:
         driver.quit()
 
