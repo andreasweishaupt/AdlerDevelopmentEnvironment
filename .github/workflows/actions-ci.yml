@@ -206,13 +206,9 @@ jobs:
         wget -q "${CHROME_URL}" -O "/tmp/${CHROME_DEB}"
         sudo dpkg -i "/tmp/${CHROME_DEB}"
         sudo apt-mark hold google-chrome-stable
-        echo "checkpoint1"
         sudo apt-get install -f -y
-        echo "checkpoint2"
         wget -q --user-agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.5735.90 Safari/537.36" "${CHROMEDRIVER_URL}" -O "/tmp/${CHROMEDRIVER_ZIP}"
-        echo "checkpoint3"
         unzip -o "/tmp/${CHROMEDRIVER_ZIP}" -d /tmp
-        echo "checkpoint4"
         sudo mv /tmp/chromedriver /usr/bin/chromedriver
         sudo chmod +x /usr/bin/chromedriver
         chromedriver --version
@@ -284,8 +280,9 @@ jobs:
           ./linux-unpacked/authoring-tool &
           tool_pid=$!
           sleep 10
-          if curl -s http://localhost:8001 > /dev/null; then
-            echo "Authoring Tool started successfully on attempt $attempt"
+          response=$(curl -s http://localhost:8001)
+          if [[ $response == *"<title>Autorentool"* ]]; then
+            echo "Authoring Tool started successfully and loaded correctly on attempt $attempt"
             break
           else
             echo "Attempt $attempt failed"
