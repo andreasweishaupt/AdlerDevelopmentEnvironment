@@ -199,8 +199,8 @@ jobs:
     - name: Define GET_POSITION function
       run: |
         chmod +x $GITHUB_WORKSPACE/.github/workflows/find_element.py
-        echo 'GET_POSITION() { python $GITHUB_WORKSPACE/.github/workflows/find_element.py "$1" "$2"; }' >> $GITHUB_ENV
-        echo 'export -f GET_POSITION' >> $GITHUB_ENV
+        chmod +x $GITHUB_WORKSPACE/.github/workflows/define_get_position.sh
+        source $GITHUB_WORKSPACE/.github/workflows/define_get_position.sh
 
     - name: Download latest Autorentool release
       run: |
@@ -284,7 +284,7 @@ jobs:
 
     - name: Simulate interactions
       run: |
-        source $GITHUB_ENV
+        source $GITHUB_WORKSPACE/.github/workflows/define_get_position.sh
         echo "DISPLAY is set to $DISPLAY"
         ps aux | grep Xvfb
         ps aux | grep authoring
