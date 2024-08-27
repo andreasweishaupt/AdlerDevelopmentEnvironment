@@ -6,7 +6,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-def find_element_coordinates(class_name, path=None):
+def find_element_coordinates(class_name, path=None, offset_x=0, offset_y=0):
     chrome_options = Options()
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--no-sandbox")
@@ -25,17 +25,19 @@ def find_element_coordinates(class_name, path=None):
         )
         
         location = element.location
-        return location['x'], location['y']
+        return location['x'] + offset_x, location['y'] + offset_y
     finally:
         driver.quit()
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2 or len(sys.argv) > 3:
-        print("Usage: python find_element.py <class_name> [path]")
+    if len(sys.argv) < 2 or len(sys.argv) > 5:
+        print("Usage: python find_element.py <class_name> [path] [offset_x] [offset_y]")
         sys.exit(1)
     
     class_name = sys.argv[1]
-    path = sys.argv[2] if len(sys.argv) == 3 else None
+    path = sys.argv[2] if len(sys.argv) > 2 else None
+    offset_x = int(sys.argv[3]) if len(sys.argv) > 3 else 0
+    offset_y = int(sys.argv[4]) if len(sys.argv) > 4 else 0
     
-    x, y = find_element_coordinates(class_name, path)
+    x, y = find_element_coordinates(class_name, path, offset_x, offset_y)
     print(f"{x},{y}")
