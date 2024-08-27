@@ -17,25 +17,16 @@ def find_element_coordinates(class_name, path=None, offset_x=0, offset_y=0):
     driver = webdriver.Chrome(service=service, options=chrome_options)
 
     try:
+        # Set the URL based on the optional path parameter
         url = "http://localhost:8001/app" if path is None else f"http://localhost:8001/{path}"
         driver.get(url)
-        
-        for attempt in range(max_retries):
-            try:
-                # Wait for the element to be present and visible
-                element = WebDriverWait(driver, 10).until(
-                    EC.visibility_of_element_located((By.CLASS_NAME, class_name))
-                )
-                
-                # Get element location
-                location = element.location
-                return location['x'] + offset_x, location['y'] + offset_y
-            except StaleElementReferenceException:
-                if attempt < max_retries - 1:
-                    time.sleep(1)  # Wait a bit before retrying
-                    continue
-                else:
-                    raise  # Re-raise the exception if we've exhausted our retries
+
+        element = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.CLASS_NAME, class_name))
+        )
+
+        location = element.location
+        return location['x'] + offset_x, location['y'] + offset_y
     finally:
         driver.quit()
 
