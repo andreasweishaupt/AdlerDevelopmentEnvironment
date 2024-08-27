@@ -37,10 +37,10 @@ def find_element_coordinates(class_name, path=None, offset_x=0, offset_y=0):
                 return location['x'] + offset_x, location['y'] + offset_y
             except StaleElementReferenceException:
                 if attempt < max_retries - 1:
-                    print(f"Stale element, retrying (attempt {attempt + 1})")
+                    # print(f"Stale element, retrying (attempt {attempt + 1})")
                     time.sleep(1)  # Wait a bit before retrying
                 else:
-                    print("Max retries reached, element still stale")
+                    # print("Max retries reached, element still stale")
                     raise
     finally:
         driver.quit()
