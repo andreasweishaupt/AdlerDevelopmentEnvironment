@@ -36,8 +36,8 @@ if __name__ == "__main__":
     
     class_name = sys.argv[1]
     path = sys.argv[2] if len(sys.argv) > 2 else None
-    offset_x = int(sys.argv[3]) if len(sys.argv) > 3 else 360
-    offset_y = int(sys.argv[4]) if len(sys.argv) > 4 else 140
+    offset_x = int(sys.argv[3]) if len(sys.argv) > 3 and sys.argv[3] else 360
+    offset_y = int(sys.argv[4]) if len(sys.argv) > 4 and sys.argv[4] else 140
     
     x, y = find_element_coordinates(class_name, path, offset_x, offset_y)
     print(f"{x},{y}")
