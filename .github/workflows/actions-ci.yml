@@ -334,9 +334,9 @@ jobs:
         DISPLAY=:99 xdotool mousemove_relative 10 15 
         sleep 1
         coordinates=$(GET_POSITION "add-learning-world" "MyLearningWorldsOverview")
-        echo coordinates
+        echo $coordinates
         IFS=',' read -ra coords <<< "$coordinates"
-        echo coords
+        echo $coords
         DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 2 click 1
         DISPLAY=:99 xdotool mousemove 900 300 click 1 sleep 2 
         DISPLAY=:99 xdotool type "testWorld"
