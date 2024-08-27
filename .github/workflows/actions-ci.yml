@@ -199,9 +199,8 @@ jobs:
     - name: Define GET_POSITION function
       run: |
         chmod +x $GITHUB_WORKSPACE/.github/workflows/find_element.py
-        GET_POSITION() {
-          python $GITHUB_WORKSPACE/.github/workflows/find_element.py "$1" "$2"
-        }
+        echo 'GET_POSITION() { python $GITHUB_WORKSPACE/.github/workflows/find_element.py "$1" "$2"; }' >> $GITHUB_ENV
+        echo 'export -f GET_POSITION' >> $GITHUB_ENV
 
     - name: Download latest Autorentool release
       run: |
