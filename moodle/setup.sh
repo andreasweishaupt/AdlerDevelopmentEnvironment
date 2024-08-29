@@ -73,7 +73,7 @@ xdebug.mode=debug
 xdebug.client_port=9000
 
 ; host ip adress of wsl network adapter
-xdebug.client_host=172.18.48.1
+xdebug.client_host=$(ip route | grep default | awk '{print $3}')
 
 ; idekey value is specific to PhpStorm
 xdebug.idekey=phpstorm
@@ -95,7 +95,7 @@ php $MOODLE_PARENT_DIRECTORY/moodle/admin/cli/install.php --lang=DE --wwwroot=ht
 git clone https://github.com/ProjektAdLer/moodle-docker /tmp/moodle-docker
 cp -r /tmp/moodle-docker/opt/adler/moodle/adler_setup $MOODLE_PARENT_DIRECTORY/moodle/
 rm -rf /tmp/moodle-docker
-php $MOODLE_PARENT_DIRECTORY/moodle/adler_setup/setup.php --first_run=true --user_name=${_USER_NAME} --user_password=${_USER_PASSWORD} --user_role=${_USER_ROLE}
+php $MOODLE_PARENT_DIRECTORY/moodle/adler_setup/setup.php --first_run=true --user_name=${_USER_NAME} --user_password=${_USER_PASSWORD} --user_role=${_USER_ROLE}  # todo: user not created
 
 # moodle config.php
 # remove the require_once line as it has to be at the end of the file
