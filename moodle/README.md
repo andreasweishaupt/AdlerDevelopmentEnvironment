@@ -129,27 +129,22 @@ Read the [Moodle setup guide for Behat](https://moodledev.io/general/development
 1. **Selenium with Chrome:**
     - Attempts to use Selenium with Firefox resulted in errors related to user profile creation.
     - **Chrome Setup:**
-        - There are two potential paths. Both are equally valid
-        - **Old Chrome Version:**
-            - Download an [older version of Chrome](http://mirror.cs.uchicago.edu/google-chrome/pool/main/g/google-chrome-stable/) 
-            - that is compatible with [the latest chromedriver](https://old.chromedriver.getwebdriver.com/index.html).
-            - Place the downloaded chromedriver in the moodle root directory.
-            - Note: Use chromedriver directly, as chromedriver-wrapper has not been tested in this setup.
-        - **Current Chrome Version:**
+        - chromedriver:
             - Download [chromedriver](https://getwebdriver.com/chromedriver#stable) version.
             - Extract the downloaded chromedriver archive and place the chromedriver file in the moodle root directory.
+        - Chrome:
             - Download the [corresponding version of Chrome](http://mirror.cs.uchicago.edu/google-chrome/pool/main/g/google-chrome-stable/).
-        - Install Chrome using the following command:
-            ```bash
-            sudo apt install -y ./<filename of the downloaded Chrome package>
-            ```
-        - Prevent Chrome from updating by running the following command (as unintended updates will break compatibility with chromedriver):
-            ```bash
-            sudo apt-mark hold google-chrome-stable
-            ```
-        - Run `google-chrome-stable` to verify the setup. If a Chrome window opens, the setup was successful.
+            - Install Chrome using the following command:
+                ```bash
+                sudo apt install -y ./<filename of the downloaded Chrome package>
+                ```
+            - Prevent Chrome from updating by running the following command (as unintended updates will break compatibility with chromedriver):
+                ```bash
+                sudo apt-mark hold google-chrome-stable
+                ```
+            - Run `google-chrome-stable` to verify the setup. If a Chrome window opens, the setup was successful.
 
-4. **Download Selenium Server:**
+2. **Download Selenium Server:**
     - Download the latest `Selenium Server (Grid)` jar file from the [official Selenium website](https://www.selenium.dev/downloads/).
     - Place it in the moodle root directory.
 
