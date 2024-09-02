@@ -49,4 +49,4 @@ if __name__ == "__main__":
     offset_y = int(sys.argv[4]) if len(sys.argv) > 4 and sys.argv[4] else 0
     
     x, y = find_element_coordinates(class_name, path, offset_x, offset_y)
-    print(f"{x},{y}")
+    print(f"{x},{y},ClassName:{class_name},Path:{path},Offset_x:{offset_x},Offset_y:{offset_y}")
