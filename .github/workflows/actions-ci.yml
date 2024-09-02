@@ -305,38 +305,26 @@ jobs:
         fi
         echo "Authoring Tool is running with PID $tool_pid"
         
-
+    - name: Get window position
+      run: |
+        window_id=$(DISPLAY=:99 xdotool search --name "Autorentool v2.1.7" | head -n 1)
+        if [ -n "$window_id" ]; then
+          window_info=$(xwininfo -id $window_id)
+          window_x=$(echo "$window_info" | grep "Absolute upper-left X" | awk '{print $4}')
+          window_y=$(echo "$window_info" | grep "Absolute upper-left Y" | awk '{print $4}')
+          echo "Window position: $window_x, $window_y"
+        else
+          echo "AuthoringTool window not found"
+          exit 1
+        fi
+        echo "WINDOW_X=$window_x" >> $GITHUB_ENV
+        echo "WINDOW_Y=$window_y" >> $GITHUB_ENV
+    
     - name: Simulate interactions
       run: |
         source $GITHUB_WORKSPACE/.github/workflows/define_get_position.sh
-        echo "DISPLAY is set to $DISPLAY"
-        ps aux | grep Xvfb
-        ps aux | grep authoring
-        ls -l /tmp/.X11-unix/
-
-        DISPLAY=:99 xwininfo -root -tree
-        echo "---"
-        
-        window_id=$(DISPLAY=:99 xdotool search --name "Autorentool v2.1.7" | head -n 1)
-        if [ -n "$window_id" ]; then
-          echo "Window found with ID: $window_id"
-          DISPLAY=:99 xdotool windowfocus $window_id
-          echo "Window focused"
-        else
-          echo "AuthoringTool window not found"
-          echo "$(curl -s http://localhost:8001)"
-          exit 1
-        fi
-        echo "---"
-        sleep 1
-        DISPLAY=:99 xdotool getmouselocation
-        xdotool getmouselocation
-        DISPLAY=:99 xdotool mousemove_relative 10 15 
-        sleep 1
-        coordinates=$(GET_POSITION "add-learning-world" "MyLearningWorldsOverview")
-        echo $coordinates
+        coordinates=$(GET_POSITION "add-learning-world" "MyLearningWorldsOverview" $WINDOW_X $WINDOW_Y)
         IFS=',' read -ra coords <<< "$coordinates"
-        echo $coords
         DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 2 click 1
         DISPLAY=:99 xdotool mousemove 900 300 click 1 sleep 2 
         DISPLAY=:99 xdotool type "testWorld"
