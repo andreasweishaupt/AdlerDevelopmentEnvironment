@@ -199,19 +199,34 @@ jobs:
 
     - name: Install Chrome and ChromeDriver
       run: |
+        # Remove existing Chrome installations
         sudo apt-get remove -y --purge google-chrome-stable
         sudo apt-get autoremove -y
-        wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-        sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list'
+        
+        # Add Google Chrome's official repository
+        wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo tee /etc/apt/trusted.gpg.d/google-chrome.asc
+        echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
+        
+        # Update package lists
         sudo apt-get update
+        
+        # Install missing dependencies
+        sudo apt-get install -y libu2f-udev
+        
+        # Download and install Google Chrome
         wget -q "${CHROME_URL}" -O "/tmp/${CHROME_DEB}"
-        sudo dpkg -i "/tmp/${CHROME_DEB}"
+        sudo apt-get install -y "/tmp/${CHROME_DEB}"
+        
+        # Hold the package to prevent automatic updates
         sudo apt-mark hold google-chrome-stable
-        sudo apt-get install -f -y
+        
+        # Download and install ChromeDriver
         wget -q --user-agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.5735.90 Safari/537.36" "${CHROMEDRIVER_URL}" -O "/tmp/${CHROMEDRIVER_ZIP}"
         unzip -o "/tmp/${CHROMEDRIVER_ZIP}" -d /tmp
         sudo mv /tmp/chromedriver /usr/bin/chromedriver
         sudo chmod +x /usr/bin/chromedriver
+        
+        # Verify installation
         chromedriver --version
       env:
         CHROME_VERSION: "114.0.5735.90"
