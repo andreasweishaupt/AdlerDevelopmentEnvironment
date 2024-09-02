@@ -286,7 +286,7 @@ jobs:
       run: |
         ffmpeg -f x11grab -video_size 1920x1080 -i :99 -codec:v libx264 -r 30 -v verbose screen_recording.mp4 &
         echo $! > ffmpeg_pid.txt
-        sleep 2
+        sleep 1
     
     - name: Run Autorentool
       run: |
@@ -295,7 +295,9 @@ jobs:
           echo "Attempt $attempt of $max_attempts to start Authoring Tool"
           ./linux-unpacked/authoring-tool &
           tool_pid=$!
-          sleep 10
+          sleep 10  # Wait time to allow for initialization
+        
+          # Check if the application is running
           response=$(curl -s http://localhost:8001)
           if [[ $response == *"<title>Autorentool"* ]]; then
             echo "Authoring Tool started successfully and loaded correctly on attempt $attempt"
@@ -313,7 +315,7 @@ jobs:
             fi
           fi
         done
-
+        
         # Check if the tool is actually running
         if ! ps -p $tool_pid > /dev/null; then
           echo "Authoring Tool process is not running. Aborting pipeline."
