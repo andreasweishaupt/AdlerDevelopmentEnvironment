@@ -343,6 +343,7 @@ jobs:
         source $GITHUB_WORKSPACE/.github/workflows/define_get_position.sh
         coordinates=$(GET_POSITION "add-learning-world" "MyLearningWorldsOverview" $WINDOW_X $WINDOW_Y)
         IFS=',' read -ra coords <<< "$coordinates"
+        echo coords
         DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 2 click 1
         DISPLAY=:99 xdotool mousemove 900 300 click 1 sleep 2 
         DISPLAY=:99 xdotool type "testWorld"
