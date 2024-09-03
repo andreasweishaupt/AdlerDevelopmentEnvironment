@@ -60,8 +60,21 @@ mkdir $MOODLE_PARENT_DIRECTORY/moodledata $MOODLE_PARENT_DIRECTORY/moodledata_ph
 
 # setup database
 sudo --preserve-env docker compose up -d
-while ! mysqladmin ping -h $DB_HOST -P3312 --connect-timeout=5 --silent 2>/dev/null; do echo "db is starting" && sleep 1; done
-echo "db is up"
+# Define a timeout of 20 seconds
+TIMEOUT=15
+# Check the database status every second
+for ((i=0; i<TIMEOUT; i++)); do
+    if mysqladmin ping -h $DB_HOST -P3312 --connect-timeout=5 --silent 2>/dev/null; then
+        echo "db is up"
+        break
+    fi
+    echo "db is starting"
+    sleep 1
+done
+if [ $i -eq $TIMEOUT ]; then
+    echo "Error: Database did not start within $TIMEOUT seconds."
+    exit 1
+fi
 
 # configure apache
 # Create a new virtual host configuration file
