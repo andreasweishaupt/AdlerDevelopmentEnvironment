@@ -1,4 +1,14 @@
 # Moodle dev env
+> [!CAUTION]
+> The development environment now requires Ubuntu **24.04**
+
+> [!IMPORTANT]
+> The Moodle port is now **5080** instead of 80.
+
+> [!NOTE]  
+> For use with Ubuntu **22.04** change the PHP Version to 8.1 as described in [Change Moodle <-> PHP version to install](doc/change_moodle_php_version.md).
+> For now you should not have to expect issues doing this, but it is recommended to set up a fresh Ubuntu 24.04 instance 
+> soon.
 
 ## Requirements
 - WSL2 with Distro **Ubuntu 24.04**
