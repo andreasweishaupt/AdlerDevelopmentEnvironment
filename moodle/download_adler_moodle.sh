@@ -1,8 +1,10 @@
 #/bin/bash
 
-MOODLE_RELEASE=MOODLE_404_STABLE
+WSL_USER=$(awk -F: '($3>=1000)&&($3!=65534){print $1, $3}' /etc/passwd | sort -k2 -n | tail -1 | cut -d' ' -f1)
+MOODLE_PARENT_DIRECTORY=$(getent passwd $WSL_USER | cut -d: -f6)
 
-MOODLE_PARENT_DIRECTORY=$(getent passwd 1000 | cut -d: -f6)  # /home/<user>
+# configuration
+MOODLE_RELEASE=MOODLE_404_STABLE
 
 # Check whether moodle is already downloaded
 if [ -d "$MOODLE_PARENT_DIRECTORY/moodle" ]; then

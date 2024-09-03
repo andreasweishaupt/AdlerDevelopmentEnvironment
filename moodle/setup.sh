@@ -1,6 +1,6 @@
 #!/bin/bash
-WSL_USER=$(id -nu 1000)
-MOODLE_PARENT_DIRECTORY=$(getent passwd 1000 | cut -d: -f6)
+WSL_USER=$(awk -F: '($3>=1000)&&($3!=65534){print $1, $3}' /etc/passwd | sort -k2 -n | tail -1 | cut -d' ' -f1)
+MOODLE_PARENT_DIRECTORY=$(getent passwd $WSL_USER | cut -d: -f6)
 
 # configuration
 APACHE_VHOST_PORT=5080  # this is the port the moodle is available at
