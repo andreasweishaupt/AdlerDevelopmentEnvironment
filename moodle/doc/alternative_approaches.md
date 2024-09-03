@@ -114,17 +114,18 @@ cp modules/xdebug.so /opt/bitnami/php/lib/php/extensions/
 ```
 
 docker-compose.yml
+
 ```yaml
 version: '3'
 services:
-#  test:
-#    image: debian
-#    command: sleep infinity
-#    volumes:
-#      - /home/markus/moodle:/moodle
+  #  test:
+  #    image: debian
+  #    command: sleep infinity
+  #    volumes:
+  #      - /home/markus/moodle:/moodle
   moodle:
     build:
-      context: .
+      context: ..
       args:
         PLUGIN_VERSION: main
         MOODLE_VERSION: 4.2
@@ -146,12 +147,12 @@ services:
       DEVELOP_DONT_INSTALL_PLUGINS: true
     volumes:
       - moodle_moodle:/bitnami/moodle
-#      - /home/markus/moodle:/bitnami/moodle
+      #      - /home/markus/moodle:/bitnami/moodle
       - moodle_moodledata:/bitnami/moodledata
       - moodle_moodledata_phpu:/bitnami/moodledata_phpu
     depends_on:
       - db_moodle
-#    restart: unless-stopped
+  #    restart: unless-stopped
 
   db_moodle:
     image: docker.io/bitnami/mariadb:10.6
