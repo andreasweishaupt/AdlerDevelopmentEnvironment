@@ -56,9 +56,27 @@ while ! mysqladmin ping -h $DB_HOST -P3312 --connect-timeout=5 --silent 2>/dev/n
 echo "db is up"
 
 # configure apache
-sudo sed -i "s#<Directory /var/www/>#<Directory $MOODLE_PARENT_DIRECTORY/>#g"  /etc/apache2/apache2.conf
-sudo sed -i "s#DocumentRoot /var/www/html#DocumentRoot $MOODLE_PARENT_DIRECTORY/moodle#g" /etc/apache2/sites-enabled/000-default.conf
-sudo sed -i "s#export APACHE_RUN_USER=www-data#export APACHE_RUN_USER=$WSL_USER#g" /etc/apache2/envvars
+APACHE_VHOST_PORT=5080
+# Create a new virtual host configuration file
+echo "<VirtualHost *:$APACHE_VHOST_PORT>
+    DocumentRoot $MOODLE_PARENT_DIRECTORY/moodle
+    <Directory $MOODLE_PARENT_DIRECTORY>
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+    </Directory>
+    ErrorLog \${APACHE_LOG_DIR}/moodle_error.log
+    CustomLog \${APACHE_LOG_DIR}/moodle_access.log combined
+</VirtualHost>" | sudo tee /etc/apache2/sites-available/moodle.conf
+# Enable the new virtual host configuration
+sudo a2ensite moodle.conf
+# Add the custom port to ports.conf
+echo "Listen $CUSTOM_PORT" | sudo tee -a /etc/apache2/ports.conf
+# Change user and group of apache to the user of the WSL
+## Set ACLs to ensure both users have read, write, and execute permissions on the directory, its subdirectories, and existing files
+#sudo setfacl -R -m u:$USER1:rwx,u:$USER2:rwx $TARGET_DIRECTORY
+## Ensure default ACLs are set for new files and directories
+#sudo setfacl -R -d -m u:$USER1:rwx,u:$USER2:rwx $TARGET_DIRECTORYsudo sed -i "s#export APACHE_RUN_USER=www-data#export APACHE_RUN_USER=$WSL_USER#g" /etc/apache2/envvars
 sudo sed -i "s#export APACHE_RUN_GROUP=www-data#export APACHE_RUN_GROUP=$WSL_USER#g" /etc/apache2/envvars
 
 # configure php
@@ -85,7 +103,7 @@ xdebug.client_host=$(ip route | grep default | awk '{print $3}')
 ; idekey value is specific to PhpStorm
 xdebug.idekey=phpstorm
 
-// TODO: always enabling debugging slows down the web interface significantly.
+// always enabling debugging slows down the web interface significantly.
 // Instead prefer to enable debugging only when needed. See README.md for more information.
 ;xdebug.start_with_request=true
 " | sudo tee /etc/php/8.1/apache2/conf.d/20-xdebug.ini
