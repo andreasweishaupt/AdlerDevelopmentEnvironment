@@ -26,6 +26,8 @@ echo "$plugin_list" | jq -c '.[]' | while read -r plugin; do
   version=$(echo "$plugin" | jq -r '.version')
   path=$(echo "$plugin" | jq -r '.path')
 
+  echo "Downloading $git_project at version $version to $MOODLE_PARENT_DIRECTORY/moodle/$path"
+
   # Clone the git project and checkout the specified version
   git clone --branch $version "https://github.com/$git_project.git" "$MOODLE_PARENT_DIRECTORY/moodle/$path"
 

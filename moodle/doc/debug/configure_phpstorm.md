@@ -4,7 +4,8 @@
 - Navigate to Settings -> PHP -> CLI interpreter
 - Click 3 dots -> "+" -> From Docker, Vagrant, ... -> WSL
 - Choose your WSL2 distribution and press OK
-- Set Configuration options (folder button on the right) xdebug.client_host -> <ip of WSL default gateway> (can be found with `ip route | grep default | awk '{print $3}'` inside WSL)
+- Set Configuration options (folder button on the right) xdebug.client_host -> <ip of WSL default gateway> (printed at
+  the end of the setup script, can also be found with `ip route | grep default | awk '{print $3}'` inside WSL)
 
 2. **Set new interpreter as project default**:
 - Ctrl + Shift + A -> Change PHP interpreter
