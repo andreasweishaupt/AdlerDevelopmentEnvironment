@@ -4,6 +4,7 @@ MOODLE_PARENT_DIRECTORY=$(getent passwd $WSL_USER | cut -d: -f6)
 
 # configuration
 APACHE_VHOST_PORT=5080  # this is the port the moodle is available at
+PHP_VERSION=8.3
 
 # Default value for DB_HOST
 DB_HOST="127.0.0.1"
@@ -45,7 +46,7 @@ sudo apt update
 sudo apt dist-upgrade -y
 
 # install dependencies
-sudo apt install -y apache2 php8.1 php8.1-curl php8.1-zip composer php8.1-gd php8.1-dom php8.1-xml php8.1-mysqli php8.1-soap php8.1-xmlrpc php8.1-intl php8.1-xdebug php8.1-pgsql php8.1-tidy mariadb-client-10.6 default-jre zstd
+sudo apt install -y apache2 php$PHP_VERSION php$PHP_VERSION-curl php$PHP_VERSION-zip composer php$PHP_VERSION-gd php$PHP_VERSION-dom php$PHP_VERSION-xml php$PHP_VERSION-mysqli php$PHP_VERSION-soap php$PHP_VERSION-xmlrpc php$PHP_VERSION-intl php$PHP_VERSION-xdebug php$PHP_VERSION-pgsql php$PHP_VERSION-tidy mariadb-client default-jre zstd
 
 # install locales
 sudo sed -i 's/^# de_DE.UTF-8 UTF-8$/de_DE.UTF-8 UTF-8/' /etc/locale.gen
@@ -87,12 +88,12 @@ sudo sed -i "s#export APACHE_RUN_GROUP=www-data#export APACHE_RUN_GROUP=$WSL_USE
 
 # configure php
 ## conf.d/moodle.ini
-echo "max_input_vars = 5000" | sudo tee /etc/php/8.1/cli/conf.d/moodle.ini
-sudo ln -s  /etc/php/8.1/cli/conf.d/moodle.ini /etc/php/8.1/apache2/conf.d/moodle.ini
+echo "max_input_vars = 5000" | sudo tee /etc/php/$PHP_VERSION/cli/conf.d/moodle.ini
+sudo ln -s  /etc/php/$PHP_VERSION/cli/conf.d/moodle.ini /etc/php/$PHP_VERSION/apache2/conf.d/moodle.ini
 ## apache/php.ini
-sudo sed -i 's/^\(\s*;\?\s*\)upload_max_filesize\s*=\s*[0-9]*M/\1upload_max_filesize = 2048M/' /etc/php/8.1/apache2/php.ini
-sudo sed -i 's/^\(\s*;\?\s*\)post_max_size\s*=\s*[0-9]*M/\post_max_size = 2048M/' /etc/php/8.1/apache2/php.ini
-sudo sed -i 's/^\(\s*;\?\s*\)memory_limit\s*=\s*[0-9]*M/\memory_limit = 2048M/' /etc/php/8.1/apache2/php.ini
+sudo sed -i 's/^\(\s*;\?\s*\)upload_max_filesize\s*=\s*[0-9]*M/\1upload_max_filesize = 2048M/' /etc/php/$PHP_VERSION/apache2/php.ini
+sudo sed -i 's/^\(\s*;\?\s*\)post_max_size\s*=\s*[0-9]*M/\post_max_size = 2048M/' /etc/php/$PHP_VERSION/apache2/php.ini
+sudo sed -i 's/^\(\s*;\?\s*\)memory_limit\s*=\s*[0-9]*M/\memory_limit = 2048M/' /etc/php/$PHP_VERSION/apache2/php.ini
 
 
 echo "[XDebug]
@@ -112,9 +113,9 @@ xdebug.idekey=phpstorm
 // always enabling debugging slows down the web interface significantly.
 // Instead prefer to enable debugging only when needed. See README.md for more information.
 ;xdebug.start_with_request=true
-" | sudo tee /etc/php/8.1/apache2/conf.d/20-xdebug.ini
-sudo rm /etc/php/8.1/cli/conf.d/20-xdebug.ini
-sudo ln -s  /etc/php/8.1/apache2/conf.d/20-xdebug.ini /etc/php/8.1/cli/conf.d/20-xdebug.ini
+" | sudo tee /etc/php/$PHP_VERSION/apache2/conf.d/20-xdebug.ini
+sudo rm /etc/php/$PHP_VERSION/cli/conf.d/20-xdebug.ini
+sudo ln -s  /etc/php/$PHP_VERSION/apache2/conf.d/20-xdebug.ini /etc/php/$PHP_VERSION/cli/conf.d/20-xdebug.ini
 
 # restart apache to apply updated config
 sudo service apache2 restart
