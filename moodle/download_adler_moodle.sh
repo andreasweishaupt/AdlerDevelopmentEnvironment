@@ -26,5 +26,10 @@ echo "$plugin_list" | jq -c '.[]' | while read -r plugin; do
 
   # Clone the git project and checkout the specified version
   git clone --branch $version "https://github.com/$git_project.git" "$MOODLE_PARENT_DIRECTORY/moodle/$path"
+
+  # run composer i for the plugin if a composer.json exists
+  if [ -f "$MOODLE_PARENT_DIRECTORY/moodle/$path/composer.json" ]; then
+    composer install --working-dir="$MOODLE_PARENT_DIRECTORY/moodle/$path"
+  fi
 done
 
