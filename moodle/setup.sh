@@ -2,6 +2,9 @@
 WSL_USER=$(id -nu 1000)
 MOODLE_PARENT_DIRECTORY=$(getent passwd 1000 | cut -d: -f6)
 
+# configuration
+APACHE_VHOST_PORT=5080  # this is the port the moodle is available at
+
 # Default value for DB_HOST
 DB_HOST="127.0.0.1"
 
@@ -60,7 +63,6 @@ while ! mysqladmin ping -h $DB_HOST -P3312 --connect-timeout=5 --silent 2>/dev/n
 echo "db is up"
 
 # configure apache
-APACHE_VHOST_PORT=5080
 # Create a new virtual host configuration file
 echo "<VirtualHost *:$APACHE_VHOST_PORT>
     DocumentRoot $MOODLE_PARENT_DIRECTORY/moodle
@@ -75,7 +77,7 @@ echo "<VirtualHost *:$APACHE_VHOST_PORT>
 # Enable the new virtual host configuration
 sudo a2ensite moodle.conf
 # Add the custom port to ports.conf
-echo "Listen $CUSTOM_PORT" | sudo tee -a /etc/apache2/ports.conf
+echo "Listen $APACHE_VHOST_PORT" | sudo tee -a /etc/apache2/ports.conf
 # Change user and group of apache to the user of the WSL
 ## Set ACLs to ensure both users have read, write, and execute permissions on the directory, its subdirectories, and existing files
 #sudo setfacl -R -m u:$USER1:rwx,u:$USER2:rwx $TARGET_DIRECTORY
@@ -118,7 +120,7 @@ sudo ln -s  /etc/php/8.1/apache2/conf.d/20-xdebug.ini /etc/php/8.1/cli/conf.d/20
 sudo service apache2 restart
 
 # install moodle
-php $MOODLE_PARENT_DIRECTORY/moodle/admin/cli/install.php --lang=DE --wwwroot=http://localhost --dataroot=$MOODLE_PARENT_DIRECTORY/moodledata --dbtype=mariadb --dbhost=$DB_HOST --dbport=3312 --dbuser=${_DB_MOODLE_USER} --dbpass=${_DB_MOODLE_PW} --dbname=${_DB_MOODLE_NAME} --fullname=fullname --shortname=shortname --adminuser=${_MOODLE_USER} --adminpass=${_MOODLE_PW} --adminemail=admin@blub.blub --supportemail=admin@blub.blub --non-interactive --agree-license
+php $MOODLE_PARENT_DIRECTORY/moodle/admin/cli/install.php --lang=DE --wwwroot=http://localhost:$APACHE_VHOST_PORT --dataroot=$MOODLE_PARENT_DIRECTORY/moodledata --dbtype=mariadb --dbhost=$DB_HOST --dbport=3312 --dbuser=${_DB_MOODLE_USER} --dbpass=${_DB_MOODLE_PW} --dbname=${_DB_MOODLE_NAME} --fullname=fullname --shortname=shortname --adminuser=${_MOODLE_USER} --adminpass=${_MOODLE_PW} --adminemail=admin@blub.blub --supportemail=admin@blub.blub --non-interactive --agree-license
 
 # setup for plugins (but don't download them, they have be present in the moodle folder already)
 git clone https://github.com/ProjektAdLer/moodle-docker /tmp/moodle-docker
@@ -159,7 +161,7 @@ echo "
 //=========================================================================
 // Behat test site needs a unique www root, data directory and database prefix:
 //
-\$CFG->behat_wwwroot = 'http://127.0.0.1';
+\$CFG->behat_wwwroot = 'http://127.0.0.1:$APACHE_VHOST_PORT';
 \$CFG->behat_prefix = 'bht_';
 \$CFG->behat_dataroot = '$MOODLE_PARENT_DIRECTORY/moodledata_bht';
 
