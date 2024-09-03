@@ -22,6 +22,13 @@ set -o allexport
 source .env
 set +o allexport
 
+# check if moodle is already installed
+if [ -f $MOODLE_PARENT_DIRECTORY/moodle/config.php ]
+then
+    echo "Moodle is already installed. Please run reset_data.sh first."
+    exit
+fi
+
 # check docker is available
 if ! docker &> /dev/null
 then
