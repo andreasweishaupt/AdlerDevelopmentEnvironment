@@ -4,6 +4,12 @@ MOODLE_RELEASE=MOODLE_404_STABLE
 
 MOODLE_PARENT_DIRECTORY=$(getent passwd 1000 | cut -d: -f6)  # /home/<user>
 
+# Check whether moodle is already downloaded
+if [ -d "$MOODLE_PARENT_DIRECTORY/moodle" ]; then
+  echo "Moodle is already downloaded. Please remove the moodle directory first."
+  exit 1
+fi
+
 sudo apt update && sudo apt -y install git jq
 
 git clone --depth=1 --branch=$MOODLE_RELEASE https://github.com/moodle/moodle.git $MOODLE_PARENT_DIRECTORY/moodle
