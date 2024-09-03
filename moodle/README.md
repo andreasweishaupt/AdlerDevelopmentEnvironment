@@ -62,6 +62,7 @@ debug tools.
 
 
 ## Further manuals/instructions
-- [Use Postgresql instead of MariaDB](doc/postgresql.md)
 - [Update Moodle](doc/update_moodle.md)
+- [Change Moodle <-> PHP version to install](doc/change_moodle_php_version.md)
+- [Use Postgresql instead of MariaDB](doc/postgresql.md)
 - [Evaluation of different approaches to set up this Moodle development environment](doc/alternative_approaches.md)
