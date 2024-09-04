@@ -1,4 +1,5 @@
 import sys
+import logging
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
@@ -7,6 +8,10 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import StaleElementReferenceException
 import time
+
+# Set up logging
+logging.basicConfig(level=logging.DEBUG, stream=sys.stderr, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 def find_element_coordinates(class_name, path=None, offset_x=0, offset_y=0):
     max_retries = 3
@@ -20,17 +25,21 @@ def find_element_coordinates(class_name, path=None, offset_x=0, offset_y=0):
 
     try:
         url = "http://localhost:8001/app" if path is None else f"http://localhost:8001/{path}"
+        logger.debug(f"Navigating to URL: {url}")
         driver.get(url)
 
         for attempt in range(max_retries):
             try:
+                logger.debug(f"Attempt {attempt + 1} to find element with class name: {class_name}")
                 element = WebDriverWait(driver, 10).until(
                     EC.visibility_of_element_located((By.CLASS_NAME, class_name))
                 )
                 time.sleep(0.5)
                 location = element.location
+                logger.debug(f"Element found at location: {location}")
                 return location['x'] + offset_x, location['y'] + offset_y
             except StaleElementReferenceException:
+                logger.warning("Stale element reference exception encountered.")
                 if attempt < max_retries - 1:
                     time.sleep(1)
                 else:
