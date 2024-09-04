@@ -10,7 +10,7 @@ from selenium.common.exceptions import StaleElementReferenceException
 import time
 
 # Set up logging
-logging.basicConfig(level=logging.DEBUG, stream=sys.stderr, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.WARNING, stream=sys.stderr, format='find_element.py - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 def find_element_coordinates(class_name, path=None, offset_x=0, offset_y=0):

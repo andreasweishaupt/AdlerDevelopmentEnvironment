@@ -365,11 +365,6 @@ jobs:
         name: screen-recording
         path: screen_recording.mp4
 
-    - name: Check Authoring Tool logs
-      if: always()
-      run: |
-        cat /home/runner/.config/authoring-tool/logs/main.log || echo "Log file not found"
-
     - name: Check for errors
       if: always()
       run: |
