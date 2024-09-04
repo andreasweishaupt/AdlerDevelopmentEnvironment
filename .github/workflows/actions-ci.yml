@@ -298,8 +298,8 @@ jobs:
           sleep 10  # Wait time to allow for initialization
         
           # Check if the application is running
-          response=$(curl -s http://localhost:8001)
-          if [[ $response == *"<title>Autorentool"* ]]; then
+          window_id=$(DISPLAY=:99 xdotool search --name "Autorentool v2.1.7" | head -n 1)
+          if [ -n "$window_id" ]; then
             echo "Authoring Tool started successfully and loaded correctly on attempt $attempt"
             break
           else
