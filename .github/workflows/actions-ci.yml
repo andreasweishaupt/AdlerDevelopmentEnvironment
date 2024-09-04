@@ -290,6 +290,7 @@ jobs:
     
     - name: Run Autorentool
       run: |
+        sleep 1
         max_attempts=15
         for attempt in $(seq 1 $max_attempts); do
           echo "Attempt $attempt of $max_attempts to start Authoring Tool"
@@ -310,7 +311,7 @@ jobs:
               exit 1
             else
               echo "Killing process and retrying..."
-              kill $tool_pid
+              kill -9 $tool_pid
               sleep 5  # Wait for process to be fully terminated
             fi
           fi
