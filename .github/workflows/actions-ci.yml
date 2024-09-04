@@ -331,7 +331,9 @@ jobs:
           window_info=$(xwininfo -id $window_id)
           window_x=$(echo "$window_info" | grep "Absolute upper-left X" | awk '{print $4}')
           window_y=$(echo "$window_info" | grep "Absolute upper-left Y" | awk '{print $4}')
-          echo "Window position: $window_x, $window_y"
+          window_width=$(echo "$window_info" | grep "Width" | awk '{print $2}')
+          window_height=$(echo "$window_info" | grep "Height" | awk '{print $2}')
+          echo "Window position: $window_x, $window_y, $window_width, $window_height"
         else
           echo "AuthoringTool window not found"
           exit 1
