@@ -291,7 +291,7 @@ jobs:
     - name: Run Autorentool
       run: |
         sleep 1
-        max_attempts=15
+        max_attempts=5
         for attempt in $(seq 1 $max_attempts); do
           echo "Attempt $attempt of $max_attempts to start Authoring Tool"
           ./linux-unpacked/authoring-tool &
