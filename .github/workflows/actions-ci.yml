@@ -312,6 +312,8 @@ jobs:
             else
               echo "Killing process and retrying..."
               kill -9 $tool_pid
+              killall -I -l -q authoring-tool
+              killall -I -l -q Autorentool
               sleep 5  # Wait for process to be fully terminated
             fi
           fi
