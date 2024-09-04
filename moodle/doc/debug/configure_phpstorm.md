@@ -17,3 +17,6 @@
 - Check "Use path mappings (...)"
 - Add the following path mapping:  
   `\\wsl$\\Ubuntu\\home\\<wsl username>\\moodle -> /home/<wsl username>/moodle`
+
+4. Make sure that the moodle phpunit.xml file (...\moodle\phpunit.xml) is selected: 
+   Settings -> PHP -> Test Frameworks -> Default configuration file
