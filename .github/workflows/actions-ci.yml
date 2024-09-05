@@ -314,6 +314,7 @@ jobs:
               kill -9 $tool_pid
               killall -I -l -q authoring-tool
               killall -I -l -q Autorentool
+              lsof -i :8001 | awk 'NR!=1 {print $2}' | xargs -r kill -9
               sleep 5  # Wait for process to be fully terminated
             fi
           fi
