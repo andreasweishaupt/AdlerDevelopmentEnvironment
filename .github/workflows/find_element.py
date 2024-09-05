@@ -39,7 +39,7 @@ def find_element_coordinates(class_name, path=None, offset_x=0, offset_y=0):
                 location = element.location
                 logger.debug(f"window_size: {driver.get_window_size()}")
                 logger.debug(f"Element found at location: {location}")
-                return location['x'] + offset_x, location['y'] + offset_y
+                return location['x'] + offset_x + 14, location['y'] + offset_y + 38  # Add offset of 14x38
             except StaleElementReferenceException:
                 logger.warning("Stale element reference exception encountered.")
                 if attempt < max_retries - 1:
