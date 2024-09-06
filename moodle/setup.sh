@@ -94,13 +94,13 @@ echo "<VirtualHost *:$APACHE_VHOST_PORT>
 sudo a2ensite moodle.conf
 # Add the custom port to ports.conf
 echo "Listen $APACHE_VHOST_PORT" | sudo tee -a /etc/apache2/ports.conf
-sudo systemctl reload apache2
 # Change user and group of apache to the user of the WSL
 ## Set ACLs to ensure both users have read, write, and execute permissions on the directory, its subdirectories, and existing files
 #sudo setfacl -R -m u:$USER1:rwx,u:$USER2:rwx $TARGET_DIRECTORY
 ## Ensure default ACLs are set for new files and directories
 #sudo setfacl -R -d -m u:$USER1:rwx,u:$USER2:rwx $TARGET_DIRECTORYsudo sed -i "s#export APACHE_RUN_USER=www-data#export APACHE_RUN_USER=$WSL_USER#g" /etc/apache2/envvars
 sudo sed -i "s#export APACHE_RUN_GROUP=www-data#export APACHE_RUN_GROUP=$WSL_USER#g" /etc/apache2/envvars
+sudo systemctl reload apache2
 
 # configure php
 ## conf.d/moodle.ini
