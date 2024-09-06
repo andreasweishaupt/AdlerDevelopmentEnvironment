@@ -94,7 +94,7 @@ echo "<VirtualHost *:$APACHE_VHOST_PORT>
 sudo a2ensite moodle.conf
 # Add the custom port to ports.conf
 echo "Listen $APACHE_VHOST_PORT" | sudo tee -a /etc/apache2/ports.conf
-systemctl reload apache2
+sudo systemctl reload apache2
 # Change user and group of apache to the user of the WSL
 ## Set ACLs to ensure both users have read, write, and execute permissions on the directory, its subdirectories, and existing files
 #sudo setfacl -R -m u:$USER1:rwx,u:$USER2:rwx $TARGET_DIRECTORY
