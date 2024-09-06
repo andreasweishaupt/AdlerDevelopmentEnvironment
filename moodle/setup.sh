@@ -1,6 +1,11 @@
 #!/bin/bash
-WSL_USER=$(id -nu 1001)
-MOODLE_PARENT_DIRECTORY=$(getent passwd 1001 | cut -d: -f6)
+WSL_USER=$(awk -F: '($3>=1000)&&($3!=65534){print $1, $3}' /etc/passwd | sort -k2 -n | tail -1 | cut -d' ' -f1)
+MOODLE_PARENT_DIRECTORY=$(getent passwd $WSL_USER | cut -d: -f6)
+HOST_IP=$(ip route | grep default | awk '{print $3}')
+
+# configuration
+APACHE_VHOST_PORT=5080  # this is the port the moodle is available at
+PHP_VERSION=8.3
 
 # Default value for DB_HOST
 DB_HOST="127.0.0.1"
@@ -22,8 +27,27 @@ set -o allexport
 source .env
 set +o allexport
 
+# check if moodle is already installed
+if [ -f $MOODLE_PARENT_DIRECTORY/moodle/config.php ]
+then
+    echo "Moodle is already installed. Please run reset_data.sh first."
+    exit 1
+fi
+
+# check docker is available
+if ! docker &> /dev/null
+then
+    echo "Docker is not working as expected."
+    docker
+    exit 1
+fi
+
+# update package list and upgrade packages
+sudo apt update
+sudo apt dist-upgrade -y
+
 # install dependencies
-sudo apt install -y apache2 php8.1 php8.1-curl php8.1-zip composer php8.1-gd php8.1-dom php8.1-xml php8.1-mysqli php8.1-soap php8.1-xmlrpc php8.1-intl php8.1-xdebug php8.1-pgsql php8.1-tidy mariadb-client-10.6 default-jre zstd
+sudo apt install -y apache2 php$PHP_VERSION php$PHP_VERSION-curl php$PHP_VERSION-zip composer php$PHP_VERSION-gd php$PHP_VERSION-dom php$PHP_VERSION-xml php$PHP_VERSION-mysqli php$PHP_VERSION-soap php$PHP_VERSION-xmlrpc php$PHP_VERSION-intl php$PHP_VERSION-xdebug php$PHP_VERSION-pgsql php$PHP_VERSION-tidy mariadb-client default-jre zstd
 
 # install locales
 sudo sed -i 's/^# de_DE.UTF-8 UTF-8$/de_DE.UTF-8 UTF-8/' /etc/locale.gen
@@ -37,23 +61,53 @@ mkdir $MOODLE_PARENT_DIRECTORY/moodledata $MOODLE_PARENT_DIRECTORY/moodledata_ph
 
 # setup database
 sudo --preserve-env docker compose up -d
-while ! mysqladmin ping -h $DB_HOST -P3312 --connect-timeout=5 --silent 2>/dev/null; do echo "db is starting" && sleep 1; done
-echo "db is up"
+# Define a timeout of 20 seconds
+TIMEOUT=15
+# Check the database status every second
+for ((i=0; i<TIMEOUT; i++)); do
+    if mysqladmin ping -h $DB_HOST -P3312 --connect-timeout=5 --silent 2>/dev/null; then
+        echo "db is up"
+        break
+    fi
+    echo "db is starting"
+    sleep 1
+done
+if [ $i -eq $TIMEOUT ]; then
+    echo "Error: Database did not start within $TIMEOUT seconds."
+    exit 1
+fi
 
 # configure apache
-sudo sed -i "s#<Directory /var/www/>#<Directory $MOODLE_PARENT_DIRECTORY/>#g"  /etc/apache2/apache2.conf
-sudo sed -i "s#DocumentRoot /var/www/html#DocumentRoot $MOODLE_PARENT_DIRECTORY/moodle#g" /etc/apache2/sites-enabled/000-default.conf
-sudo sed -i "s#export APACHE_RUN_USER=www-data#export APACHE_RUN_USER=$WSL_USER#g" /etc/apache2/envvars
+# Create a new virtual host configuration file
+echo "<VirtualHost *:$APACHE_VHOST_PORT>
+    DocumentRoot $MOODLE_PARENT_DIRECTORY/moodle
+    <Directory $MOODLE_PARENT_DIRECTORY>
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+    </Directory>
+    ErrorLog \${APACHE_LOG_DIR}/moodle_error.log
+    CustomLog \${APACHE_LOG_DIR}/moodle_access.log combined
+</VirtualHost>" | sudo tee /etc/apache2/sites-available/moodle.conf
+# Enable the new virtual host configuration
+sudo a2ensite moodle.conf
+# Add the custom port to ports.conf
+echo "Listen $APACHE_VHOST_PORT" | sudo tee -a /etc/apache2/ports.conf
+# Change user and group of apache to the user of the WSL
+## Set ACLs to ensure both users have read, write, and execute permissions on the directory, its subdirectories, and existing files
+#sudo setfacl -R -m u:$USER1:rwx,u:$USER2:rwx $TARGET_DIRECTORY
+## Ensure default ACLs are set for new files and directories
+#sudo setfacl -R -d -m u:$USER1:rwx,u:$USER2:rwx $TARGET_DIRECTORYsudo sed -i "s#export APACHE_RUN_USER=www-data#export APACHE_RUN_USER=$WSL_USER#g" /etc/apache2/envvars
 sudo sed -i "s#export APACHE_RUN_GROUP=www-data#export APACHE_RUN_GROUP=$WSL_USER#g" /etc/apache2/envvars
 
 # configure php
 ## conf.d/moodle.ini
-echo "max_input_vars = 5000" | sudo tee /etc/php/8.1/cli/conf.d/moodle.ini
-sudo ln -s  /etc/php/8.1/cli/conf.d/moodle.ini /etc/php/8.1/apache2/conf.d/moodle.ini
+echo "max_input_vars = 5000" | sudo tee /etc/php/$PHP_VERSION/cli/conf.d/moodle.ini
+sudo ln -s  /etc/php/$PHP_VERSION/cli/conf.d/moodle.ini /etc/php/$PHP_VERSION/apache2/conf.d/moodle.ini
 ## apache/php.ini
-sudo sed -i 's/^\(\s*;\?\s*\)upload_max_filesize\s*=\s*[0-9]*M/\1upload_max_filesize = 2048M/' /etc/php/8.1/apache2/php.ini
-sudo sed -i 's/^\(\s*;\?\s*\)post_max_size\s*=\s*[0-9]*M/\post_max_size = 2048M/' /etc/php/8.1/apache2/php.ini
-sudo sed -i 's/^\(\s*;\?\s*\)memory_limit\s*=\s*[0-9]*M/\memory_limit = 2048M/' /etc/php/8.1/apache2/php.ini
+sudo sed -i 's/^\(\s*;\?\s*\)upload_max_filesize\s*=\s*[0-9]*M/\upload_max_filesize = 2048M/' /etc/php/$PHP_VERSION/apache2/php.ini
+sudo sed -i 's/^\(\s*;\?\s*\)post_max_size\s*=\s*[0-9]*M/\post_max_size = 2048M/' /etc/php/$PHP_VERSION/apache2/php.ini
+sudo sed -i 's/^\(\s*;\?\s*\)memory_limit\s*=\s*[0-9]*M/\memory_limit = 256M/' /etc/php/$PHP_VERSION/apache2/php.ini
 
 
 echo "[XDebug]
@@ -65,23 +119,23 @@ xdebug.mode=debug
 xdebug.client_port=9000
 
 ; host ip adress of wsl network adapter
-xdebug.client_host=172.18.48.1
+xdebug.client_host=$HOST_IP
 
 ; idekey value is specific to PhpStorm
 xdebug.idekey=phpstorm
 
-// TODO: always enabling debugging slows down the web interface significantly.
+// always enabling debugging slows down the web interface significantly.
 // Instead prefer to enable debugging only when needed. See README.md for more information.
 ;xdebug.start_with_request=true
-" | sudo tee /etc/php/8.1/apache2/conf.d/20-xdebug.ini
-sudo rm /etc/php/8.1/cli/conf.d/20-xdebug.ini
-sudo ln -s  /etc/php/8.1/apache2/conf.d/20-xdebug.ini /etc/php/8.1/cli/conf.d/20-xdebug.ini
+" | sudo tee /etc/php/$PHP_VERSION/apache2/conf.d/20-xdebug.ini
+sudo rm /etc/php/$PHP_VERSION/cli/conf.d/20-xdebug.ini
+sudo ln -s  /etc/php/$PHP_VERSION/apache2/conf.d/20-xdebug.ini /etc/php/$PHP_VERSION/cli/conf.d/20-xdebug.ini
 
 # restart apache to apply updated config
 sudo service apache2 restart
 
 # install moodle
-php $MOODLE_PARENT_DIRECTORY/moodle/admin/cli/install.php --lang=DE --wwwroot=http://localhost --dataroot=$MOODLE_PARENT_DIRECTORY/moodledata --dbtype=mariadb --dbhost=$DB_HOST --dbport=3312 --dbuser=${_DB_MOODLE_USER} --dbpass=${_DB_MOODLE_PW} --dbname=${_DB_MOODLE_NAME} --fullname=fullname --shortname=shortname --adminuser=${_MOODLE_USER} --adminpass=${_MOODLE_PW} --adminemail=admin@blub.blub --supportemail=admin@blub.blub --non-interactive --agree-license
+php $MOODLE_PARENT_DIRECTORY/moodle/admin/cli/install.php --lang=DE --wwwroot=http://localhost:$APACHE_VHOST_PORT --dataroot=$MOODLE_PARENT_DIRECTORY/moodledata --dbtype=mariadb --dbhost=$DB_HOST --dbport=3312 --dbuser=${_DB_MOODLE_USER} --dbpass=${_DB_MOODLE_PW} --dbname=${_DB_MOODLE_NAME} --fullname=fullname --shortname=shortname --adminuser=${_MOODLE_USER} --adminpass=${_MOODLE_PW} --adminemail=admin@blub.blub --supportemail=admin@blub.blub --non-interactive --agree-license
 
 # setup for plugins (but don't download them, they have be present in the moodle folder already)
 git clone https://github.com/ProjektAdLer/moodle-docker /tmp/moodle-docker
@@ -122,7 +176,7 @@ echo "
 //=========================================================================
 // Behat test site needs a unique www root, data directory and database prefix:
 //
-\$CFG->behat_wwwroot = 'http://127.0.0.1';
+\$CFG->behat_wwwroot = 'http://127.0.0.1:$APACHE_VHOST_PORT';
 \$CFG->behat_prefix = 'bht_';
 \$CFG->behat_dataroot = '$MOODLE_PARENT_DIRECTORY/moodledata_bht';
 
@@ -148,6 +202,7 @@ php admin/tool/behat/cli/init.php
 
 echo moodle login data: username: ${_MOODLE_USER} password: ${_MOODLE_PW}
 echo db root password: ${_DB_ROOT_PW}
+echo Host IP (for IDE config): $HOST_IP
 
 
 
