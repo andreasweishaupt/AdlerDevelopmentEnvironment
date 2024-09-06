@@ -100,7 +100,6 @@ echo "Listen $APACHE_VHOST_PORT" | sudo tee -a /etc/apache2/ports.conf
 ## Ensure default ACLs are set for new files and directories
 #sudo setfacl -R -d -m u:$USER1:rwx,u:$USER2:rwx $TARGET_DIRECTORYsudo sed -i "s#export APACHE_RUN_USER=www-data#export APACHE_RUN_USER=$WSL_USER#g" /etc/apache2/envvars
 sudo sed -i "s#export APACHE_RUN_GROUP=www-data#export APACHE_RUN_GROUP=$WSL_USER#g" /etc/apache2/envvars
-sudo systemctl reload apache2
 
 # configure php
 ## conf.d/moodle.ini
