@@ -83,6 +83,7 @@ services:
       - '8087:80'
     environment:
       API_URL: 'http://${_URL_BACKEND}/api'
+      MOODLE_URL: "http://${_URL_MOODLE}"
     restart: unless-stopped
 
   phpmyadmin:
