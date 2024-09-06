@@ -90,6 +90,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          sudo add-apt-repository -y ppa:ondrej/php
           sudo apt-get update
           sudo apt-get install -y zstd git jq
           sudo apt-get install -y git locales docker-ce-cli wget unzip default-jre zstd
