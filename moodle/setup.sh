@@ -84,9 +84,9 @@ docker ps
 echo "docker ps -a"
 docker ps -a
 echo "docker logs db_moodle"
-docker logs db_moodle
+docker logs moodle_dev_env-db_moodle-1
 echo "docker logs phpmyadmin"
-docker logs phpmyadmin
+docker logs moodle_dev_env-phpmyadmin-1
 echo "docker network ls"
 docker network ls
 echo "telnet localhost 3312"
