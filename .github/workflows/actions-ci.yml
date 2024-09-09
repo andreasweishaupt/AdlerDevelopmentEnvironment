@@ -168,9 +168,15 @@ jobs:
           chmod +x $GITHUB_WORKSPACE/moodle/setup.sh
           $GITHUB_WORKSPACE/moodle/setup.sh --dbhost localhost
 
+      - name: Check Docker containers
+        run: |
+          docker ps
+          docker logs moodle_dev_env-db_moodle-1
+          docker logs moodle_dev_env-phpmyadmin-1
+        
       - name: Download Selenium
         run: |
-          cd $(getent passwd 1001 | cut -d: -f6)/moodle
+          cd $MOODLE_PARENT_DIRECTORY/moodle
           wget -N https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.23.0/selenium-server-4.23.0.jar
           PATH=./:$PATH java -jar selenium-server-4.23.0.jar standalone &
           
