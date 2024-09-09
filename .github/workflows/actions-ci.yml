@@ -146,7 +146,18 @@ jobs:
           cd $HOME
           chmod +x $GITHUB_WORKSPACE/moodle/download_adler_moodle.sh
           $GITHUB_WORKSPACE/moodle/download_adler_moodle.sh
-
+          
+      - name: Generate config.php
+        run: |
+          cp $GITHUB_WORKSPACE/moodle/config-dist.php $GITHUB_WORKSPACE/moodle/config.php
+          sed -i "s/\$CFG->dbtype    = 'pgsql';/\$CFG->dbtype    = 'mysqli';/" $GITHUB_WORKSPACE/moodle/config.php
+          sed -i "s/\$CFG->dbhost    = 'localhost';/\$CFG->dbhost    = 'db_moodle';/" $GITHUB_WORKSPACE/moodle/config.php
+          sed -i "s/\$CFG->dbname    = 'moodle';/\$CFG->dbname    = '$_DB_MOODLE_NAME';/" $GITHUB_WORKSPACE/moodle/config.php
+          sed -i "s/\$CFG->dbuser    = 'username';/\$CFG->dbuser    = '$_DB_MOODLE_USER';/" $GITHUB_WORKSPACE/moodle/config.php
+          sed -i "s/\$CFG->dbpass    = 'password';/\$CFG->dbpass    = '$_DB_MOODLE_PW';/" $GITHUB_WORKSPACE/moodle/config.php
+          sed -i "s/\$CFG->wwwroot   = 'http://example.com/moodle';/\$CFG->wwwroot   = 'http://localhost:8001';/" $GITHUB_WORKSPACE/moodle/config.php
+          sed -i "s/\$CFG->dataroot  = '/home/example/moodledata';/\$CFG->dataroot  = '\/home\/runner\/moodledata';/" $GITHUB_WORKSPACE/moodle/config.php
+      
       - name: Print User directory
         run: |
           tree -L 4 $MOODLE_PARENT_DIRECTORY
