@@ -155,8 +155,8 @@ jobs:
           sed -i "s/\$CFG->dbname    = 'moodle';/\$CFG->dbname    = '$_DB_MOODLE_NAME';/" $MOODLE_PARENT_DIRECTORY/moodle/config.php
           sed -i "s/\$CFG->dbuser    = 'username';/\$CFG->dbuser    = '$_DB_MOODLE_USER';/" $MOODLE_PARENT_DIRECTORY/moodle/config.php
           sed -i "s/\$CFG->dbpass    = 'password';/\$CFG->dbpass    = '$_DB_MOODLE_PW';/" $MOODLE_PARENT_DIRECTORY/moodle/config.php
-          sed -i "s/\$CFG->wwwroot   = 'http://example.com/moodle';/\$CFG->wwwroot   = 'http://localhost:8001';/" $MOODLE_PARENT_DIRECTORY/moodle/config.php
-          sed -i "s/\$CFG->dataroot  = '/home/example/moodledata';/\$CFG->dataroot  = '\/home\/runner\/moodledata';/" $MOODLE_PARENT_DIRECTORY/moodle/config.php
+          sed -i "s|\$CFG->wwwroot   = 'http://example.com/moodle';|\$CFG->wwwroot   = 'http://localhost:8001';|" $MOODLE_PARENT_DIRECTORY/moodle/config.php
+          sed -i "s|\$CFG->dataroot  = '/home/example/moodledata';|\$CFG->dataroot  = '/home/runner/moodledata';|" $MOODLE_PARENT_DIRECTORY/moodle/config.php
       
       - name: Print User directory
         run: |
