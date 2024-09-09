@@ -95,6 +95,10 @@ echo "docker compose config"
 docker compose config
 echo "docker volume ls"
 docker volume ls
+echo "mysql -h localhost -P 3312 -u root -p a"
+mysql -h localhost -P 3312 -u root -p a
+echo 'mysql -h localhost -P 3312 -u root -p a -e "SHOW DATABASES;"'
+mysql -h localhost -P 3312 -u root -p a -e "SHOW DATABASES;"
 echo "-----------------------------------------"
 
 # configure apache
