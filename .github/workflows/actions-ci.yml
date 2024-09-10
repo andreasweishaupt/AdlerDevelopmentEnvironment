@@ -84,6 +84,20 @@ jobs:
           echo "MOODLE_PARENT_DIRECTORY=$HOME" >> $GITHUB_ENV
           echo "WSL_USER=$USER" >> $GITHUB_ENV
           
+      - name: Cache apt packages
+        uses: actions/cache@v2
+        with:
+          path: /var/cache/apt/archives
+          key: ${{ runner.os }}-apt-${{ hashFiles('**/setup.sh') }}
+          restore-keys: |
+            ${{ runner.os }}-apt-
+      
+      - name: Update and upgrade packages
+        run: |
+          sudo apt-get update
+          sudo apt-get dist-upgrade -y
+    
+    
       - name: Print User directory
         run: |
           tree -L 4 $MOODLE_PARENT_DIRECTORY
@@ -194,7 +208,12 @@ jobs:
           docker ps
           docker logs moodle_dev_env-phpmyadmin-1
           docker logs moodle_dev_env-db_moodle-1
-          docker exec moodle_dev_env-db_moodle-1 mysql -u root -p $_DB_ROOT_PW -e "SHOW DATABASES;"
+          docker network ls
+          telnet localhost 3312
+          docker compose config
+          docker volume ls
+          mysql -h localhost -P 3312 -u root -p $_DB_ROOT_PW
+          mysql -h localhost -P 3312 -u root -p $_DB_ROOT_PW -e "SHOW DATABASES;"
         
       - name: Download Selenium
         run: |
