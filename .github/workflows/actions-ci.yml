@@ -168,12 +168,33 @@ jobs:
           cd $HOME/moodle
           chmod +x $GITHUB_WORKSPACE/moodle/setup.sh
           $GITHUB_WORKSPACE/moodle/setup.sh --dbhost localhost
+          
+      - name: Check config.php
+        run: |
+          cat > $MOODLE_PARENT_DIRECTORY/moodle/config.php << EOL
+          <?php
+          \$CFG = new stdClass();
+          \$CFG->dbtype    = 'mysqli';
+          \$CFG->dblibrary = 'native';
+          \$CFG->dbhost    = 'db_moodle';
+          \$CFG->dbname    = '$_DB_MOODLE_NAME';
+          \$CFG->dbuser    = '$_DB_MOODLE_USER';
+          \$CFG->dbpass    = '$_DB_MOODLE_PW';
+          \$CFG->prefix    = 'mdl_';
+          \$CFG->dboptions = array('dbcollation' => 'utf8mb4_unicode_ci');
+          \$CFG->wwwroot   = 'http://localhost:8001';
+          \$CFG->dataroot  = '/home/runner/moodledata';
+          \$CFG->admin     = 'admin';
+          \$CFG->directorypermissions = 0777;
+          require_once(__DIR__ . '/lib/setup.php');
+          EOL
 
       - name: Check Docker containers
         run: |
           docker ps
-          docker logs moodle_dev_env-db_moodle-1
           docker logs moodle_dev_env-phpmyadmin-1
+          docker logs moodle_dev_env-db_moodle-1
+          docker exec moodle_dev_env-db_moodle-1 mysql -u root -p $_DB_ROOT_PW -e "SHOW DATABASES;"
         
       - name: Download Selenium
         run: |
@@ -187,7 +208,10 @@ jobs:
 
       - name: Run behat
         run: |
-          $MOODLE_PARENT_DIRECTORY/moodle/vendor/bin/behat --config $MOODLE_PARENT_DIRECTORY/moodledata_bht/behatrun/behat/behat.yml --profile headlesschrome
+          source $GITHUB_ENV
+          cd $MOODLE_PARENT_DIRECTORY/moodle 
+          php admin/tool/behat/cli/init.php
+          vendor/bin/behat --config $MOODLE_PARENT_DIRECTORY/moodledata_bht/behatrun/behat/behat.yml --profile chrome --verbose
           
   autorentool:
     if: false
