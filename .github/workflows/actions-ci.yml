@@ -224,7 +224,7 @@ jobs:
           echo "docker network ls"
           docker network ls
           echo "telnet localhost 3312"
-          telnet localhost 3312
+          telnet moodle_dev_env-db_moodle-1 3312
           echo "docker compose config"
           docker compose config
           echo "docker volume ls"
