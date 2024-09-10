@@ -95,6 +95,12 @@ jobs:
       
       - name: Update and upgrade packages
         run: |
+          if dpkg -l | grep -q php8.1; then
+            sudo apt-get purge -y $(dpkg -l | grep php8.1 | awk '{print $2}')
+            sudo apt-get autoremove -y
+          fi
+          sudo add-apt-repository -r ppa:ondrej/php -y
+          sudo rm -f /etc/apt/sources.list.d/ondrej-ubuntu-php-*.list
           sudo apt-get update
           sudo apt-get dist-upgrade -y
     
