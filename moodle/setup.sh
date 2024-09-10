@@ -96,9 +96,11 @@ docker compose config
 echo "docker volume ls"
 docker volume ls
 echo "mysql -h localhost -P 3312 -u root -p a"
-mysql -h moodle_dev_env-db_moodle-1 -P 3312 -u root -pa
+mysql -h localhost -P 3312 -u root -p$_DB_ROOT_PW
 echo 'mysql -h localhost -P 3312 -u root -p a -e "SHOW DATABASES;"'
-mysql -h moodle_dev_env-db_moodle-1 -P 3312 -u root -pa -e "SHOW DATABASES;"
+mysql -h localhost -P 3312 -u root -p$_DB_ROOT_PW -e "SHOW DATABASES;"
+echo "docker logs db_moodle"
+docker logs moodle_dev_env-db_moodle-1
 echo "-----------------------------------------"
 
 # configure apache
