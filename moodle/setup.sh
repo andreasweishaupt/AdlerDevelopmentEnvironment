@@ -78,6 +78,29 @@ if [ $i -eq $TIMEOUT ]; then
     exit 1
 fi
 
+echo "--------Testing Docker compose up--------"
+echo "docker ps"
+docker ps
+echo "docker ps -a"
+docker ps -a
+echo "docker logs db_moodle"
+docker logs moodle_dev_env-db_moodle-1
+echo "docker logs phpmyadmin"
+docker logs moodle_dev_env-phpmyadmin-1
+echo "docker network ls"
+docker network ls
+echo "telnet localhost 3312"
+telnet localhost 3312
+echo "docker compose config"
+docker compose config
+echo "docker volume ls"
+docker volume ls
+echo "mysql -h localhost -P 3312 -u root -p a"
+mysql -h localhost -P 3312 -u root -p a
+echo 'mysql -h localhost -P 3312 -u root -p a -e "SHOW DATABASES;"'
+mysql -h localhost -P 3312 -u root -p a -e "SHOW DATABASES;"
+echo "-----------------------------------------"
+
 # configure apache
 # Create a new virtual host configuration file
 echo "<VirtualHost *:$APACHE_VHOST_PORT>
