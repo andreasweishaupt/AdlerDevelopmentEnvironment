@@ -212,8 +212,8 @@ jobs:
           telnet localhost 3312
           docker compose config
           docker volume ls
-          mysql -h localhost -P 3312 -u root -p $_DB_ROOT_PW
-          mysql -h localhost -P 3312 -u root -p $_DB_ROOT_PW -e "SHOW DATABASES;"
+          mysql -h moodle_dev_env-db_moodle-1 -P 3312 -u root -p $_DB_ROOT_PW
+          mysql -h moodle_dev_env-db_moodle-1 -P 3312 -u root -p $_DB_ROOT_PW -e "SHOW DATABASES;"
         
       - name: Download Selenium
         run: |
