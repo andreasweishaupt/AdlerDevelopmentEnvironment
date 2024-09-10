@@ -148,6 +148,7 @@ jobs:
           $GITHUB_WORKSPACE/moodle/download_adler_moodle.sh
           
       - name: Generate config.php
+        if: false
         run: |
           cp $MOODLE_PARENT_DIRECTORY/moodle/config-dist.php $MOODLE_PARENT_DIRECTORY/moodle/config.php
           sed -i "s/\$CFG->dbtype    = 'pgsql';/\$CFG->dbtype    = 'mysqli';/" $MOODLE_PARENT_DIRECTORY/moodle/config.php
