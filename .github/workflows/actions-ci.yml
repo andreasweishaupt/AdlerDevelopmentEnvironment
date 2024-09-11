@@ -85,12 +85,15 @@ jobs:
           echo "WSL_USER=$USER" >> $GITHUB_ENV
           
       - name: Update and upgrade packages
-        if: false
+        #if: false
         run: |
           if dpkg -l | grep -q php8.1; then
             sudo apt-get purge -y $(dpkg -l | grep php8.1 | awk '{print $2}')
-            sudo apt-get autoremove -y
           fi
+          if dpkg -l | grep -q apache2; then
+            sudo apt-get purge -y $(dpkg -l | grep apache2 | awk '{print $2}')
+          fi
+          sudo apt-get autoremove -y
           sudo add-apt-repository -r ppa:ondrej/php -y
           sudo rm -f /etc/apt/sources.list.d/ondrej-ubuntu-php-*.list
           sudo apt-get update
