@@ -78,6 +78,7 @@ if [ $i -eq $TIMEOUT ]; then
     exit 1
 fi
 
+mysqladmin -h $DB_HOST -P3312 -p"${_DB_ROOT_PW}" -e "SHOW DATABASES;"
 echo "--------Testing Docker compose up--------"
 echo "docker ps"
 docker ps
