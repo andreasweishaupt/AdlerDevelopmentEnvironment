@@ -183,7 +183,7 @@ jobs:
         run: |
           cd $HOME/moodle
           chmod +x $GITHUB_WORKSPACE/moodle/setup.sh
-          $GITHUB_WORKSPACE/moodle/setup.sh --dbhost localhost
+          $GITHUB_WORKSPACE/moodle/setup.sh
           
 
       - name: Check Docker containers
