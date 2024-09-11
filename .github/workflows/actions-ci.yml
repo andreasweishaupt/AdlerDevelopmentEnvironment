@@ -84,16 +84,8 @@ jobs:
           echo "MOODLE_PARENT_DIRECTORY=$HOME" >> $GITHUB_ENV
           echo "WSL_USER=$USER" >> $GITHUB_ENV
           
-      - name: Cache apt packages
-        uses: actions/cache@v4
-        with:
-          path: /var/cache/apt/archives
-          key: ${{ runner.os }}-apt-${{ hashFiles('**/setup.sh') }}-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-apt-${{ hashFiles('**/setup.sh') }}-
-            ${{ runner.os }}-apt-
-      
       - name: Update and upgrade packages
+        if: false
         run: |
           if dpkg -l | grep -q php8.1; then
             sudo apt-get purge -y $(dpkg -l | grep php8.1 | awk '{print $2}')
