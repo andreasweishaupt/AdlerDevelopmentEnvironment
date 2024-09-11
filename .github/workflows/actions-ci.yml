@@ -238,8 +238,7 @@ jobs:
           cat $MOODLE_PARENT_DIRECTORY/moodle/config.php
           source $GITHUB_ENV
           cd $MOODLE_PARENT_DIRECTORY/moodle 
-          php admin/tool/behat/cli/init.php
-          vendor/bin/behat --config $MOODLE_PARENT_DIRECTORY/moodledata_bht/behatrun/behat/behat.yml --profile chrome --verbose
+          vendor/bin/behat --config $MOODLE_PARENT_DIRECTORY/moodledata_bht/behatrun/behat/behat.yml --profile headlesschrome --verbose
           
   autorentool:
     if: false
