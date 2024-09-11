@@ -183,6 +183,7 @@ jobs:
         run: |
           cd $HOME/moodle
           chmod +x $GITHUB_WORKSPACE/moodle/setup.sh
+          docker ps
           $GITHUB_WORKSPACE/moodle/setup.sh
           
 
