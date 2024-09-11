@@ -6,7 +6,7 @@ HOST_IP=$(ip route | grep default | awk '{print $3}')
 
 # configuration
 APACHE_VHOST_PORT=5080  # this is the port the moodle is available at
-PHP_VERSION=8.3
+PHP_VERSION=8.1
 
 # Default value for DB_HOST
 DB_HOST="127.0.0.1"

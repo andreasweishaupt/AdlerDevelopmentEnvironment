@@ -85,7 +85,7 @@ jobs:
           echo "WSL_USER=$USER" >> $GITHUB_ENV
           
       - name: Update and upgrade packages
-        #if: false
+        if: false
         run: |
           if dpkg -l | grep -q php8.1; then
             sudo apt-get purge -y $(dpkg -l | grep php8.1 | awk '{print $2}')
