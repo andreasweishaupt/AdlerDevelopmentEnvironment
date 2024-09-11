@@ -235,6 +235,7 @@ jobs:
 
       - name: Run behat
         run: |
+          cat $MOODLE_PARENT_DIRECTORY/moodle/config.php
           source $GITHUB_ENV
           cd $MOODLE_PARENT_DIRECTORY/moodle 
           php admin/tool/behat/cli/init.php
