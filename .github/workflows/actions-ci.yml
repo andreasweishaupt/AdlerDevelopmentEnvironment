@@ -185,25 +185,6 @@ jobs:
           chmod +x $GITHUB_WORKSPACE/moodle/setup.sh
           $GITHUB_WORKSPACE/moodle/setup.sh --dbhost localhost
           
-      - name: Check config.php
-        run: |
-          cat > $MOODLE_PARENT_DIRECTORY/moodle/config.php << EOL
-          <?php
-          \$CFG = new stdClass();
-          \$CFG->dbtype    = 'mysqli';
-          \$CFG->dblibrary = 'native';
-          \$CFG->dbhost    = 'db_moodle';
-          \$CFG->dbname    = '$_DB_MOODLE_NAME';
-          \$CFG->dbuser    = '$_DB_MOODLE_USER';
-          \$CFG->dbpass    = '$_DB_MOODLE_PW';
-          \$CFG->prefix    = 'mdl_';
-          \$CFG->dboptions = array('dbcollation' => 'utf8mb4_unicode_ci');
-          \$CFG->wwwroot   = 'http://localhost:8001';
-          \$CFG->dataroot  = '/home/runner/moodledata';
-          \$CFG->admin     = 'admin';
-          \$CFG->directorypermissions = 0777;
-          require_once(__DIR__ . '/lib/setup.php');
-          EOL
 
       - name: Check Docker containers
         run: |
