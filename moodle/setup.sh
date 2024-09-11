@@ -78,7 +78,14 @@ if [ $i -eq $TIMEOUT ]; then
     exit 1
 fi
 
-mysqladmin -h $DB_HOST -P3312 -p"${_DB_ROOT_PW}" -e "SHOW DATABASES;"
+if docker exec moodle_dev_env-db_moodle-1 mysql -u root -p"${_DB_ROOT_PW}" -e "SHOW DATABASES;"; then
+    echo "Datenbankverbindung erfolgreich!"
+    return 0
+else
+    echo "Datenbankverbindung fehlgeschlagen"
+    return 1
+fi
+sleep 1  
 echo "--------Testing Docker compose up--------"
 echo "docker ps"
 docker ps
