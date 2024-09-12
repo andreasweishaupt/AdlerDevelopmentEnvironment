@@ -5,7 +5,7 @@ MOODLE_PARENT_DIRECTORY=$(getent passwd $WSL_USER | cut -d: -f6)
 HOST_IP=$(ip route | grep default | awk '{print $3}')
 
 # configuration
-APACHE_VHOST_PORT=6080  # this is the port the moodle is available at
+APACHE_VHOST_PORT=5080  # this is the port the moodle is available at
 PHP_VERSION=8.1
 
 # Default value for DB_HOST
