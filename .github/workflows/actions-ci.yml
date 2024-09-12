@@ -221,6 +221,7 @@ jobs:
         continue-on-error: true
 
       - name: Setup tmate session
+        if: false
         uses: mxschmitt/action-tmate@v3
 
       - name: Run behat
