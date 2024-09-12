@@ -209,7 +209,7 @@ jobs:
         run: |
           cd $MOODLE_PARENT_DIRECTORY/moodle
           wget -N https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.23.0/selenium-server-4.23.0.jar
-          PATH=./:$PATH java -jar selenium-server-4.23.0.jar standalone &
+          PATH=./:$PATH java -jar selenium-server-4.23.0.jar standalone --selenium-manager true &
           
       - name: Print User directory
         run: |
@@ -218,9 +218,10 @@ jobs:
       - name: Run behat
         run: |
           cat $MOODLE_PARENT_DIRECTORY/moodle/config.php
+          cat $MOODLE_PARENT_DIRECTORY/moodledata_bht/behatrun/behat/behat.yml
           source $GITHUB_ENV
           cd $MOODLE_PARENT_DIRECTORY/moodle 
-          vendor/bin/behat --config $MOODLE_PARENT_DIRECTORY/moodledata_bht/behatrun/behat/behat.yml --profile headlesschrome --verbose
+          vendor/bin/behat --config $MOODLE_PARENT_DIRECTORY/moodledata_bht/behatrun/behat/behat.yml --profile headlesschrome --verbose --format pretty
           
   autorentool:
     if: false
