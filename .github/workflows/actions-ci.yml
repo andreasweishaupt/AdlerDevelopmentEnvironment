@@ -56,6 +56,9 @@ jobs:
           path: moodle
           load-mode: strict
           
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+  
       - name: Check Environment
         env:
           _MOODLE_USER: ${{ env._MOODLE_USER }}
@@ -221,6 +224,9 @@ jobs:
           echo "---------------------------------------------------------"
           curl http://127.0.0.1:6080 || echo "URL http://127.0.0.1:6080 is not reachable"
         continue-on-error: true
+
+      - name: Sleep for debugging
+        run: sleep 600 # Wartet 10 Minuten
 
       - name: Run behat
         run: |
