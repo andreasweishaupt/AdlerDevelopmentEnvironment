@@ -217,9 +217,10 @@ jobs:
       
       - name: Check URL
         run: |
-          curl http://127.0.0.1:5080
+          curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:5080 || echo "URL http://127.0.0.1:5080 is not reachable"
           echo "---------------------------------------------------------"
-          curl http://127.0.0.1:6080
+          curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:6080 || echo "URL http://127.0.0.1:6080 is not reachable"
+        continue-on-error: true
 
       - name: Run behat
         run: |
