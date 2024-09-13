@@ -35,12 +35,20 @@ def find_element_coordinates(identifier, identifier_type, path=None, offset_x=0,
                     element = WebDriverWait(driver, 10).until(
                         EC.visibility_of_element_located((By.CLASS_NAME, identifier))
                     )
-                elif identifier_type == "img_src":
+                elif identifier_type == "src":
                     element = WebDriverWait(driver, 10).until(
                         EC.visibility_of_element_located((By.XPATH, f"//img[contains(@src, '{identifier}')]"))
                     )
+                elif identifier_type == "identifier":
+                    element = WebDriverWait(driver, 10).until(
+                        EC.visibility_of_element_located((By.XPATH, f"//*[contains(@identifier, '{identifier}')]"))
+                    )
+                elif identifier_type == "title":
+                    element = WebDriverWait(driver, 10).until(
+                        EC.visibility_of_element_located((By.XPATH, f"//*[contains(@title, '{identifier}')]"))
+                    )
                 else:
-                    raise ValueError("Invalid identifier_type. Use 'class' or 'img_src'.")
+                    raise ValueError("Invalid identifier_type. Use 'class', 'src', 'identifier', or 'title'.")
 
                 time.sleep(0.5)
                 location = element.location
@@ -65,7 +73,7 @@ def find_element_coordinates(identifier, identifier_type, path=None, offset_x=0,
 if __name__ == "__main__":
     if len(sys.argv) < 3 or len(sys.argv) > 6:
         print("Usage: python find_element.py <identifier_type> <identifier> [path] [offset_x] [offset_y]")
-        print("identifier_type can be 'class' or 'img_src'")
+        print("identifier_type can be 'class', 'src', 'identifier', or 'title'")
         sys.exit(1)
     
     identifier_type = sys.argv[1]
