@@ -427,10 +427,10 @@ jobs:
         sleep 2
         
         # Click on slot ele_0
-        coordinates=$(GET_POSITION "identifier" "ele_0" "app" $WINDOW_X $WINDOW_Y)
-        IFS=',' read -ra coords <<< "$coordinates"
-        echo $coordinates
-        DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1 sleep 1
+        # coordinates=$(GET_POSITION "identifier" "ele_0" "app" $WINDOW_X $WINDOW_Y)
+        # IFS=',' read -ra coords <<< "$coordinates"
+        # echo $coordinates
+        # DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1 sleep 1
         
         # Click on adaptivityelement-icon
         coordinates=$(GET_POSITION "src" "adaptivityelement-icon.png" "app" $WINDOW_X $WINDOW_Y)
