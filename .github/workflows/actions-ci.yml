@@ -18,7 +18,7 @@ on:
 jobs:
 
   build-and-test:
-    #if: false
+    if: false
     # The type of runner that the job will run on
     runs-on: ubuntu-22.04
 
@@ -233,7 +233,7 @@ jobs:
           vendor/bin/behat --config $MOODLE_PARENT_DIRECTORY/moodledata_bht/behatrun/behat/behat.yml --profile headlesschrome --verbose --format pretty
           
   autorentool:
-    if: false
+    #if: false
     runs-on: ubuntu-latest
 
     steps:
@@ -407,11 +407,22 @@ jobs:
     - name: Simulate interactions
       run: |
         source $GITHUB_WORKSPACE/.github/workflows/define_get_position.sh
-        coordinates=$(GET_POSITION "add-learning-world" "MyLearningWorldsOverview" $WINDOW_X $WINDOW_Y)
+        
+        # Click on create-world-button
+        coordinates=$(GET_POSITION "class" "create-world-button" "MyLearningWorldsOverview" $WINDOW_X $WINDOW_Y)
         IFS=',' read -ra coords <<< "$coordinates"
         echo $coordinates
         DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1 sleep 1
         DISPLAY=:99 xdotool type "testWorld"
+        DISPLAY=:99 xdotool sleep 1 key "Return"
+        sleep 2
+        
+        # Click on space-metadata-icon
+        coordinates=$(GET_POSITION "img_src" "space-metadata-icon.png" "MyLearningWorldsOverview" $WINDOW_X $WINDOW_Y)
+        IFS=',' read -ra coords <<< "$coordinates"
+        echo $coordinates
+        DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1 sleep 1
+        DISPLAY=:99 xdotool type "testSpace"
         DISPLAY=:99 xdotool sleep 1 key "Return"
         sleep 2
 

@@ -6,14 +6,13 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import StaleElementReferenceException
+from selenium.common.exceptions import StaleElementReferenceException, TimeoutException
 import time
 
-# Set up logging
 logging.basicConfig(level=logging.DEBUG, stream=sys.stderr, format='find_element.py - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-def find_element_coordinates(class_name, path=None, offset_x=0, offset_y=0):
+def find_element_coordinates(identifier, identifier_type, path=None, offset_x=0, offset_y=0):
     max_retries = 3
     chrome_options = Options()
     chrome_options.add_argument("--headless")
@@ -31,10 +30,18 @@ def find_element_coordinates(class_name, path=None, offset_x=0, offset_y=0):
 
         for attempt in range(max_retries):
             try:
-                logger.debug(f"Attempt {attempt + 1} to find element with class name: {class_name}")
-                element = WebDriverWait(driver, 10).until(
-                    EC.visibility_of_element_located((By.CLASS_NAME, class_name))
-                )
+                logger.debug(f"Attempt {attempt + 1} to find element with {identifier_type}: {identifier}")
+                if identifier_type == "class":
+                    element = WebDriverWait(driver, 10).until(
+                        EC.visibility_of_element_located((By.CLASS_NAME, identifier))
+                    )
+                elif identifier_type == "img_src":
+                    element = WebDriverWait(driver, 10).until(
+                        EC.visibility_of_element_located((By.XPATH, f"//img[contains(@src, '{identifier}')]"))
+                    )
+                else:
+                    raise ValueError("Invalid identifier_type. Use 'class' or 'img_src'.")
+
                 time.sleep(0.5)
                 location = element.location
                 logger.debug(f"window_size: {driver.get_window_size()}")
@@ -46,18 +53,30 @@ def find_element_coordinates(class_name, path=None, offset_x=0, offset_y=0):
                     time.sleep(1)
                 else:
                     raise
+            except TimeoutException:
+                logger.warning(f"Timeout exception encountered while finding element with {identifier_type}: {identifier}")
+                if attempt < max_retries - 1:
+                    time.sleep(1)
+                else:
+                    raise
     finally:
         driver.quit()
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2 or len(sys.argv) > 5:
-        print("Usage: python find_element.py <class_name> [path] [offset_x] [offset_y]")
+    if len(sys.argv) < 3 or len(sys.argv) > 6:
+        print("Usage: python find_element.py <identifier_type> <identifier> [path] [offset_x] [offset_y]")
+        print("identifier_type can be 'class' or 'img_src'")
         sys.exit(1)
     
-    class_name = sys.argv[1]
-    path = sys.argv[2] if len(sys.argv) > 2 else None
-    offset_x = int(sys.argv[3]) if len(sys.argv) > 3 and sys.argv[3] else 0
-    offset_y = int(sys.argv[4]) if len(sys.argv) > 4 and sys.argv[4] else 0
-    
-    x, y = find_element_coordinates(class_name, path, offset_x, offset_y)
-    print(f"{x},{y},ClassName:{class_name},Path:{path},Offset_x:{offset_x},Offset_y:{offset_y}")
+    identifier_type = sys.argv[1]
+    identifier = sys.argv[2]
+    path = sys.argv[3] if len(sys.argv) > 3 else None
+    offset_x = int(sys.argv[4]) if len(sys.argv) > 4 and sys.argv[4] else 0
+    offset_y = int(sys.argv[5]) if len(sys.argv) > 5 and sys.argv[5] else 0
+
+    try:
+        x, y = find_element_coordinates(identifier, identifier_type, path, offset_x, offset_y)
+        print(f"{x},{y},IdentifierType:{identifier_type},Identifier:{identifier},Path:{path},Offset_x:{offset_x},Offset_y:{offset_y}")
+    except Exception as e:
+        logger.error(f"An error occurred: {str(e)}")
+        sys.exit(1)
