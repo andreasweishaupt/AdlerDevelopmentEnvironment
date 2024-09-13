@@ -418,7 +418,7 @@ jobs:
         sleep 2
         
         # Click on space-metadata-icon
-        coordinates=$(GET_POSITION "img_src" "space-metadata-icon.png" $WINDOW_X $WINDOW_Y)
+        coordinates=$(GET_POSITION "img_src" "space-metadata-icon.png" "app" $WINDOW_X $WINDOW_Y)
         IFS=',' read -ra coords <<< "$coordinates"
         echo $coordinates
         DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1 sleep 1
