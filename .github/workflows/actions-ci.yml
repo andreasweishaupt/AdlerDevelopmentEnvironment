@@ -389,7 +389,6 @@ jobs:
               killall -I -l -q Autorentool
               echo "2"
               echo "3"
-              pkill -9 -f Autorentool
               echo "4"
               lsof -i :8001 | awk 'NR!=1 {print $2}' | xargs -r kill -9
               echo "5"
