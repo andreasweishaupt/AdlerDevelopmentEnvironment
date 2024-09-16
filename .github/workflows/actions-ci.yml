@@ -362,7 +362,7 @@ jobs:
         echo "Attempt $attempt of $max_attempts to start Authoring Tool"
         ./linux-unpacked/authoring-tool &
         tool_pid=$!
-        sleep 10  # Wait time to allow for initialization
+        sleep 5  # Wait time to allow for initialization
           
         max_attempts=5
         for attempt in $(seq 1 $max_attempts); do
@@ -379,7 +379,7 @@ jobs:
               echo "All $max_attempts attempts failed. Aborting pipeline."
               exit 1
             else
-              DISPLAY=:99 xdotool key "ctrl+r" sleep 1
+              DISPLAY=:99 xdotool key "ctrl+r" sleep 2
             fi
           fi
         done
