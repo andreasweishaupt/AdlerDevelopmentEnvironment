@@ -45,15 +45,25 @@ def automate_authoring_tool():
     driver = webdriver.Chrome(options=options)
     
     try:
-        # Navigate to the authoring tool
-        logger.info("Navigating to the authoring tool")
-        driver.get("http://localhost:8001/")
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.TAG_NAME, "body"))
+        )
+        logger.info("Body found")
+        
+        # Navigate to the authoring tool - MyLearningWorldsOverview"
+        logger.info("Navigating to the authoring tool - MyLearningWorldsOverview")
+        driver.get("http://localhost:8001/MyLearningWorldsOverview")
         logger.debug(f"Current URL: {driver.current_url}")
         
         # Click on create-world-button
         logger.info("Attempting to click create-world-button")
         wait_and_click(driver, (By.CLASS_NAME, "create-world-button"))
         wait_and_type(driver, (By.XPATH, "//input"), "testWorld")
+        
+        # Navigate to the authoring tool - app"
+        logger.info("Navigating to the authoring tool -app")
+        driver.get("http://localhost:8001/app")
+        logger.debug(f"Current URL: {driver.current_url}")
         
         # Click on space-metadata-icon
         logger.info("Attempting to click space-metadata-icon")
