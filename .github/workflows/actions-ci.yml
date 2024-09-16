@@ -363,11 +363,30 @@ jobs:
               exit 1
             else
               echo "Killing process and retrying..."
-              kill -9 $tool_pid
-              killall -I -l -q authoring-tool
-              killall -I -l -q Autorentool
-              lsof -i :8001 | awk 'NR!=1 {print $2}' | xargs -r kill -9
-              sleep 5  # Wait for process to be fully terminated
+              if ps -p $tool_pid > /dev/null; then
+                echo "Kill with SIGINT"
+                kill -SIGINT $tool_pid
+                sleep 3
+              fi
+              if ps -p $tool_pid > /dev/null; then
+                echo "Kill with kill"
+                kill $tool_pid
+                sleep 3
+              fi
+              if ps -p $tool_pid > /dev/null; then
+                echo "Kill with kill -9"
+                kill -9 $tool_pid
+                sleep 3
+              fi
+              if ps -p $tool_pid > /dev/null; then
+                echo "Try kill with everything else"
+                killall -I -l -q authoring-tool
+                killall -I -l -q Autorentool
+                pkill -9 -f authoring-tool
+                pkill -9 -f Autorentool
+                lsof -i :8001 | awk 'NR!=1 {print $2}' | xargs -r kill -9
+                sleep 5  # Wait for process to be fully terminated
+              fi
             fi
           fi
         done
