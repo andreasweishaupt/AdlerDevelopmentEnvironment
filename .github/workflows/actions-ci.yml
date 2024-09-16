@@ -344,7 +344,9 @@ jobs:
       run: |
         sleep 1
         if ! DISPLAY=:99 xdpyinfo >/dev/null 2>&1; then
-          echo "X server is not running properly"
+          echo "ERROR: X server is not running properly"
+        else
+          echo "X server is running properly"
         fi
         max_attempts=20
         for attempt in $(seq 1 $max_attempts); do
@@ -383,10 +385,15 @@ jobs:
               fi
               echo "Try kill with everything else"
               killall -I -l -q authoring-tool
+              echo "1"
               killall -I -l -q Autorentool
+              echo "2"
               pkill -9 -f authoring-tool
+              echo "3"
               pkill -9 -f Autorentool
+              echo "4"
               lsof -i :8001 | awk 'NR!=1 {print $2}' | xargs -r kill -9
+              echo "5"
               sleep 5  # Wait for process to be fully terminated
             fi
           fi
