@@ -388,7 +388,6 @@ jobs:
               echo "1"
               killall -I -l -q Autorentool
               echo "2"
-              pkill -9 -f authoring-tool
               echo "3"
               pkill -9 -f Autorentool
               echo "4"
