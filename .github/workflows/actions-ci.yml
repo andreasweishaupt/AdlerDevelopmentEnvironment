@@ -343,7 +343,7 @@ jobs:
     - name: Run Autorentool
       run: |
         sleep 1
-        max_attempts=3
+        max_attempts=20
         for attempt in $(seq 1 $max_attempts); do
           echo "Attempt $attempt of $max_attempts to start Authoring Tool"
           ./linux-unpacked/authoring-tool &
@@ -378,15 +378,13 @@ jobs:
                 kill -9 $tool_pid
                 sleep 3
               fi
-              if ps -p $tool_pid > /dev/null; then
-                echo "Try kill with everything else"
-                killall -I -l -q authoring-tool
-                killall -I -l -q Autorentool
-                pkill -9 -f authoring-tool
-                pkill -9 -f Autorentool
-                lsof -i :8001 | awk 'NR!=1 {print $2}' | xargs -r kill -9
-                sleep 5  # Wait for process to be fully terminated
-              fi
+              echo "Try kill with everything else"
+              killall -I -l -q authoring-tool
+              killall -I -l -q Autorentool
+              pkill -9 -f authoring-tool
+              pkill -9 -f Autorentool
+              lsof -i :8001 | awk 'NR!=1 {print $2}' | xargs -r kill -9
+              sleep 5  # Wait for process to be fully terminated
             fi
           fi
         done
