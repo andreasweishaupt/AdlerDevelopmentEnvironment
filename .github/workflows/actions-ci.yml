@@ -297,9 +297,8 @@ jobs:
 
     - name: Define GET_POSITION function
       run: |
-        chmod +x $GITHUB_WORKSPACE/.github/workflows/find_element.py
-        chmod +x $GITHUB_WORKSPACE/.github/workflows/define_get_position.sh
-        source $GITHUB_WORKSPACE/.github/workflows/define_get_position.sh
+        chmod +x $GITHUB_WORKSPACE/.github/workflows/automate_authoring_tool.py
+        
 
     - name: Download latest Autorentool release
       run: |
