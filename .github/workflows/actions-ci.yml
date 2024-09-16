@@ -298,6 +298,7 @@ jobs:
     - name: Define GET_POSITION function
       run: |
         chmod +x $GITHUB_WORKSPACE/.github/workflows/automate_authoring_tool.py
+        chmod +x $GITHUB_WORKSPACE/.github/workflows/refresh_electron.py
         
 
     - name: Download latest Autorentool release
@@ -339,6 +340,15 @@ jobs:
         xdpyinfo -display :99
         echo "Xvfb is ready"
         echo "DISPLAY=:99" >> $GITHUB_ENV
+                
+    - name: Start screen and recording
+      id: start_recording
+      continue-on-error: true
+      run: |
+        ffmpeg -f x11grab -video_size 1920x1080 -i :99 -codec:v libx264 -r 30 -v verbose screen_recording.mp4 &
+        echo $! > ffmpeg_pid.txt
+        sleep 1
+        echo "recording_started=true" >> $GITHUB_OUTPUT
     
     - name: Run Autorentool
       run: |
@@ -348,7 +358,7 @@ jobs:
         else
           echo "X server is running properly"
         fi
-        max_attempts=3
+        max_attempts=5
         for attempt in $(seq 1 $max_attempts); do
           echo "Attempt $attempt of $max_attempts to start Authoring Tool"
           ./linux-unpacked/authoring-tool &
@@ -367,28 +377,7 @@ jobs:
               echo "All $max_attempts attempts failed. Aborting pipeline."
               exit 1
             else
-              echo "Killing process and retrying..."
-              if ps -p $tool_pid > /dev/null; then
-                echo "Kill with SIGINT"
-                kill -SIGINT $tool_pid
-                sleep 3
-              fi
-              if ps -p $tool_pid > /dev/null; then
-                echo "Kill with kill"
-                kill $tool_pid
-                sleep 3
-              fi
-              if ps -p $tool_pid > /dev/null; then
-                echo "Kill with kill -9"
-                kill -9 $tool_pid
-                sleep 3
-              fi
-              echo "Try kill with everything else"
-              killall -I -l -q authoring-tool
-              killall -I -l -q Autorentool
-              lsof -i :8001 | awk 'NR!=1 {print $2}'
-              lsof -i :8001 | awk 'NR!=1 {print $2}' | xargs -r kill -9
-              sleep 5  # Wait for process to be fully terminated
+              python3 $GITHUB_WORKSPACE/.github/workflows/refresh_electron.py
             fi
           fi
         done
@@ -399,15 +388,6 @@ jobs:
           exit 1
         fi
         echo "Authoring Tool is running with PID $tool_pid"
-        
-    - name: Start screen and recording
-      id: start_recording
-      continue-on-error: true
-      run: |
-        ffmpeg -f x11grab -video_size 1920x1080 -i :99 -codec:v libx264 -r 30 -v verbose screen_recording.mp4 &
-        echo $! > ffmpeg_pid.txt
-        sleep 1
-        echo "recording_started=true" >> $GITHUB_OUTPUT
         
     - name: Get window position
       run: |
