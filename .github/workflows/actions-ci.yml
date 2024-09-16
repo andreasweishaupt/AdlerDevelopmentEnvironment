@@ -339,13 +339,6 @@ jobs:
         xdpyinfo -display :99
         echo "Xvfb is ready"
         echo "DISPLAY=:99" >> $GITHUB_ENV
-        
-        
-    - name: Start screen and recording
-      run: |
-        ffmpeg -f x11grab -video_size 1920x1080 -i :99 -codec:v libx264 -r 30 -v verbose screen_recording.mp4 &
-        echo $! > ffmpeg_pid.txt
-        sleep 1
     
     - name: Run Autorentool
       run: |
@@ -385,6 +378,12 @@ jobs:
           exit 1
         fi
         echo "Authoring Tool is running with PID $tool_pid"
+        
+    - name: Start screen and recording
+      run: |
+        ffmpeg -f x11grab -video_size 1920x1080 -i :99 -codec:v libx264 -r 30 -v verbose screen_recording.mp4 &
+        echo $! > ffmpeg_pid.txt
+        sleep 1    
         
     - name: Get window position
       run: |
