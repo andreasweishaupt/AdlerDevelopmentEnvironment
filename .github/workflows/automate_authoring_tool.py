@@ -47,7 +47,7 @@ def automate_authoring_tool():
     try:
         # Navigate to the authoring tool
         logger.info("Navigating to the authoring tool")
-        driver.get("http://localhost:8001/app")
+        driver.get("http://localhost:8001/")
         logger.debug(f"Current URL: {driver.current_url}")
         
         # Click on create-world-button
