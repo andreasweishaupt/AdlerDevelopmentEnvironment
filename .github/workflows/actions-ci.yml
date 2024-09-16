@@ -358,13 +358,15 @@ jobs:
         else
           echo "X server is running properly"
         fi
+        
+        echo "Attempt $attempt of $max_attempts to start Authoring Tool"
+        ./linux-unpacked/authoring-tool &
+        tool_pid=$!
+        sleep 10  # Wait time to allow for initialization
+          
         max_attempts=5
         for attempt in $(seq 1 $max_attempts); do
           echo "Attempt $attempt of $max_attempts to start Authoring Tool"
-          ./linux-unpacked/authoring-tool &
-          tool_pid=$!
-          sleep 10  # Wait time to allow for initialization
-        
           # Check if the application is running
           window_id=$(DISPLAY=:99 xdotool search --name "Autorentool v2.1.7" | head -n 1)
           if [ -n "$window_id" ]; then
