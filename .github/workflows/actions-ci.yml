@@ -348,7 +348,7 @@ jobs:
         else
           echo "X server is running properly"
         fi
-        max_attempts=20
+        max_attempts=3
         for attempt in $(seq 1 $max_attempts); do
           echo "Attempt $attempt of $max_attempts to start Authoring Tool"
           ./linux-unpacked/authoring-tool &
@@ -385,13 +385,9 @@ jobs:
               fi
               echo "Try kill with everything else"
               killall -I -l -q authoring-tool
-              echo "1"
               killall -I -l -q Autorentool
-              echo "2"
-              echo "3"
-              echo "4"
+              lsof -i :8001 | awk 'NR!=1 {print $2}'
               lsof -i :8001 | awk 'NR!=1 {print $2}' | xargs -r kill -9
-              echo "5"
               sleep 5  # Wait for process to be fully terminated
             fi
           fi
