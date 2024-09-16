@@ -295,10 +295,9 @@ jobs:
         CHROMEDRIVER_ZIP: "chromedriver_linux64.zip"
         CHROMEDRIVER_URL: "https://old.chromedriver.getwebdriver.com/114.0.5735.90/chromedriver_linux64.zip"
 
-    - name: Define GET_POSITION function
+    - name: Make skripts executable
       run: |
-        chmod +x $GITHUB_WORKSPACE/.github/workflows/automate_authoring_tool.py
-        chmod +x $GITHUB_WORKSPACE/.github/workflows/refresh_electron.py
+        chmod +x $GITHUB_WORKSPACE/.github/workflows/run_authoring_tool_steps.py
         
 
     - name: Download latest Autorentool release
@@ -410,7 +409,7 @@ jobs:
     
     - name: Simulate interactions
       run: |
-        python3 $GITHUB_WORKSPACE/.github/workflows/automate_authoring_tool.py
+        python3 $GITHUB_WORKSPACE/.github/workflows/run_authoring_tool_steps.py
         
 
     - name: Stop screen recording
