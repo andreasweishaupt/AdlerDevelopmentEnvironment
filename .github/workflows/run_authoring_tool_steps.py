@@ -7,7 +7,10 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 import time
 
-def find_element(driver, identifier, identifier_type, timeout=10):
+# Globale Variable für den WebDriver
+driver = None
+
+def find_element(identifier, identifier_type, timeout=10):
     print(f"Attempting to find element with {identifier_type}: {identifier}")
     try:
         if identifier_type == "class":
@@ -35,18 +38,22 @@ def find_element(driver, identifier, identifier_type, timeout=10):
         print(f"Failed to find element: {identifier}. Error: {str(e)}")
         raise
 
-def wait_and_click(driver, identifier, identifier_type, timeout=10):
-    element = find_element(driver, identifier, identifier_type, timeout)
+def wait_and_click(identifier, identifier_type, timeout=10):
+    element = find_element(identifier, identifier_type, timeout)
     element.click()
     print(f"Clicked element: {identifier}")
 
-def wait_and_type(driver, identifier, identifier_type, text, timeout=10):
-    element = find_element(driver, identifier, identifier_type, timeout)
+def wait_and_type(identifier, identifier_type, text, timeout=10):
+    if identifier_type is None:
+        element = driver.switch_to.active_element
+    else:
+        element = find_element(identifier, identifier_type, timeout)
     element.send_keys(text)
     element.send_keys(Keys.RETURN)
     print(f"Typed '{text}' into element: {identifier}")
 
 def run_automation_steps():
+    global driver
     options = Options()
     options.add_argument('--headless')
     options.add_argument('--no-sandbox')
@@ -62,30 +69,30 @@ def run_automation_steps():
         print(f"Current URL: {driver.current_url}")
 
         # Click on create-world-button
-        wait_and_click(driver, "create-world-button", "class")
-        wait_and_type(driver, "//input", "xpath", "testWorld")
+        wait_and_click("create-world-button", "class")
+        wait_and_type(None, None, "testWorld")
 
         # Navigate to the authoring tool - app
         driver.get("http://localhost:8001/app")
         print(f"Current URL: {driver.current_url}")
 
         # Click on space-metadata-icon
-        wait_and_click(driver, "space-metadata-icon.png", "src")
-        wait_and_type(driver, "//input", "xpath", "testSpace")
+        wait_and_click("space-metadata-icon.png", "src")
+        wait_and_type(None, None, "testSpace")
 
         # Click on adaptivityelement-icon
-        wait_and_click(driver, "adaptivityelement-icon.png", "src")
-        wait_and_type(driver, "//input", "xpath", "testElement")
+        wait_and_click("adaptivityelement-icon.png", "src")
+        wait_and_type(None, None, "testElement")
 
         # Click on add-tasks
-        wait_and_click(driver, "add-tasks", "class")
+        wait_and_click("add-tasks", "class")
 
         # Click on Neue Aufgabe erstellen
-        wait_and_click(driver, "Aufgabe erstellen", "title")
+        wait_and_click("Aufgabe erstellen", "title")
 
         # Click on mud-button-close
-        wait_and_click(driver, "mud-button-close", "class")
-        wait_and_type(driver, "//input", "xpath", "testWorld")
+        wait_and_click("mud-button-close", "class")
+        #wait_and_type("//input", "xpath", "testWorld")
 
         print("Automation completed successfully!")
 
