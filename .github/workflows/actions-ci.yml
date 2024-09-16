@@ -343,6 +343,9 @@ jobs:
     - name: Run Autorentool
       run: |
         sleep 1
+        if ! DISPLAY=:99 xdpyinfo >/dev/null 2>&1; then
+          echo "X server is not running properly"
+        fi
         max_attempts=20
         for attempt in $(seq 1 $max_attempts); do
           echo "Attempt $attempt of $max_attempts to start Authoring Tool"
