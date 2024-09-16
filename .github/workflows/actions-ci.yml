@@ -379,7 +379,7 @@ jobs:
               echo "All $max_attempts attempts failed. Aborting pipeline."
               exit 1
             else
-              python3 $GITHUB_WORKSPACE/.github/workflows/refresh_electron.py
+              DISPLAY=:99 xdotool key "ctrl+r" sleep 1
             fi
           fi
         done
