@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Pfad zum Python-Skript
-PYTHON_SCRIPT="$GITHUB_WORKSPACE/.github/workflows/browser_funtions.py"
+PYTHON_SCRIPT="$GITHUB_WORKSPACE/.github/workflows/browser_functions.py"
 
 # Funktion zum Initialisieren des Browsers
 INIT_BROWSER() {
