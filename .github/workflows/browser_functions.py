@@ -13,21 +13,43 @@ logging.basicConfig(level=logging.DEBUG, stream=sys.stderr, format='find_element
 logger = logging.getLogger(__name__)
 
 driver = None
-
-def initialize_browser():
-    get_driver()
+SESSION_FILE = 'session.json'
 
 def get_driver():
     global driver
     if driver is None:
-        chrome_options = Options()
-        chrome_options.add_argument("--headless")
-        chrome_options.add_argument("--no-sandbox")
-        chrome_options.add_argument("--disable-dev-shm-usage")
-        chrome_options.add_argument("window-size=1200,800")
-        service = Service('/usr/bin/chromedriver')
-        driver = webdriver.Chrome(service=service, options=chrome_options)
+        if os.path.exists(SESSION_FILE):
+            with open(SESSION_FILE, 'r') as f:
+                session_data = json.load(f)
+            try:
+                driver = webdriver.Remote(command_executor=session_data['url'], desired_capabilities={})
+                driver.session_id = session_data['session_id']
+            except:
+                os.remove(SESSION_FILE)
+                driver = create_new_driver()
+        else:
+            driver = create_new_driver()
     return driver
+
+def create_new_driver():
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("window-size=1200,800")
+    service = Service('/usr/bin/chromedriver')
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+    session_data = {
+        'url': driver.command_executor._url,
+        'session_id': driver.session_id
+    }
+    with open(SESSION_FILE, 'w') as f:
+        json.dump(session_data, f)
+    return driver
+
+def initialize_browser():
+    get_driver()
+    print("Browser initialized")
 
 def navigate_to_url(url):
     driver = get_driver()
@@ -72,9 +94,13 @@ def find_element_coordinates(identifier, identifier_type, offset_x=0, offset_y=0
                 raise
 
 def close_browser():
-    driver = get_driver()
+    global driver
     if driver:
         driver.quit()
+    if os.path.exists(SESSION_FILE):
+        os.remove(SESSION_FILE)
+    driver = None
+    print("Browser closed")
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
@@ -86,7 +112,6 @@ if __name__ == "__main__":
 
     if command == "init":
         initialize_browser()
-        print("Browser initialized")
     elif command == "navigate":
         if len(sys.argv) < 3:
             print("Usage: python find_element.py navigate <url>")
