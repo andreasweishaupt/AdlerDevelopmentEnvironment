@@ -17,6 +17,9 @@ SESSION_FILE = 'session.json'
 driver = None
 
 def is_session_valid(driver):
+    logger.info("Check driver")
+    if driver is None:
+        return False
     try:
         driver.title  # This will throw an exception if the session is invalid
         return True
@@ -44,10 +47,9 @@ def get_driver():
                 logger.debug("Reused existing session")
             except Exception as e:
                 logger.error(f"Failed to reuse session: {str(e)}")
-                sys.exit(1)  # Beende das Skript, wenn die Session nicht wiederhergestellt werden kann
+                driver = create_new_driver()
         else:
-            logger.error("SESSION_FILE nicht gefunden. Bitte initialisieren Sie zuerst den Browser.")
-            sys.exit(1)
+            driver = create_new_driver()
     return driver
 
 def create_new_driver():
@@ -72,12 +74,12 @@ def initialize_browser():
     print("Browser initialized")
 
 def navigate_to_url(url):
-    global driver
+    driver = get_driver()
+    if driver is None:
+        logger.error("Failed to initialize driver")
+        sys.exit(1)
     try:
         logger.debug(f"Navigating to URL: {url}")
-        if not is_session_valid(driver):
-            logger.warning("Session invalid, creating a new one")
-            driver = create_new_driver()
         driver.get(url)
     except WebDriverException as e:
         logger.error(f"WebDriver exception: {str(e)}")
@@ -128,20 +130,25 @@ def close_browser():
     print("Browser closed and session file removed")
 
 if __name__ == "__main__":
+    logger.info(f"Script called with arguments: {sys.argv}")
+
     if len(sys.argv) < 2:
         print("Usage: python find_element.py <command> [args...]")
         print("Commands: init, navigate, find, close")
         sys.exit(1)
 
     command = sys.argv[1]
+    logger.info(f"Command: {command}")
 
     if command == "init":
+        logger.info("Initializing browser")
         initialize_browser()
     elif command == "navigate":
         if len(sys.argv) < 3:
             print("Usage: python find_element.py navigate <url>")
             sys.exit(1)
         url = sys.argv[2]
+        logger.info(f"Navigating to URL: {url}")
         navigate_to_url(url)
         print(f"Navigated to {url}")
     elif command == "find":
@@ -152,6 +159,7 @@ if __name__ == "__main__":
         identifier = sys.argv[3]
         offset_x = int(sys.argv[4]) if len(sys.argv) > 4 else 0
         offset_y = int(sys.argv[5]) if len(sys.argv) > 5 else 0
+        logger.info(f"Finding element: type={identifier_type}, identifier={identifier}, offset_x={offset_x}, offset_y={offset_y}")
         try:
             x, y = find_element_coordinates(identifier, identifier_type, offset_x, offset_y)
             print(f"{x},{y}")
@@ -159,8 +167,10 @@ if __name__ == "__main__":
             logger.error(f"An error occurred: {str(e)}")
             sys.exit(1)
     elif command == "close":
+        logger.info("Closing browser")
         close_browser()
         print("Browser closed")
     else:
+        logger.warning(f"Unknown command: {command}")
         print(f"Unknown command: {command}")
         sys.exit(1)
