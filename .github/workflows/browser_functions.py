@@ -18,10 +18,37 @@ logger = logging.getLogger(__name__)
 driver = None
 SESSION_FILE = 'session.json'
 
+# Überprüfen der Berechtigungen
+if os.path.exists(SESSION_FILE):
+    permissions = oct(os.stat(SESSION_FILE).st_mode)[-3:]
+    logger.debug(f"Berechtigungen für {SESSION_FILE}: {permissions}")
+else:
+    logger.debug(f"{SESSION_FILE} existiert noch nicht.")
+
+# Versuchen, Schreib- und Leserechte zu setzen
+try:
+    os.chmod(SESSION_FILE, 0o666)
+    logger.debug(f"Berechtigungen für {SESSION_FILE} auf 666 gesetzt.")
+except Exception as e:
+    logger.error(f"Konnte Berechtigungen für {SESSION_FILE} nicht setzen: {str(e)}")
+    
+def print_session_file_content():
+    if os.path.exists(SESSION_FILE):
+        try:
+            with open(SESSION_FILE, 'r') as f:
+                content = f.read()
+            logger.debug(f"Inhalt von {SESSION_FILE}:\n{content}")
+        except Exception as e:
+            logger.error(f"Fehler beim Lesen von {SESSION_FILE}: {str(e)}")
+    else:
+        logger.debug(f"{SESSION_FILE} existiert nicht.")
+
 def get_driver():
     global driver
     if driver is None:
+        logger.debug(f"SESSION_FILE exists: {os.path.exists(SESSION_FILE)}")
         if os.path.exists(SESSION_FILE):
+            print_session_file_content()
             with open(SESSION_FILE, 'r') as f:
                 session_data = json.load(f)
             try:
