@@ -54,9 +54,15 @@ def reconnect_session():
 def get_driver():
     global driver
     if driver is None:
-        driver = reconnect_session()
-    elif not is_session_valid(driver):
-        driver = reconnect_session()
+        if os.path.exists(SESSION_FILE):
+            with open(SESSION_FILE, 'r') as f:
+                data = json.load(f)
+            debugging_url = data['debugging_url']
+            options = Options()
+            options.add_experimental_option("debuggerAddress", debugging_url.split('/')[-1])
+            driver = webdriver.Chrome(options=options)
+        else:
+            driver = create_new_driver()
     return driver
 
 def create_new_driver():
@@ -65,19 +71,16 @@ def create_new_driver():
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("window-size=1200,800")
+    options.add_argument("--remote-debugging-port=9222")
     driver = webdriver.Chrome(options=options)
-    session_data = {
-        'debugger_address': driver.capabilities['goog:chromeOptions']['debuggerAddress'],
-        'session_id': driver.session_id
-    }
-    create_session_file(session_data)
     return driver
 
 def initialize_browser():
     global driver
-    if os.path.exists(SESSION_FILE):
-        os.remove(SESSION_FILE)
     driver = create_new_driver()
+    debugging_url = driver.command_executor._url
+    with open(SESSION_FILE, 'w') as f:
+        json.dump({'debugging_url': debugging_url}, f)
     print("Browser initialized")
 
 def navigate_to_url(url):
@@ -87,8 +90,8 @@ def navigate_to_url(url):
         driver.get(url)
     except WebDriverException as e:
         logger.error(f"WebDriver exception: {str(e)}")
-        driver = create_new_driver()
-        driver.get(url)
+        logger.error("Session invalid. Aborting script.")
+        sys.exit(1)
 
 def find_element_coordinates(identifier, identifier_type, offset_x=0, offset_y=0):
     driver = get_driver()
