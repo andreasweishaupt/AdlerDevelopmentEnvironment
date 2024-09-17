@@ -53,7 +53,6 @@ def create_new_driver():
     return driver
 
 def initialize_browser():
-    global driver
     if os.path.exists(SESSION_FILE):
         os.remove(SESSION_FILE)
     driver = get_driver()
@@ -66,7 +65,6 @@ def navigate_to_url(url):
         driver.get(url)
     except WebDriverException:
         logger.error("Session invalid, reinitializing")
-        global driver
         driver = create_new_driver()
         driver.get(url)
 
