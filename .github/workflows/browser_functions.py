@@ -16,6 +16,13 @@ logger = logging.getLogger(__name__)
 SESSION_FILE = 'session.json'
 driver = None
 
+def is_session_valid(driver):
+    try:
+        driver.title  # This will throw an exception if the session is invalid
+        return True
+    except WebDriverException:
+        return False
+
 def create_session_file(data):
     with open(SESSION_FILE, 'w') as f:
         json.dump(data, f)
@@ -65,12 +72,17 @@ def initialize_browser():
     print("Browser initialized")
 
 def navigate_to_url(url):
-    driver = get_driver()
+    global driver
     try:
         logger.debug(f"Navigating to URL: {url}")
+        if not is_session_valid(driver):
+            logger.warning("Session invalid, creating a new one")
+            driver = create_new_driver()
         driver.get(url)
-    except WebDriverException:
-        logger.error("Session invalid. Aborting script.")
+    except WebDriverException as e:
+        logger.error(f"WebDriver exception: {str(e)}")
+        logger.error(f"Session ID: {driver.session_id}")
+        logger.error(f"Current URL: {driver.current_url}")
         sys.exit(1)
 
 def find_element_coordinates(identifier, identifier_type, offset_x=0, offset_y=0):
