@@ -16,6 +16,15 @@ logger = logging.getLogger(__name__)
 SESSION_FILE = 'session.json'
 driver = None
 
+def create_session_file(data):
+    with open(SESSION_FILE, 'w') as f:
+        json.dump(data, f)
+    
+    # Setze Berechtigungen auf 600 (rw-------)
+    os.chmod(SESSION_FILE, 0o600)
+    
+    logger.debug(f"SESSION_FILE erstellt mit Berechtigungen: {oct(os.stat(SESSION_FILE).st_mode)[-3:]}")
+
 def get_driver():
     global driver
     if driver is None:
@@ -23,6 +32,7 @@ def get_driver():
             try:
                 with open(SESSION_FILE, 'r') as f:
                     session_data = json.load(f)
+                    logger.info(f"SESSION_FILE content: {f}")
                 options = Options()
                 options.add_argument(f"debuggerAddress={session_data['debugger_address']}")
                 driver = webdriver.Chrome(options=options)
@@ -47,9 +57,7 @@ def create_new_driver():
         'debugger_address': driver.capabilities['goog:chromeOptions']['debuggerAddress'],
         'session_id': driver.session_id
     }
-    with open(SESSION_FILE, 'w') as f:
-        json.dump(session_data, f)
-    logger.debug("Created new driver session")
+    create_session_file(session_data)
     return driver
 
 def initialize_browser():
