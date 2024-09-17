@@ -8,59 +8,31 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.remote.webdriver import WebDriver as RemoteWebDriver
-from selenium.common.exceptions import StaleElementReferenceException, TimeoutException
-import time
+from selenium.common.exceptions import WebDriverException, TimeoutException
 
 logging.basicConfig(level=logging.DEBUG, stream=sys.stderr, format='find_element.py - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-driver = None
 SESSION_FILE = 'session.json'
-
-# Überprüfen der Berechtigungen
-if os.path.exists(SESSION_FILE):
-    permissions = oct(os.stat(SESSION_FILE).st_mode)[-3:]
-    logger.debug(f"Berechtigungen für {SESSION_FILE}: {permissions}")
-else:
-    logger.debug(f"{SESSION_FILE} existiert noch nicht.")
-
-# Versuchen, Schreib- und Leserechte zu setzen
-try:
-    os.chmod(SESSION_FILE, 0o666)
-    logger.debug(f"Berechtigungen für {SESSION_FILE} auf 666 gesetzt.")
-except Exception as e:
-    logger.error(f"Konnte Berechtigungen für {SESSION_FILE} nicht setzen: {str(e)}")
-    
-def print_session_file_content():
-    if os.path.exists(SESSION_FILE):
-        try:
-            with open(SESSION_FILE, 'r') as f:
-                content = f.read()
-            logger.debug(f"Inhalt von {SESSION_FILE}:\n{content}")
-        except Exception as e:
-            logger.error(f"Fehler beim Lesen von {SESSION_FILE}: {str(e)}")
-    else:
-        logger.debug(f"{SESSION_FILE} existiert nicht.")
+driver = None
 
 def get_driver():
     global driver
     if driver is None:
         if os.path.exists(SESSION_FILE):
-            with open(SESSION_FILE, 'r') as f:
-                session_data = json.load(f)
             try:
-                logger.debug("Read SESSION_FILE...")
+                with open(SESSION_FILE, 'r') as f:
+                    session_data = json.load(f)
                 options = Options()
                 options.add_argument(f"debuggerAddress={session_data['debugger_address']}")
                 driver = webdriver.Chrome(options=options)
                 driver.session_id = session_data['session_id']
+                logger.debug("Reused existing session")
             except Exception as e:
-                logger.error(f"Could not read SESSION_FILE: {str(e)}")
+                logger.error(f"Failed to reuse session: {str(e)}")
                 os.remove(SESSION_FILE)
                 driver = create_new_driver()
         else:
-            logger.debug("SESSION_FILE does not exist. Create new SESSION_FILE.")
             driver = create_new_driver()
     return driver
 
@@ -77,20 +49,26 @@ def create_new_driver():
     }
     with open(SESSION_FILE, 'w') as f:
         json.dump(session_data, f)
+    logger.debug("Created new driver session")
     return driver
 
 def initialize_browser():
     global driver
     if os.path.exists(SESSION_FILE):
         os.remove(SESSION_FILE)
-        logger.debug(f"Removed existing {SESSION_FILE}")
     driver = get_driver()
     print("Browser initialized")
 
 def navigate_to_url(url):
     driver = get_driver()
-    logger.debug(f"Navigating to URL: {url}")
-    driver.get(url)
+    try:
+        logger.debug(f"Navigating to URL: {url}")
+        driver.get(url)
+    except WebDriverException:
+        logger.error("Session invalid, reinitializing")
+        global driver
+        driver = create_new_driver()
+        driver.get(url)
 
 def find_element_coordinates(identifier, identifier_type, offset_x=0, offset_y=0):
     driver = get_driver()
@@ -117,16 +95,12 @@ def find_element_coordinates(identifier, identifier_type, offset_x=0, offset_y=0
             else:
                 raise ValueError("Invalid identifier_type. Use 'class', 'src', 'identifier', or 'title'.")
             
-            time.sleep(0.5)
             location = element.location
-            logger.debug(f"window_size: {driver.get_window_size()}")
             logger.debug(f"Element found at location: {location}")
             return location['x'] + offset_x + 14, location['y'] + offset_y + 38
-        except (StaleElementReferenceException, TimeoutException) as e:
-            logger.warning(f"Exception encountered: {str(e)}")
-            if attempt < max_retries - 1:
-                time.sleep(1)
-            else:
+        except TimeoutException:
+            logger.warning(f"Timeout on attempt {attempt + 1}")
+            if attempt == max_retries - 1:
                 raise
 
 def close_browser():
