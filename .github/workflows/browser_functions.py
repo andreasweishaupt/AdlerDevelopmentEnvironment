@@ -19,10 +19,7 @@ driver = None
 def create_session_file(data):
     with open(SESSION_FILE, 'w') as f:
         json.dump(data, f)
-    
-    # Setze Berechtigungen auf 600 (rw-------)
     os.chmod(SESSION_FILE, 0o600)
-    
     logger.debug(f"SESSION_FILE erstellt mit Berechtigungen: {oct(os.stat(SESSION_FILE).st_mode)[-3:]}")
 
 def get_driver():
@@ -32,7 +29,7 @@ def get_driver():
             try:
                 with open(SESSION_FILE, 'r') as f:
                     session_data = json.load(f)
-                    logger.info(f"SESSION_FILE content: {f}")
+                logger.info(f"SESSION_FILE content: {session_data}")
                 options = Options()
                 options.add_argument(f"debuggerAddress={session_data['debugger_address']}")
                 driver = webdriver.Chrome(options=options)
@@ -40,10 +37,10 @@ def get_driver():
                 logger.debug("Reused existing session")
             except Exception as e:
                 logger.error(f"Failed to reuse session: {str(e)}")
-                os.remove(SESSION_FILE)
-                driver = create_new_driver()
+                sys.exit(1)  # Beende das Skript, wenn die Session nicht wiederhergestellt werden kann
         else:
-            driver = create_new_driver()
+            logger.error("SESSION_FILE nicht gefunden. Bitte initialisieren Sie zuerst den Browser.")
+            sys.exit(1)
     return driver
 
 def create_new_driver():
@@ -61,9 +58,10 @@ def create_new_driver():
     return driver
 
 def initialize_browser():
+    global driver
     if os.path.exists(SESSION_FILE):
         os.remove(SESSION_FILE)
-    driver = get_driver()
+    driver = create_new_driver()
     print("Browser initialized")
 
 def navigate_to_url(url):
@@ -72,9 +70,8 @@ def navigate_to_url(url):
         logger.debug(f"Navigating to URL: {url}")
         driver.get(url)
     except WebDriverException:
-        logger.error("Session invalid, reinitializing")
-        driver = create_new_driver()
-        driver.get(url)
+        logger.error("Session invalid. Aborting script.")
+        sys.exit(1)
 
 def find_element_coordinates(identifier, identifier_type, offset_x=0, offset_y=0):
     driver = get_driver()
