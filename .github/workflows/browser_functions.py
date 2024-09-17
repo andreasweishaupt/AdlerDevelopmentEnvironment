@@ -25,12 +25,15 @@ def get_driver():
             with open(SESSION_FILE, 'r') as f:
                 session_data = json.load(f)
             try:
+                logger.debug("Read SESSION_FILE...")
                 driver = webdriver.Remote(command_executor=session_data['url'], desired_capabilities={})
                 driver.session_id = session_data['session_id']
             except:
+                logger.error("Could not read SESSION_FILE")
                 os.remove(SESSION_FILE)
                 driver = create_new_driver()
         else:
+            logger.debug("SESSION_FILE does not exist. Create new SESSION_FILE.")
             driver = create_new_driver()
     return driver
 
