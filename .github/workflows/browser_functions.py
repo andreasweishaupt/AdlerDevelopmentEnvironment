@@ -46,21 +46,20 @@ def print_session_file_content():
 def get_driver():
     global driver
     if driver is None:
-        logger.debug(f"SESSION_FILE exists: {os.path.exists(SESSION_FILE)}")
         if os.path.exists(SESSION_FILE):
-            print_session_file_content()
             with open(SESSION_FILE, 'r') as f:
                 session_data = json.load(f)
             try:
-                logger.debug("Read SESSION_FILE...")
+                logger.debug("Attempting to connect to existing session...")
                 driver = webdriver.Remote(command_executor=session_data['url'], desired_capabilities={})
                 driver.session_id = session_data['session_id']
-            except:
-                logger.error("Could not read SESSION_FILE")
-                os.remove(SESSION_FILE)
+                logger.debug("Successfully connected to existing session.")
+            except Exception as e:
+                logger.error(f"Failed to connect to existing session: {str(e)}")
+                logger.debug("Creating new driver...")
                 driver = create_new_driver()
         else:
-            logger.debug("SESSION_FILE does not exist. Create new SESSION_FILE.")
+            logger.debug("SESSION_FILE does not exist. Creating new driver...")
             driver = create_new_driver()
     return driver
 
@@ -78,10 +77,15 @@ def create_new_driver():
     }
     with open(SESSION_FILE, 'w') as f:
         json.dump(session_data, f)
+    logger.debug(f"Created new driver and saved session data to {SESSION_FILE}")
     return driver
 
 def initialize_browser():
-    get_driver()
+    global driver
+    if os.path.exists(SESSION_FILE):
+        os.remove(SESSION_FILE)
+        logger.debug(f"Removed existing {SESSION_FILE}")
+    driver = get_driver()
     print("Browser initialized")
 
 def navigate_to_url(url):
@@ -133,7 +137,7 @@ def close_browser():
     if os.path.exists(SESSION_FILE):
         os.remove(SESSION_FILE)
     driver = None
-    print("Browser closed")
+    print("Browser closed and session file removed")
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
