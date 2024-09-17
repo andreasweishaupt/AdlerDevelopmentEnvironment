@@ -342,8 +342,6 @@ jobs:
         echo "DISPLAY=:99" >> $GITHUB_ENV
                 
     - name: Start screen and recording
-      if: true
-      continue-on-error: true
       run: |
         ffmpeg -f x11grab -video_size 1920x1080 -i :99 -codec:v libx264 -r 30 -v verbose screen_recording.mp4 &
         echo $! > ffmpeg_pid.txt
@@ -478,14 +476,14 @@ jobs:
         
 
     - name: Stop screen recording
-      if: true
+      if: always()
       run: |
         sleep 2
         kill $(cat ffmpeg_pid.txt)
         sleep 10  # Give ffmpeg time to finish writing
 
     - name: Upload screen recording
-      if: true
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: screen-recording
