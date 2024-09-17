@@ -30,26 +30,33 @@ def create_session_file(data):
     with open(SESSION_FILE, 'w') as f:
         json.dump(data, f)
     os.chmod(SESSION_FILE, 0o600)
-    logger.debug(f"SESSION_FILE erstellt mit Berechtigungen: {oct(os.stat(SESSION_FILE).st_mode)[-3:]}")
+    logger.debug(f"SESSION_FILE created with permissions: {oct(os.stat(SESSION_FILE).st_mode)[-3:]}")
+
+def read_session_file():
+    if os.path.exists(SESSION_FILE):
+        with open(SESSION_FILE, 'r') as f:
+            return json.load(f)
+    return None
+
+def reconnect_session():
+    session_data = read_session_file()
+    if session_data:
+        try:
+            options = Options()
+            options.add_argument(f"debuggerAddress={session_data['debugger_address']}")
+            driver = webdriver.Chrome(options=options)
+            driver.session_id = session_data['session_id']
+            return driver
+        except WebDriverException:
+            logger.error("Failed to reconnect to existing session")
+    return create_new_driver()
 
 def get_driver():
     global driver
     if driver is None:
-        if os.path.exists(SESSION_FILE):
-            try:
-                with open(SESSION_FILE, 'r') as f:
-                    session_data = json.load(f)
-                logger.info(f"SESSION_FILE content: {session_data}")
-                options = Options()
-                options.add_argument(f"debuggerAddress={session_data['debugger_address']}")
-                driver = webdriver.Chrome(options=options)
-                driver.session_id = session_data['session_id']
-                logger.debug("Reused existing session")
-            except Exception as e:
-                logger.error(f"Failed to reuse session: {str(e)}")
-                driver = create_new_driver()
-        else:
-            driver = create_new_driver()
+        driver = reconnect_session()
+    elif not is_session_valid(driver):
+        driver = reconnect_session()
     return driver
 
 def create_new_driver():
@@ -75,17 +82,13 @@ def initialize_browser():
 
 def navigate_to_url(url):
     driver = get_driver()
-    if driver is None:
-        logger.error("Failed to initialize driver")
-        sys.exit(1)
     try:
         logger.debug(f"Navigating to URL: {url}")
         driver.get(url)
     except WebDriverException as e:
         logger.error(f"WebDriver exception: {str(e)}")
-        logger.error(f"Session ID: {driver.session_id}")
-        logger.error(f"Current URL: {driver.current_url}")
-        sys.exit(1)
+        driver = create_new_driver()
+        driver.get(url)
 
 def find_element_coordinates(identifier, identifier_type, offset_x=0, offset_y=0):
     driver = get_driver()
