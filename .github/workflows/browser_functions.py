@@ -15,22 +15,27 @@ logger = logging.getLogger(__name__)
 driver = None
 
 def initialize_browser():
+    get_driver()
+
+def get_driver():
     global driver
-    chrome_options = Options()
-    chrome_options.add_argument("--headless")
-    chrome_options.add_argument("--no-sandbox")
-    chrome_options.add_argument("--disable-dev-shm-usage")
-    chrome_options.add_argument("window-size=1200,800")
-    service = Service('/usr/bin/chromedriver')
-    driver = webdriver.Chrome(service=service, options=chrome_options)
+    if driver is None:
+        chrome_options = Options()
+        chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument("window-size=1200,800")
+        service = Service('/usr/bin/chromedriver')
+        driver = webdriver.Chrome(service=service, options=chrome_options)
+    return driver
 
 def navigate_to_url(url):
-    global driver
+    driver = get_driver()
     logger.debug(f"Navigating to URL: {url}")
     driver.get(url)
 
 def find_element_coordinates(identifier, identifier_type, offset_x=0, offset_y=0):
-    global driver
+    driver = get_driver()
     max_retries = 3
     for attempt in range(max_retries):
         try:
@@ -67,7 +72,7 @@ def find_element_coordinates(identifier, identifier_type, offset_x=0, offset_y=0
                 raise
 
 def close_browser():
-    global driver
+    driver = get_driver()
     if driver:
         driver.quit()
 
