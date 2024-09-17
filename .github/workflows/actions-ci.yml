@@ -297,7 +297,8 @@ jobs:
 
     - name: Make skripts executable
       run: |
-        chmod +x $GITHUB_WORKSPACE/.github/workflows/run_authoring_tool_steps.py
+        chmod +x $GITHUB_WORKSPACE/.github/workflows/browser_functions.py
+        chmod +x $GITHUB_WORKSPACE/.github/workflows/define_browser_functions.sh
         
 
     - name: Download latest Autorentool release
@@ -408,8 +409,73 @@ jobs:
         echo "WINDOW_Y=$window_y" >> $GITHUB_ENV
     
     - name: Simulate interactions
-      run: |
-        python3 $GITHUB_WORKSPACE/.github/workflows/run_authoring_tool_steps.py
+      run: |        
+        source $GITHUB_WORKSPACE/.github/workflows/define_browser_functions.sh
+        
+        # Init Browser
+        INIT_BROWSER
+        
+        # Navigate to WorldOverview
+        NAVIGATE_TO "http://localhost:8001/MyLearningWorldsOverview"
+        
+        # Click on create-world-button
+        coordinates=$(GET_ELEMENT_POSITION "class" "create-world-button" $WINDOW_X $WINDOW_Y)
+        IFS=',' read -ra coords <<< "$coordinates"
+        echo $coordinates
+        DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1 sleep 1
+        DISPLAY=:99 xdotool type "testWorld"
+        DISPLAY=:99 xdotool sleep 1 key "Return"
+        sleep 2
+        
+        # Navigate to app
+        NAVIGATE_TO "http://localhost:8001/app"
+        
+        # Click on space-metadata-icon
+        coordinates=$(GET_ELEMENT_POSITION "src" "space-metadata-icon.png" $WINDOW_X $WINDOW_Y)
+        IFS=',' read -ra coords <<< "$coordinates"
+        echo $coordinates
+        DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1 sleep 1
+        DISPLAY=:99 xdotool type "testSpace"
+        DISPLAY=:99 xdotool sleep 1 key "Return"
+        sleep 2
+        
+        # Click on slot ele_0
+        # coordinates=$(GET_ELEMENT_POSITION "identifier" "ele_0" $WINDOW_X $WINDOW_Y)
+        # IFS=',' read -ra coords <<< "$coordinates"
+        # echo $coordinates
+        # DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1 sleep 1
+        
+        # Click on adaptivityelement-icon
+        coordinates=$(GET_ELEMENT_POSITION "src" "adaptivityelement-icon.png" $WINDOW_X $WINDOW_Y)
+        IFS=',' read -ra coords <<< "$coordinates"
+        echo $coordinates
+        DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1 sleep 1
+        DISPLAY=:99 xdotool type "testElement"
+        DISPLAY=:99 xdotool sleep 1 key "Return"
+        sleep 2
+        
+        # Click on add-tasks
+        coordinates=$(GET_ELEMENT_POSITION "class" "add-tasks" $WINDOW_X $WINDOW_Y)
+        IFS=',' read -ra coords <<< "$coordinates"
+        echo $coordinates
+        DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1
+        sleep 2
+        
+        # Click on Neue Aufgabe erstellen
+        coordinates=$(GET_ELEMENT_POSITION "title" "Aufgabe erstellen" $WINDOW_X $WINDOW_Y)
+        IFS=',' read -ra coords <<< "$coordinates"
+        echo $coordinates
+        DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1
+        sleep 2
+        
+        # Click on mud-button-close
+        coordinates=$(GET_ELEMENT_POSITION "class" "mud-button-close" $WINDOW_X $WINDOW_Y)
+        IFS=',' read -ra coords <<< "$coordinates"
+        echo $coordinates
+        DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1 sleep 1
+        DISPLAY=:99 xdotool type "testWorld"
+        DISPLAY=:99 xdotool sleep 1 key "Return"
+        sleep 2
         
 
     - name: Stop screen recording
