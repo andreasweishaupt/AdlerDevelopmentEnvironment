@@ -50,34 +50,33 @@ def get_driver():
             with open(SESSION_FILE, 'r') as f:
                 session_data = json.load(f)
             try:
-                logger.debug("Attempting to connect to existing session...")
-                driver = webdriver.Remote(command_executor=session_data['url'], desired_capabilities={})
+                logger.debug("Read SESSION_FILE...")
+                options = Options()
+                options.add_argument(f"debuggerAddress={session_data['debugger_address']}")
+                driver = webdriver.Chrome(options=options)
                 driver.session_id = session_data['session_id']
-                logger.debug("Successfully connected to existing session.")
             except Exception as e:
-                logger.error(f"Failed to connect to existing session: {str(e)}")
-                logger.debug("Creating new driver...")
+                logger.error(f"Could not read SESSION_FILE: {str(e)}")
+                os.remove(SESSION_FILE)
                 driver = create_new_driver()
         else:
-            logger.debug("SESSION_FILE does not exist. Creating new driver...")
+            logger.debug("SESSION_FILE does not exist. Create new SESSION_FILE.")
             driver = create_new_driver()
     return driver
 
 def create_new_driver():
-    chrome_options = Options()
-    chrome_options.add_argument("--headless")
-    chrome_options.add_argument("--no-sandbox")
-    chrome_options.add_argument("--disable-dev-shm-usage")
-    chrome_options.add_argument("window-size=1200,800")
-    service = Service('/usr/bin/chromedriver')
-    driver = webdriver.Chrome(service=service, options=chrome_options)
+    options = Options()
+    options.add_argument("--headless")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("window-size=1200,800")
+    driver = webdriver.Chrome(options=options)
     session_data = {
-        'url': driver.command_executor._url,
+        'debugger_address': driver.capabilities['goog:chromeOptions']['debuggerAddress'],
         'session_id': driver.session_id
     }
     with open(SESSION_FILE, 'w') as f:
         json.dump(session_data, f)
-    logger.debug(f"Created new driver and saved session data to {SESSION_FILE}")
     return driver
 
 def initialize_browser():
