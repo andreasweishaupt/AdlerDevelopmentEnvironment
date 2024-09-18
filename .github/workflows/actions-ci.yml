@@ -444,7 +444,7 @@ jobs:
         }
         
         # Init Browser
-        INIT_BROWSER
+        # INIT_BROWSER
         
         # Navigate to WorldOverview
         # NAVIGATE_TO "http://localhost:8001/MyLearningWorldsOverview"
