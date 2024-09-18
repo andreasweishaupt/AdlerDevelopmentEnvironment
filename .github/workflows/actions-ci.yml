@@ -453,7 +453,6 @@ jobs:
         type find_element_position
         
         DISPLAY=:99 xdotool search --name "Autorentool v2.1.7"
-        DISPLAY=:99 xdotool version
         DISPLAY=:99 xdotool search --onlyvisible --name ".*" getwindowname
         DISPLAY=:99 xdpyinfo
         echo $DISPLAY
