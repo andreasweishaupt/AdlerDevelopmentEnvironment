@@ -406,60 +406,44 @@ jobs:
         echo "WINDOW_Y=$window_y" >> $GITHUB_ENV
     
     - name: Simulate interactions
-      run: |        
-        # source $GITHUB_WORKSPACE/.github/workflows/define_browser_functions.sh
+      run: | 
         # Funktion zum Finden von Elementpositionen
         find_element_position() {
           local identifier_type="$1"
           local identifier="$2"
-          local timeout=10
-          echo "Searching for element: $identifier_type=$identifier"
+          local window_x="$3"
+          local window_y="$4"
           local xpath=""
           
-          local window_id=$(DISPLAY=:99 xdotool search --name "Autorentool v2.1.7" | head -n 1)
-          if [ -z "$window_id" ]; then
-              echo "Error: AuthoringTool window not found"
+          case "$identifier_type" in
+            "class")
+              xpath="//*[contains(@class, '$identifier')]"
+              ;;
+            "src")
+              xpath="//img[contains(@src, '$identifier')]"
+              ;;
+            "identifier")
+              xpath="//*[contains(@identifier, '$identifier')]"
+              ;;
+            "title")
+              xpath="//*[contains(@title, '$identifier')]"
+              ;;
+            *)
+              echo "Invalid identifier_type. Use 'class', 'src', 'identifier', or 'title'."
               return 1
-          fi
+              ;;
+          esac
           
-          local start_time=$(date +%s)
-          while true; do
-              local current_time=$(date +%s)
-              if [ $((current_time - start_time)) -gt $timeout ]; then
-                  echo "Error: Timeout while searching for element"
-                  return 1
-              fi
-              
-              case "$identifier_type" in
-                  "class")
-                      local element_id=$(DISPLAY=:99 xdotool search --onlyvisible --class "$identifier" --limit 1)
-                      ;;
-                  "src")
-                      # Für Bilder müssen wir eventuell einen anderen Ansatz wählen
-                      echo "Error: 'src' identifier type not supported yet"
-                      return 1
-                      ;;
-                  "identifier")
-                      local element_id=$(DISPLAY=:99 xdotool search --onlyvisible --name "$identifier" --limit 1)
-                      ;;
-                  "title")
-                      local element_id=$(DISPLAY=:99 xdotool search --onlyvisible --name "$identifier" --limit 1)
-                      ;;
-                  *)
-                      echo "Error: Invalid identifier_type. Use 'class', 'identifier', or 'title'."
-                      return 1
-                      ;;
-              esac
-              
-              if [ -n "$element_id" ]; then
-                  local geometry=$(DISPLAY=:99 xdotool getwindowgeometry --shell $element_id)
-                  eval "$geometry"
-                  echo "$X,$Y"
-                  return 0
-              fi
-              
-              sleep 0.5
-          done
+          local result=$(DISPLAY=:99 xdotool search --name "Autorentool v2.1.7" selectwindow -- search --onlyvisible --sync --limit 1 "$xpath" getwindowgeometry --shell)
+          if [ -n "$result" ]; then
+            eval "$result"
+            local element_x=$((X - window_x))
+            local element_y=$((Y - window_y))
+            echo "$element_x,$element_y"
+          else
+            echo "Element not found"
+            return 1
+          fi
         }
         
         type find_element_position
@@ -474,7 +458,7 @@ jobs:
         
         # Click on create-world-button
         echo Click on create-world-button
-        coordinates=$(find_element_position "class" "create-world-button")
+        coordinates=$(find_element_position "class" "create-world-button" $WINDOW_X $WINDOW_Y)
         IFS=',' read -ra coords <<< "$coordinates"
         echo $coordinates
         DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1 sleep 1
