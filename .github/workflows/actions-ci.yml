@@ -407,7 +407,7 @@ jobs:
     
     - name: Simulate interactions
       run: |        
-        source $GITHUB_WORKSPACE/.github/workflows/define_browser_functions.sh
+        # source $GITHUB_WORKSPACE/.github/workflows/define_browser_functions.sh
         # Funktion zum Finden von Elementpositionen
         find_element_position() {
           local identifier_type="$1"
@@ -461,6 +461,10 @@ jobs:
               sleep 0.5
           done
         }
+        
+        type find_element_position
+        
+        find_element_position "class" "create-world-button"
         
         # Init Browser
         # INIT_BROWSER
