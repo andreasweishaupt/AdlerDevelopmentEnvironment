@@ -407,21 +407,11 @@ jobs:
     
     - name: Simulate interactions
       run: | 
-        my_function() {
-            local param1=$1
-            local param2=$2
-            echo "Function called with parameters: $param1 and $param2"
-            # Fügen Sie hier Ihre Funktionslogik hinzu
-        } 
-        # Funktion aufrufen
-        my_function "Hello" "World"
-        
         # Funktion zum Finden von Elementpositionen
         find_element_position() {
           local identifier_type="$1"
           local identifier="$2"
-          local window_x="$3"
-          local window_y="$4"
+          echo "Called find_element_position() with parameters: $identifier_type and $identifier"
           local xpath=""
           
           case "$identifier_type" in
@@ -442,7 +432,7 @@ jobs:
               return 1
               ;;
           esac
-          
+          echo "$xpath"
           local result=$(DISPLAY=:99 xdotool search --name "Autorentool v2.1.7" selectwindow -- search --onlyvisible --sync --limit 1 "$xpath" getwindowgeometry --shell)
           if [ -n "$result" ]; then
             eval "$result"
@@ -467,9 +457,9 @@ jobs:
         
         # Click on create-world-button
         echo Click on create-world-button
-        coordinates=$(find_element_position "class" "create-world-button" $WINDOW_X $WINDOW_Y)
-        IFS=',' read -ra coords <<< "$coordinates"
+        coordinates=$(find_element_position "class" "create-world-button")
         echo $coordinates
+        IFS=',' read -ra coords <<< "$coordinates"
         DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1 sleep 1
         DISPLAY=:99 xdotool type "testWorld"
         DISPLAY=:99 xdotool sleep 1 key "Return"
