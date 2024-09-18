@@ -434,7 +434,7 @@ jobs:
           esac
           
           echo "XPath: $xpath"
-          local result=$(DISPLAY=:99 xdotool search --name "Autorentool v2.1.7" behave %@ getwindowname %@ selectwindow -- search --onlyvisible --sync --limit 1 "$xpath" getwindowgeometry --shell)
+          local result=$(DISPLAY=:99 xdotool search --name "Autorentool v2.1.7" behave %@ selectwindow -- search --onlyvisible --sync --limit 1 "$xpath" getwindowgeometry --shell)
           echo "Result: $result"
           if [ -n "$result" ]; then
             eval "$result"
