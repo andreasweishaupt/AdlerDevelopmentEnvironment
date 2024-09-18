@@ -412,37 +412,54 @@ jobs:
         find_element_position() {
           local identifier_type="$1"
           local identifier="$2"
+          local timeout=10
+          echo "Searching for element: $identifier_type=$identifier"
           local xpath=""
           
-          case "$identifier_type" in
-            "class")
-              xpath="//*[contains(@class, '$identifier')]"
-              ;;
-            "src")
-              xpath="//img[contains(@src, '$identifier')]"
-              ;;
-            "identifier")
-              xpath="//*[contains(@identifier, '$identifier')]"
-              ;;
-            "title")
-              xpath="//*[contains(@title, '$identifier')]"
-              ;;
-            *)
-              echo "Invalid identifier_type. Use 'class', 'src', 'identifier', or 'title'."
+          local window_id=$(DISPLAY=:99 xdotool search --name "Autorentool v2.1.7" | head -n 1)
+          if [ -z "$window_id" ]; then
+              echo "Error: AuthoringTool window not found"
               return 1
-              ;;
-          esac
-          
-          echo "XPath: $xpath"
-          local result=$(DISPLAY=:99 xdotool search --name "Autorentool v2.1.7" selectwindow -- search --onlyvisible --sync --limit 1 "$xpath" getwindowgeometry --shell)
-          echo "Result: $result"
-          if [ -n "$result" ]; then
-            eval "$result"
-            echo "$X,$Y"
-          else
-            echo "Element not found"
-            return 1
           fi
+          
+          local start_time=$(date +%s)
+          while true; do
+              local current_time=$(date +%s)
+              if [ $((current_time - start_time)) -gt $timeout ]; then
+                  echo "Error: Timeout while searching for element"
+                  return 1
+              fi
+              
+              case "$identifier_type" in
+                  "class")
+                      local element_id=$(DISPLAY=:99 xdotool search --onlyvisible --class "$identifier" --limit 1)
+                      ;;
+                  "src")
+                      # Für Bilder müssen wir eventuell einen anderen Ansatz wählen
+                      echo "Error: 'src' identifier type not supported yet"
+                      return 1
+                      ;;
+                  "identifier")
+                      local element_id=$(DISPLAY=:99 xdotool search --onlyvisible --name "$identifier" --limit 1)
+                      ;;
+                  "title")
+                      local element_id=$(DISPLAY=:99 xdotool search --onlyvisible --name "$identifier" --limit 1)
+                      ;;
+                  *)
+                      echo "Error: Invalid identifier_type. Use 'class', 'identifier', or 'title'."
+                      return 1
+                      ;;
+              esac
+              
+              if [ -n "$element_id" ]; then
+                  local geometry=$(DISPLAY=:99 xdotool getwindowgeometry --shell $element_id)
+                  eval "$geometry"
+                  echo "$X,$Y"
+                  return 0
+              fi
+              
+              sleep 0.5
+          done
         }
         
         # Init Browser
