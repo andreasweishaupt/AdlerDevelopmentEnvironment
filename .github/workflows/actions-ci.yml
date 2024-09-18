@@ -433,7 +433,9 @@ jobs:
               ;;
           esac
           
+          echo "XPath: $xpath"
           local result=$(DISPLAY=:99 xdotool search --name "Autorentool v2.1.7" behave %@ getwindowname %@ selectwindow -- search --onlyvisible --sync --limit 1 "$xpath" getwindowgeometry --shell)
+          echo "Result: $result"
           if [ -n "$result" ]; then
             eval "$result"
             echo "$X,$Y"
@@ -485,28 +487,28 @@ jobs:
         DISPLAY=:99 xdotool sleep 1 key "Return"
         sleep 2
         
-        # Click on add-tasks
-        coordinates=$(GET_ELEMENT_POSITION "class" "add-tasks" $WINDOW_X $WINDOW_Y)
-        IFS=',' read -ra coords <<< "$coordinates"
-        echo $coordinates
-        DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1
-        sleep 2
-        
-        # Click on Neue Aufgabe erstellen
-        coordinates=$(GET_ELEMENT_POSITION "title" "Aufgabe erstellen" $WINDOW_X $WINDOW_Y)
-        IFS=',' read -ra coords <<< "$coordinates"
-        echo $coordinates
-        DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1
-        sleep 2
-        
-        # Click on mud-button-close
-        coordinates=$(GET_ELEMENT_POSITION "class" "mud-button-close" $WINDOW_X $WINDOW_Y)
-        IFS=',' read -ra coords <<< "$coordinates"
-        echo $coordinates
-        DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1 sleep 1
-        DISPLAY=:99 xdotool type "testWorld"
-        DISPLAY=:99 xdotool sleep 1 key "Return"
-        sleep 2
+        ## Click on add-tasks
+        #coordinates=$(GET_ELEMENT_POSITION "class" "add-tasks" $WINDOW_X $WINDOW_Y)
+        #IFS=',' read -ra coords <<< "$coordinates"
+        #echo $coordinates
+        #DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1
+        #sleep 2
+        #
+        ## Click on Neue Aufgabe erstellen
+        #coordinates=$(GET_ELEMENT_POSITION "title" "Aufgabe erstellen" $WINDOW_X $WINDOW_Y)
+        #IFS=',' read -ra coords <<< "$coordinates"
+        #echo $coordinates
+        #DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1
+        #sleep 2
+        #
+        ## Click on mud-button-close
+        #coordinates=$(GET_ELEMENT_POSITION "class" "mud-button-close" $WINDOW_X $WINDOW_Y)
+        #IFS=',' read -ra coords <<< "$coordinates"
+        #echo $coordinates
+        #DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1 sleep 1
+        #DISPLAY=:99 xdotool type "testWorld"
+        #DISPLAY=:99 xdotool sleep 1 key "Return"
+        #sleep 2
         
 
     - name: Stop screen recording
