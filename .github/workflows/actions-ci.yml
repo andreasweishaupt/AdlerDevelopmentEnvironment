@@ -452,6 +452,7 @@ jobs:
         # NAVIGATE_TO "http://localhost:8001/MyLearningWorldsOverview"
         
         # Click on create-world-button
+        echo Click on create-world-button
         coordinates=$(find_element_position "class" "create-world-button")
         IFS=',' read -ra coords <<< "$coordinates"
         echo $coordinates
@@ -464,6 +465,7 @@ jobs:
         # NAVIGATE_TO "http://localhost:8001/app"
         
         # Click on space-metadata-icon
+        echo Click on space-metadata-icon
         coordinates=$(find_element_position "src" "space-metadata-icon.png")
         IFS=',' read -ra coords <<< "$coordinates"
         echo $coordinates
