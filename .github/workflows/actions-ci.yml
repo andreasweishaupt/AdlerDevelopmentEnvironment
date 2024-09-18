@@ -407,6 +407,15 @@ jobs:
     
     - name: Simulate interactions
       run: | 
+        my_function() {
+            local param1=$1
+            local param2=$2
+            echo "Function called with parameters: $param1 and $param2"
+            # Fügen Sie hier Ihre Funktionslogik hinzu
+        } 
+        # Funktion aufrufen
+        my_function "Hello" "World"
+        
         # Funktion zum Finden von Elementpositionen
         find_element_position() {
           local identifier_type="$1"
