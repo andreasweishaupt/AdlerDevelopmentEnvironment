@@ -414,6 +414,9 @@ jobs:
           echo "Called find_element_position() with parameters: $identifier_type and $identifier"
           local xpath=""
           
+          local testcommand=$(timeout 10s DISPLAY=:99 xdotool search --name "Autorentool v2.1.7" selectwindow -- search --onlyvisible --sync --limit 1 --class "create-world-button" getwindowgeometry --shell)
+          echo "testcommand= $testcommand"
+          
           case "$identifier_type" in
             "class")
               xpath="//*[contains(@class, '$identifier')]"
@@ -433,7 +436,9 @@ jobs:
               ;;
           esac
           echo "$xpath"
-          local result=$(DISPLAY=:99 xdotool search --name "Autorentool v2.1.7" selectwindow -- search --onlyvisible --sync --limit 1 "$xpath" getwindowgeometry --shell)
+          echo "Executing xdotool command..."
+          local result=$(timeout 10s DISPLAY=:99 xdotool search --name "Autorentool v2.1.7" selectwindow -- search --onlyvisible --sync --limit 1 "$xpath" getwindowgeometry --shell)
+          echo "xdotool command completed. Result: $result"
           if [ -n "$result" ]; then
             eval "$result"
             local element_x=$((X - window_x))
