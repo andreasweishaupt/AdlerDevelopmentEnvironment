@@ -412,6 +412,11 @@ jobs:
           local identifier_type="$1"
           local identifier="$2"
           echo "Called find_element_position() with parameters: $identifier_type and $identifier"
+          
+          echo 'Fenster finden: $(timeout 10s DISPLAY=:99 xdotool search --name "Autorentool v2.1.7")'
+          echo 'Element finden: $(timeout 10s DISPLAY=:99 xdotool search --name "Autorentool v2.1.7" windowfocus --sync && xdotool search --onlyvisible --classname "create-world-button")'
+          echo 'Position finden: $(timeout 10s DISPLAY=:99 xdotool search --name "Fenstername" windowfocus --sync && ELEMENT_ID=$(xdotool search --onlyvisible --classname "Elementklassenname") && xdotool getwindowgeometry --shell $ELEMENT_ID | grep -E "X|Y")'
+          
           local xpath=""
           
           local testcommand=$(timeout 10s DISPLAY=:99 xdotool search --name "Autorentool v2.1.7" selectwindow -- search --onlyvisible --sync --limit 1 --class "create-world-button" getwindowgeometry --shell)
