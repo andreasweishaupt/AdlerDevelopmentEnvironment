@@ -9,6 +9,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import WebDriverException, TimeoutException
 
 def get_driver():
+    print("get_driver")
     options = Options()
     options.add_argument("--headless")
     options.add_argument("--no-sandbox")

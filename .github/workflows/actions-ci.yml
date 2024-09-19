@@ -413,7 +413,6 @@ jobs:
     - name: Simulate interactions
       run: | 
         source $GITHUB_WORKSPACE/.github/workflows/define_test_script.sh
-        python $GITHUB_WORKSPACE/.github/workflows/test_script.py 
         python $GITHUB_WORKSPACE/.github/workflows/test_script.py find "class" "create-world-button"
         coordinates=$(python $GITHUB_WORKSPACE/.github/workflows/test_script.py find "class" "create-world-button")
         echo $coordinates
