@@ -425,23 +425,7 @@ jobs:
           
           const pages = await browser.pages();
           const page = pages[0];
-          
-          // Beispiel: Suche nach einem Element mit einer bestimmten Klasse
-          const button = await page.$('.my-button-class');
-          if (button) {
-            const boundingBox = await button.boundingBox();
-            console.log('Button gefunden:', boundingBox);
-            await button.click();
-          } else {
-            console.log('Button nicht gefunden');
-          }
-          
-          // Beispiel: Text in ein Eingabefeld eingeben
-          const input = await page.$('.my-input-class');
-          if (input) {
-            await input.type('Beispieltext');
-            console.log('Text in Eingabefeld eingegeben');
-          }
+          console.log('Page content:', await page.content());
           
           await browser.disconnect();
         })();
