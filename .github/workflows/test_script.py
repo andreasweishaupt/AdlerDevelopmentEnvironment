@@ -52,6 +52,7 @@ def find_element_coordinates(identifier, identifier_type):
 
 
 if __name__ == "__main__":
+    print("Called test_script.py")
     print(f"Script called with arguments: {sys.argv}")
     if len(sys.argv) < 2:
         print("Usage: python test_script.py <command> [args...]")

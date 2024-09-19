@@ -414,7 +414,7 @@ jobs:
       run: | 
         source $GITHUB_WORKSPACE/.github/workflows/define_test_script.sh
         
-        coordinates=$(FIND_ELEMENT "class" "create-world-button")
+        coordinates=$(python $GITHUB_WORKSPACE/.github/workflows/test_script.py find "class" "create-world-button")
         echo $coordinates
         echo "------------"
         
