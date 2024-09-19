@@ -46,8 +46,12 @@ def find_element_coordinates(identifier, identifier_type):
                 raise ValueError("Invalid identifier_type. Use 'class', 'src', 'identifier', or 'title'.")
             
             location = element.location
-            print(f"Element {element} found at location: {location}")
-            return location['x'], location['y']
+            location = element.location
+            size = element.size
+            center_x = int(location['x'] + size['width'] / 2)
+            center_y = int(location['y'] + size['height'] / 2)
+            print(f"Element {element} found. Center at: ({center_x}, {center_y})")
+            return center_x, center_y
         except TimeoutException:
             print(f"Timeout on attempt {attempt + 1}")
             if attempt == max_retries - 1:
@@ -75,7 +79,7 @@ if __name__ == "__main__":
         try:
             x, y = find_element_coordinates(identifier, identifier_type)
             x += 360
-            y += 140 + 15
+            y += 140 + 18
             print(f"{x},{y}", flush=True)
         except Exception as e:
             print(f"An error occurred: {str(e)}")
