@@ -409,9 +409,9 @@ jobs:
     - name: Simulate interactions
       run: | 
         
-        DISPLAY=:99 xdotool windowfocus $WINDOW_ID
-        DISPLAY=:99 xdotool search --onlyvisible --class "create-world-button" click --window %1
-        element_pos=$(DISPLAY=:99 xdotool search --onlyvisible --class "create-world-button" getwindowgeometry --shell %1)
+        # DISPLAY=:99 xdotool windowfocus $WINDOW_ID
+        # DISPLAY=:99 xdotool search --onlyvisible --class "create-world-button" --window $WINDOW_ID click
+        element_pos=$(DISPLAY=:99 xdotool search --window $WINDOW_ID --onlyvisible --class "create-world-button" getwindowgeometry --shell)
         echo 'element_pos: $element_pos'
         
         # Init Browser
