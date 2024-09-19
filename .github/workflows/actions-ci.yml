@@ -404,65 +404,15 @@ jobs:
         fi
         echo "WINDOW_X=$window_x" >> $GITHUB_ENV
         echo "WINDOW_Y=$window_y" >> $GITHUB_ENV
+        echo "WINDOW_ID=$window_id" >> $GITHUB_ENV
     
     - name: Simulate interactions
       run: | 
-        # Funktion zum Finden von Elementpositionen
-        find_element_position() {
-          local identifier_type="$1"
-          local identifier="$2"
-          echo "Called find_element_position() with parameters: $identifier_type and $identifier"
-          
-          echo "Fenster finden: $(xdotool search --name 'Autorentool v2.1.7' || echo 'Fenster nicht gefunden')"
-          echo "Element finden1: $(xdotool search --name 'Autorentool v2.1.7' windowfocus --sync && xdotool search --onlyvisible --class --classname 'create-world-button' || echo 'Element nicht gefunden')"
-          echo "Element finden: $(xdotool search --name 'Autorentool v2.1.7' windowfocus --sync && xdotool search --onlyvisible --classname 'create-world-button' || echo 'Element nicht gefunden')"
-          echo "Position finden: $(xdotool search --name 'Autorentool v2.1.7' windowfocus --sync && ELEMENT_ID=$(xdotool search --onlyvisible --classname 'create-world-button') && xdotool getwindowgeometry --shell $ELEMENT_ID | grep -E 'X|Y' || echo 'Position nicht gefunden')"
-          
-          local xpath=""
-          
-          local testcommand=$(timeout 10s DISPLAY=:99 xdotool search --name "Autorentool v2.1.7" selectwindow -- search --onlyvisible --sync --limit 1 --class "create-world-button" getwindowgeometry --shell)
-          echo "testcommand= $testcommand"
-          
-          case "$identifier_type" in
-            "class")
-              xpath="//*[contains(@class, '$identifier')]"
-              ;;
-            "src")
-              xpath="//img[contains(@src, '$identifier')]"
-              ;;
-            "identifier")
-              xpath="//*[contains(@identifier, '$identifier')]"
-              ;;
-            "title")
-              xpath="//*[contains(@title, '$identifier')]"
-              ;;
-            *)
-              echo "Invalid identifier_type. Use 'class', 'src', 'identifier', or 'title'."
-              return 1
-              ;;
-          esac
-          echo "$xpath"
-          echo "Executing xdotool command..."
-          local result=$(timeout 10s DISPLAY=:99 xdotool search --name "Autorentool v2.1.7" selectwindow -- search --onlyvisible --sync --limit 1 "$xpath" getwindowgeometry --shell)
-          echo "xdotool command completed. Result: $result"
-          if [ -n "$result" ]; then
-            eval "$result"
-            local element_x=$((X - window_x))
-            local element_y=$((Y - window_y))
-            echo "$element_x,$element_y"
-          else
-            echo "Element not found"
-            return 1
-          fi
-        }
         
-        type find_element_position
-        
-        DISPLAY=:99 xdotool search --name "Autorentool v2.1.7"
-        DISPLAY=:99 xdotool search --onlyvisible --name ".*" getwindowname
-        echo $DISPLAY
-        
-        find_element_position "class" "create-world-button"
+        DISPLAY=:99 xdotool windowactivate $WINDOW_ID
+        DISPLAY=:99 xdotool search --onlyvisible --class "create-world-button" click --window %1
+        element_pos=$(DISPLAY=:99 xdotool search --onlyvisible --class "create-world-button" getwindowgeometry --shell %1)
+        echo 'element_pos: $element_pos'
         
         # Init Browser
         # INIT_BROWSER
