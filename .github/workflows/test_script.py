@@ -18,6 +18,7 @@ def get_driver():
     # options.add_argument("--remote-debugging-port=9222")
     driver = webdriver.Chrome(service=service, options=options)
     print("get_driver finish")
+    return driver
     
 def find_element_coordinates(identifier, identifier_type):
     driver = get_driver()
