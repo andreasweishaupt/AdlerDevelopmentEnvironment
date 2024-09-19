@@ -291,10 +291,13 @@ jobs:
         chromedriver --version
       env:
         CHROME_VERSION: "114.0.5735.90"
-        CHROME_DEB: "google-chrome-stable_114.0.5735.90-1_amd64.deb"
-        CHROME_URL: "https://mirror.cs.uchicago.edu/google-chrome/pool/main/g/google-chrome-stable/google-chrome-stable_114.0.5735.90-1_amd64.deb"
+        CHROME_DEB_BACKUP: "google-chrome-stable_114.0.5735.90-1_amd64.deb"
+        CHROME_DEB: "google-chrome-stable_110.0.5481.77-1_amd64.deb"
+        CHROME_URL_BACKUP: "https://mirror.cs.uchicago.edu/google-chrome/pool/main/g/google-chrome-stable/google-chrome-stable_114.0.5735.90-1_amd64.deb"
+        CHROME_URL: "https://mirror.cs.uchicago.edu/google-chrome/pool/main/g/google-chrome-stable/google-chrome-stable_110.0.5481.77-1_amd64.deb"
         CHROMEDRIVER_ZIP: "chromedriver_linux64.zip"
-        CHROMEDRIVER_URL: "https://old.chromedriver.getwebdriver.com/114.0.5735.90/chromedriver_linux64.zip"
+        CHROMEDRIVER_URL_BACKUP: "https://old.chromedriver.getwebdriver.com/114.0.5735.90/chromedriver_linux64.zip"
+        CHROMEDRIVER_URL: "https://old.chromedriver.getwebdriver.com/110.0.5481.77/chromedriver_linux64.zip"
 
     - name: Make skripts executable
       run: |
