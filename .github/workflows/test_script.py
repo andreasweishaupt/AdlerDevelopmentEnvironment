@@ -1,6 +1,5 @@
 import sys
 from selenium import webdriver
-from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
@@ -16,8 +15,9 @@ def get_driver():
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("window-size=1200,800")
-    options.add_argument("--remote-debugging-port=9222")
+    # options.add_argument("--remote-debugging-port=9222")
     driver = webdriver.Chrome(service=service, options=options)
+    print("get_driver finish")
     
 def find_element_coordinates(identifier, identifier_type):
     driver = get_driver()
