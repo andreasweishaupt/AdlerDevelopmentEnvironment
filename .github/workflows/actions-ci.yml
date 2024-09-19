@@ -245,10 +245,6 @@ jobs:
       with:
         python-version: '3.x'
         
-    - name: Setup Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '20'
 
     - name: Install dependencies
       run: |
@@ -261,7 +257,6 @@ jobs:
           x11-utils libxkbcommon-x11-0
         python -m pip install --upgrade pip
         pip install selenium
-        npm install puppeteer
 
     - name: Install Chrome and ChromeDriver
       run: |
@@ -305,6 +300,8 @@ jobs:
       run: |
         chmod +x $GITHUB_WORKSPACE/.github/workflows/browser_functions.py
         chmod +x $GITHUB_WORKSPACE/.github/workflows/define_browser_functions.sh
+        chmod +x $GITHUB_WORKSPACE/.github/workflows/test_script.sh
+        chmod +x $GITHUB_WORKSPACE/.github/workflows/define_test_script.sh
         
 
     - name: Download latest Autorentool release
@@ -412,26 +409,15 @@ jobs:
         echo "WINDOW_Y=$window_y" >> $GITHUB_ENV
         echo "WINDOW_ID=$window_id" >> $GITHUB_ENV
     
-    - name: Interact with UI elements
-      run: |
-        node - <<EOF
-        const puppeteer = require('puppeteer');
-        
-        (async () => {
-          const browser = await puppeteer.connect({
-            browserURL: 'http://localhost:9222',
-            defaultViewport: null
-          });
-          
-          const pages = await browser.pages();
-          const page = pages[0];
-          console.log('Page content:', await page.content());
-          
-        })();
-        EOF
     
     - name: Simulate interactions
       run: | 
+        source $GITHUB_WORKSPACE/.github/workflows/define_test_script.sh
+        
+        coordinates=$(FIND_ELEMENT "class" "create-world-button"
+        echo $coordinates
+        echo "------------"
+        
         
         # DISPLAY=:99 xdotool windowfocus $WINDOW_ID
         # DISPLAY=:99 xdotool search --onlyvisible --class "create-world-button" --window $WINDOW_ID click
