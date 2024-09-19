@@ -455,7 +455,6 @@ jobs:
         DISPLAY=:99 xdotool search --name "Autorentool v2.1.7"
         DISPLAY=:99 xdotool search --onlyvisible --name ".*" getwindowname
         echo $DISPLAY
-        DISPLAY=:99 xdotool search --name "Autorentool v2.1.7" windowactivate --sync
         
         find_element_position "class" "create-world-button"
         
