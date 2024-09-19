@@ -244,6 +244,11 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: '3.x'
+        
+    - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
 
     - name: Install dependencies
       run: |
@@ -256,6 +261,7 @@ jobs:
           x11-utils libxkbcommon-x11-0
         python -m pip install --upgrade pip
         pip install selenium
+        npm install puppeteer
 
     - name: Install Chrome and ChromeDriver
       run: |
@@ -357,7 +363,7 @@ jobs:
         fi
         
         echo "Attempt $attempt of $max_attempts to start Authoring Tool"
-        ./linux-unpacked/authoring-tool &
+        ./linux-unpacked/authoring-tool --remote-debugging-port=9222 &
         tool_pid=$!
         sleep 5  # Wait time to allow for initialization
           
@@ -405,6 +411,41 @@ jobs:
         echo "WINDOW_X=$window_x" >> $GITHUB_ENV
         echo "WINDOW_Y=$window_y" >> $GITHUB_ENV
         echo "WINDOW_ID=$window_id" >> $GITHUB_ENV
+    
+    - name: Interact with UI elements
+        run: |
+          node - <<EOF
+          const puppeteer = require('puppeteer');
+          
+          (async () => {
+            const browser = await puppeteer.connect({
+              browserURL: 'http://localhost:9222',
+              defaultViewport: null
+            });
+            
+            const pages = await browser.pages();
+            const page = pages[0];
+            
+            // Beispiel: Suche nach einem Element mit einer bestimmten Klasse
+            const button = await page.$('.my-button-class');
+            if (button) {
+              const boundingBox = await button.boundingBox();
+              console.log('Button gefunden:', boundingBox);
+              await button.click();
+            } else {
+              console.log('Button nicht gefunden');
+            }
+            
+            // Beispiel: Text in ein Eingabefeld eingeben
+            const input = await page.$('.my-input-class');
+            if (input) {
+              await input.type('Beispieltext');
+              console.log('Text in Eingabefeld eingegeben');
+            }
+            
+            await browser.disconnect();
+          })();
+          EOF
     
     - name: Simulate interactions
       run: | 
