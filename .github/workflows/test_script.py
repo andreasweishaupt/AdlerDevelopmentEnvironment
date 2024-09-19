@@ -15,7 +15,7 @@ def get_driver():
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("window-size=1200,800")
-    # options.add_argument("--remote-debugging-port=9222")
+    options.add_argument("--remote-debugging-port=9222")
     driver = webdriver.Chrome(service=service, options=options)
     print("get_driver finish")
     return driver
