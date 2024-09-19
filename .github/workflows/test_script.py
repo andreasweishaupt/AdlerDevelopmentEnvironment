@@ -71,7 +71,6 @@ if __name__ == "__main__":
         try:
             x, y = find_element_coordinates(identifier, identifier_type)
             print(f"{x},{y}")
-            return x, y
         except Exception as e:
             print(f"An error occurred: {str(e)}")
             sys.exit(1)
