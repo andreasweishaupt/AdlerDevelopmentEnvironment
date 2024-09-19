@@ -74,6 +74,8 @@ if __name__ == "__main__":
         print(f"Finding element: type={identifier_type}, identifier={identifier}")
         try:
             x, y = find_element_coordinates(identifier, identifier_type)
+            x += 360
+            y += 140 + 15
             print(f"{x},{y}", flush=True)
         except Exception as e:
             print(f"An error occurred: {str(e)}")
