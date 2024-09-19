@@ -300,7 +300,7 @@ jobs:
       run: |
         chmod +x $GITHUB_WORKSPACE/.github/workflows/browser_functions.py
         chmod +x $GITHUB_WORKSPACE/.github/workflows/define_browser_functions.sh
-        chmod +x $GITHUB_WORKSPACE/.github/workflows/test_script.sh
+        chmod +x $GITHUB_WORKSPACE/.github/workflows/test_script.py
         chmod +x $GITHUB_WORKSPACE/.github/workflows/define_test_script.sh
         
 
