@@ -1,5 +1,8 @@
 #!/bin/bash
 
+export LANG=de_DE.UTF-8
+export LC_ALL=de_DE.UTF-8
+
 # Laden Sie die FIND_ELEMENT Funktion
 source $GITHUB_WORKSPACE/.github/workflows/define_test_script.sh
         
