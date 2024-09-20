@@ -466,8 +466,6 @@ jobs:
         IFS=',' read -ra coords <<< "$coordinates"
         echo $coordinates
         DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1
-        DISPLAY=:99 xdotool sleep 1 key "ctrl+a" key "BackSpace" sleep 1
-        DISPLAY=:99 xdotool type "testAufgabe"
         sleep 2
         
         # Click on Neue Aufgabe erstellen
@@ -476,6 +474,8 @@ jobs:
         IFS=',' read -ra coords <<< "$coordinates"
         echo $coordinates
         DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1
+        DISPLAY=:99 xdotool sleep 1 key "ctrl+a" key "BackSpace" sleep 1
+        DISPLAY=:99 xdotool type "testAufgabe"
         sleep 2
         
         # Click on Mittelschwer

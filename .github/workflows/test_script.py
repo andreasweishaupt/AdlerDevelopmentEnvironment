@@ -52,7 +52,7 @@ def find_element_coordinates(identifier, identifier_type):
                 )
             elif identifier_type == "text":
                 element = WebDriverWait(driver, 5).until(
-                    EC.visibility_of_element_located((By.XPATH, f"//*[contains(text(), '{identifier}')]"))
+                    EC.visibility_of_element_located((By.XPATH, f"//*[contains(text(), '{identifier}') or .//*/contains(text(), '{identifier}')]"))
                 )
             else:
                 raise ValueError("Invalid identifier_type. Use 'class', 'src', 'identifier', 'title', 'type', 'tag' or 'text'.")
