@@ -536,6 +536,14 @@ jobs:
         DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1
         sleep 2
         
+        # Click on mud-button-text-primary
+        echo Click on mud-button-text-primary
+        coordinates=$(FIND_ELEMENT "class" "mud-button-text-primary" | tail -n 1)
+        IFS=',' read -ra coords <<< "$coordinates"
+        echo $coordinates
+        DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1
+        sleep 2
+        
         echo "------------"     
 
     - name: Stop screen recording
