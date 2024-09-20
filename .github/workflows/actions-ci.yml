@@ -475,13 +475,23 @@ jobs:
         DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1
         sleep 2
         
+        # Click first radio button
+        coords=($(FIND_ELEMENT "type" "radio" 0))
+        DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1
+        sleep 2
+        
+        # Click second radio button
+        coords=($(FIND_ELEMENT "type" "radio" 1))
+        DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1
+        sleep 2
+        
         # Click on Erstellen
         coords=($(FIND_ELEMENT "text" "Erstellen"))
         DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1
         sleep 2
         
         # Click on mud-button-close
-        coords=($(FIND_ELEMENT "class" "mud-button-close"$(FIND_ELEMENT "class" "mud-button-close"))
+        coords=($(FIND_ELEMENT "class" "mud-button-close"))
         DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1 sleep 1
         sleep 2
         
