@@ -27,23 +27,35 @@ def find_element_coordinates(identifier, identifier_type):
         try:
             print(f"Attempt {attempt + 1} to find element with {identifier_type}: {identifier}")
             if identifier_type == "class":
-                element = WebDriverWait(driver, 10).until(
+                element = WebDriverWait(driver, 5).until(
                     EC.visibility_of_element_located((By.CLASS_NAME, identifier))
                 )
             elif identifier_type == "src":
-                element = WebDriverWait(driver, 10).until(
+                element = WebDriverWait(driver, 5).until(
                     EC.visibility_of_element_located((By.XPATH, f"//img[contains(@src, '{identifier}')]"))
                 )
             elif identifier_type == "identifier":
-                element = WebDriverWait(driver, 10).until(
+                element = WebDriverWait(driver, 5).until(
                     EC.visibility_of_element_located((By.XPATH, f"//*[contains(@identifier, '{identifier}')]"))
                 )
             elif identifier_type == "title":
-                element = WebDriverWait(driver, 10).until(
+                element = WebDriverWait(driver, 5).until(
                     EC.visibility_of_element_located((By.XPATH, f"//*[contains(@title, '{identifier}')]"))
                 )
+            elif identifier_type == "type":
+                element = WebDriverWait(driver, 5).until(
+                    EC.visibility_of_element_located((By.XPATH, f"//*[contains(@type, '{identifier}')]"))
+                )
+            elif identifier_type == "tag":
+                element = WebDriverWait(driver, 5).until(
+                    EC.visibility_of_element_located((By.TAG_NAME, identifier))
+                )
+            elif identifier_type == "text":
+                element = WebDriverWait(driver, 5).until(
+                    EC.visibility_of_element_located((By.XPATH, f"//*[contains(text(), '{identifier}')]"))
+                )
             else:
-                raise ValueError("Invalid identifier_type. Use 'class', 'src', 'identifier', or 'title'.")
+                raise ValueError("Invalid identifier_type. Use 'class', 'src', 'identifier', 'title', 'type', 'tag' or 'text'.")
             
             location = element.location
             location = element.location

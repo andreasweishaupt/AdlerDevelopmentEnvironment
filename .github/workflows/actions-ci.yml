@@ -436,12 +436,14 @@ jobs:
         sleep 2
         
         # Click on slot ele_0
+        echo Click on slot ele_0
         coordinates=$(FIND_ELEMENT "identifier" "ele_0" | tail -n 1)
         IFS=',' read -ra coords <<< "$coordinates"
         echo $coordinates
         DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1 sleep 1
         
         # Click on adaptivityelement-icon
+        echo Click on adaptivityelement-icon
         coordinates=$(FIND_ELEMENT "src" "adaptivityelement-icon.png" | tail -n 1)
         IFS=',' read -ra coords <<< "$coordinates"
         echo $coordinates
@@ -451,6 +453,7 @@ jobs:
         sleep 2
         
         # Click on add-tasks
+        echo Click on add-tasks
         coordinates=$(FIND_ELEMENT "class" "add-tasks" | tail -n 1)
         IFS=',' read -ra coords <<< "$coordinates"
         echo $coordinates
@@ -458,7 +461,51 @@ jobs:
         sleep 2
         
         # Click on Neue Aufgabe erstellen
+        echo Click on Neue Aufgabe erstellen
         coordinates=$(FIND_ELEMENT "title" "Aufgabe erstellen" | tail -n 1)
+        IFS=',' read -ra coords <<< "$coordinates"
+        echo $coordinates
+        DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1
+        DISPLAY=:99 xdotool sleep 1 key "ctrl+a" key "BackSpace" sleep 1
+        DISPLAY=:99 xdotool type "testAufgabe"
+        sleep 2
+        
+        # Click on Neue Aufgabe erstellen
+        echo Click on Neue Aufgabe erstellen
+        coordinates=$(FIND_ELEMENT "type" "text" | tail -n 1)
+        IFS=',' read -ra coords <<< "$coordinates"
+        echo $coordinates
+        DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1
+        sleep 2
+        
+        # Click on Mittelschwer
+        echo Click on Mittelschwer
+        coordinates=$(FIND_ELEMENT "text" "Mittelschwer" | tail -n 1)
+        IFS=',' read -ra coords <<< "$coordinates"
+        echo $coordinates
+        DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1
+        sleep 2
+        
+        # Click on textarea
+        echo Click on textarea
+        coordinates=$(FIND_ELEMENT "tag" "textarea" | tail -n 1)
+        IFS=',' read -ra coords <<< "$coordinates"
+        echo $coordinates
+        DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1
+        DISPLAY=:99 xdotool type "Macht es Spaß, Pipelines zu erstellen?"
+        sleep 2
+        
+        # Click on switch-button
+        echo Click on switch-button
+        coordinates=$(FIND_ELEMENT "class" "mud-switch-button" | tail -n 1)
+        IFS=',' read -ra coords <<< "$coordinates"
+        echo $coordinates
+        DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1
+        sleep 2
+        
+        # Click on btn-standard
+        echo Click on btn-standard
+        coordinates=$(FIND_ELEMENT "class" "btn-standard" | tail -n 1)
         IFS=',' read -ra coords <<< "$coordinates"
         echo $coordinates
         DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1
