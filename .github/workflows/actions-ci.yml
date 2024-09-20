@@ -491,7 +491,7 @@ jobs:
         coordinates=$(FIND_ELEMENT "class" "mud-switch-button" | tail -n 1)
         IFS=',' read -ra coords <<< "$coordinates"
         echo $coordinates
-        coords[1]=$((coords[1] + 30))
+        coords[1]=$((coords[1] - 40))
         DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1
         DISPLAY=:99 xdotool type "Macht es Spaß, Pipelines zu erstellen?"
         sleep 2
