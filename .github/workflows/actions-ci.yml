@@ -476,18 +476,18 @@ jobs:
         
         echo first radio button
         coords=($(FIND_ELEMENT "type" "radio" 0))
-        coords[1]=$((coords[0] + 60))
+        coords[0]=$((coords[0] + 60))
         DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1
         DISPLAY=:99 xdotool sleep 1 key "ctrl+a" key "BackSpace" sleep 1
         DISPLAY=:99 xdotool type "Ja"
         
         echo second radio button
         coords=($(FIND_ELEMENT "type" "radio" 1))
-        coords[1]=$((coords[0] + 60))
+        coords[0]=$((coords[0] + 60))
         DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1
         DISPLAY=:99 xdotool sleep 1 key "ctrl+a" key "BackSpace" sleep 1
         DISPLAY=:99 xdotool type "Nein"
-        coords[1]=$((coords[0] - 60))
+        coords[0]=$((coords[0] - 60))
         DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1
         sleep 2
         
@@ -498,11 +498,11 @@ jobs:
         
         echo third radio button
         coords=($(FIND_ELEMENT "type" "radio" 2))
-        coords[1]=$((coords[0] + 60))
+        coords[0]=$((coords[0] + 60))
         DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1
         DISPLAY=:99 xdotool sleep 1 key "ctrl+a" key "BackSpace" sleep 1
         DISPLAY=:99 xdotool type "Auf jeden Fall!!"
-        coords[1]=$((coords[0] - 60))
+        coords[0]=$((coords[0] - 60))
         DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1
         sleep 2
         
