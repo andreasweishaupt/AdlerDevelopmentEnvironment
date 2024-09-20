@@ -418,7 +418,7 @@ jobs:
         
         # Click on create-world-button
         echo Click on create-world-button
-        coordinates=$(python $GITHUB_WORKSPACE/.github/workflows/test_script.py find "class" "create-world-button" | tail -n 1)
+        coordinates=$(FIND_ELEMENT "class" "create-world-button" | tail -n 1)
         echo $coordinates
         IFS=',' read -ra coords <<< "$coordinates"
         DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1 sleep 1
@@ -427,7 +427,7 @@ jobs:
         
         # Click on space-metadata-icon
         echo Click on space-metadata-icon
-        coordinates=$(python $GITHUB_WORKSPACE/.github/workflows/test_script.py find "src" "space-metadata-icon.png" | tail -n 1)
+        coordinates=$(FIND_ELEMENT "src" "space-metadata-icon.png" | tail -n 1)
         IFS=',' read -ra coords <<< "$coordinates"
         echo $coordinates
         DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1 sleep 1
@@ -436,13 +436,13 @@ jobs:
         sleep 2
         
         # Click on slot ele_0
-        coordinates=$(python $GITHUB_WORKSPACE/.github/workflows/test_script.py find "identifier" "ele_0" | tail -n 1)
+        coordinates=$(FIND_ELEMENT "identifier" "ele_0" | tail -n 1)
         IFS=',' read -ra coords <<< "$coordinates"
         echo $coordinates
         DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1 sleep 1
         
         # Click on adaptivityelement-icon
-        coordinates=$(python $GITHUB_WORKSPACE/.github/workflows/test_script.py find "src" "adaptivityelement-icon.png" | tail -n 1)
+        coordinates=$(FIND_ELEMENT "src" "adaptivityelement-icon.png" | tail -n 1)
         IFS=',' read -ra coords <<< "$coordinates"
         echo $coordinates
         DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1 sleep 1
@@ -450,58 +450,30 @@ jobs:
         DISPLAY=:99 xdotool sleep 1 key "Return"
         sleep 2
         
-        echo "------------"
-        
-        sleep 5
-        # DISPLAY=:99 xdotool windowfocus $WINDOW_ID
-        # DISPLAY=:99 xdotool search --onlyvisible --class "create-world-button" --window $WINDOW_ID click
-        element_pos=$(DISPLAY=:99 xdotool search --window $WINDOW_ID --onlyvisible --class "create-world-button" getwindowgeometry --shell)
-        echo 'element_pos: $element_pos'
-        
-        # Init Browser
-        # INIT_BROWSER
-        
-        # Navigate to WorldOverview
-        # NAVIGATE_TO "http://localhost:8001/MyLearningWorldsOverview"
-        
-        # Click on create-world-button
-        echo Click on create-world-button
-        coordinates=$(find_element_position "class" "create-world-button")
-        echo $coordinates
+        # Click on add-tasks
+        coordinates=$(FIND_ELEMENT "class" "add-tasks" $WINDOW_X $WINDOW_Y)
         IFS=',' read -ra coords <<< "$coordinates"
+        echo $coordinates
+        DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1
+        sleep 2
+        
+        # Click on Neue Aufgabe erstellen
+        coordinates=$(FIND_ELEMENT "title" "Aufgabe erstellen" $WINDOW_X $WINDOW_Y)
+        IFS=',' read -ra coords <<< "$coordinates"
+        echo $coordinates
+        DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1
+        sleep 2
+        
+        # Click on mud-button-close
+        coordinates=$(FIND_ELEMENT "class" "mud-button-close" $WINDOW_X $WINDOW_Y)
+        IFS=',' read -ra coords <<< "$coordinates"
+        echo $coordinates
         DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1 sleep 1
         DISPLAY=:99 xdotool type "testWorld"
         DISPLAY=:99 xdotool sleep 1 key "Return"
         sleep 2
         
-        # Navigate to app
-        # NAVIGATE_TO "http://localhost:8001/app"
-        
-        
-        
-        ## Click on add-tasks
-        #coordinates=$(GET_ELEMENT_POSITION "class" "add-tasks" $WINDOW_X $WINDOW_Y)
-        #IFS=',' read -ra coords <<< "$coordinates"
-        #echo $coordinates
-        #DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1
-        #sleep 2
-        #
-        ## Click on Neue Aufgabe erstellen
-        #coordinates=$(GET_ELEMENT_POSITION "title" "Aufgabe erstellen" $WINDOW_X $WINDOW_Y)
-        #IFS=',' read -ra coords <<< "$coordinates"
-        #echo $coordinates
-        #DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1
-        #sleep 2
-        #
-        ## Click on mud-button-close
-        #coordinates=$(GET_ELEMENT_POSITION "class" "mud-button-close" $WINDOW_X $WINDOW_Y)
-        #IFS=',' read -ra coords <<< "$coordinates"
-        #echo $coordinates
-        #DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1 sleep 1
-        #DISPLAY=:99 xdotool type "testWorld"
-        #DISPLAY=:99 xdotool sleep 1 key "Return"
-        #sleep 2
-        
+        echo "------------"     
 
     - name: Stop screen recording
       if: always()
