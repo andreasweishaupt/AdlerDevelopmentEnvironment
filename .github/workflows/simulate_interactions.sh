@@ -1,8 +1,5 @@
 #!/bin/bash
 
-export LANG=de_DE.UTF-8
-export LC_ALL=de_DE.UTF-8
-
 # Laden Sie die FIND_ELEMENT Funktion
 source $GITHUB_WORKSPACE/.github/workflows/define_test_script.sh
         
@@ -56,7 +53,7 @@ echo Click on mud-input-root-outlined
 coords=($(FIND_ELEMENT "class" "mud-switch-button"))
 coords[1]=$((coords[1] - 70))
 DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1
-DISPLAY=:99 xdotool type "Macht es Spaß, Pipelines zu erstellen?"
+DISPLAY=:99 xdotool type "Macht es Spa$(printf '\u00df'), Pipelines zu erstellen?"
 sleep 2
 
 echo Click on switch-button
