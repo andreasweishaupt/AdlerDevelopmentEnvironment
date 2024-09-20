@@ -102,7 +102,7 @@ if __name__ == "__main__":
         try:
             x, y = find_element_coordinates(identifier, identifier_type, index)
             x += 360
-            y += 140 + 18
+            y += 140 + 26
             print(f"{x},{y}", flush=True)
         except Exception as e:
             print(f"An error occurred: {str(e)}")
