@@ -520,6 +520,14 @@ jobs:
         DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1 sleep 1
         sleep 2
         
+        # Click on mud-success-text
+        echo Click on mud-success-text
+        coordinates=$(FIND_ELEMENT "class" "mud-success-text" | tail -n 1)
+        IFS=',' read -ra coords <<< "$coordinates"
+        echo $coordinates
+        DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1 sleep 1
+        sleep 2
+        
         # Click on upload .mbz
         echo Click on upload .mbz
         coordinates=$(FIND_ELEMENT "title" "(.mbz)" | tail -n 1)
