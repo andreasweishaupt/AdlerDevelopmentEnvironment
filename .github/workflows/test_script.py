@@ -51,7 +51,7 @@ def find_element_coordinates(identifier, identifier_type):
                     EC.visibility_of_element_located((By.TAG_NAME, identifier))
                 )
             elif identifier_type == "text":
-                elements = WebDriverWait(driver, 5).findElements(By.XPATH, f"//*[contains(@type, '{identifier}')]")
+                elements = driver.findElements(By.XPATH, f"//*[contains(@type, '{identifier}')]")
                 element = elements.until(
                     EC.visibility_of_element_located((By.XPATH, f"//*[contains(text(), '{identifier}')]"))
                 )
