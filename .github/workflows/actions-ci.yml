@@ -451,26 +451,24 @@ jobs:
         sleep 2
         
         # Click on add-tasks
-        coordinates=$(FIND_ELEMENT "class" "add-tasks" $WINDOW_X $WINDOW_Y)
+        coordinates=$(FIND_ELEMENT "class" "add-tasks" | tail -n 1)
         IFS=',' read -ra coords <<< "$coordinates"
         echo $coordinates
         DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1
         sleep 2
         
         # Click on Neue Aufgabe erstellen
-        coordinates=$(FIND_ELEMENT "title" "Aufgabe erstellen" $WINDOW_X $WINDOW_Y)
+        coordinates=$(FIND_ELEMENT "title" "Aufgabe erstellen" | tail -n 1)
         IFS=',' read -ra coords <<< "$coordinates"
         echo $coordinates
         DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1
         sleep 2
         
         # Click on mud-button-close
-        coordinates=$(FIND_ELEMENT "class" "mud-button-close" $WINDOW_X $WINDOW_Y)
+        coordinates=$(FIND_ELEMENT "class" "mud-button-close" | tail -n 1)
         IFS=',' read -ra coords <<< "$coordinates"
         echo $coordinates
         DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1 sleep 1
-        DISPLAY=:99 xdotool type "testWorld"
-        DISPLAY=:99 xdotool sleep 1 key "Return"
         sleep 2
         
         echo "------------"     
