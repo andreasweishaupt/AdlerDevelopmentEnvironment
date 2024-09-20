@@ -486,9 +486,9 @@ jobs:
         DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1
         sleep 2
         
-        # Click on textarea
-        echo Click on textarea
-        coordinates=$(FIND_ELEMENT "tag" "textarea" | tail -n 1)
+        # Click on mud-input-root-outlined
+        echo Click on mud-input-root-outlined
+        coordinates=$(FIND_ELEMENT "tag" "mud-input-root-outlined" | tail -n 1)
         IFS=',' read -ra coords <<< "$coordinates"
         echo $coordinates
         DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1
