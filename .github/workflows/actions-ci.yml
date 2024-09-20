@@ -468,8 +468,8 @@ jobs:
         DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1
         sleep 2
         
-        # Click on Neue Aufgabe erstellen
-        echo Click on Neue Aufgabe erstellen
+        # Neue Aufgabe umbenennen
+        echo Neue Aufgabe umbenennen
         coordinates=$(FIND_ELEMENT "type" "text" | tail -n 1)
         IFS=',' read -ra coords <<< "$coordinates"
         echo $coordinates
