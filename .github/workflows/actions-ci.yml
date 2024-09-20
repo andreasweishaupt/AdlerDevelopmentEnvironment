@@ -488,10 +488,10 @@ jobs:
         
         # Click on mud-input-root-outlined
         echo Click on mud-input-root-outlined
-        coordinates=$(FIND_ELEMENT "tag" "mud-input-root-outlined" | tail -n 1)
+        coordinates=$(FIND_ELEMENT "class" "mud-switch-button" | tail -n 1)
         IFS=',' read -ra coords <<< "$coordinates"
         echo $coordinates
-        DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1
+        DISPLAY=:99 xdotool mousemove ${coords[0]} $({coords[1]}+30) sleep 1 click 1
         DISPLAY=:99 xdotool type "Macht es Spaß, Pipelines zu erstellen?"
         sleep 2
         
@@ -503,9 +503,9 @@ jobs:
         DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1
         sleep 2
         
-        # Click on btn-standard
-        echo Click on btn-standard
-        coordinates=$(FIND_ELEMENT "class" "btn-standard" | tail -n 1)
+        # Click on Erstellen
+        echo Click on Erstellen
+        coordinates=$(FIND_ELEMENT "text" "Erstellen" | tail -n 1)
         IFS=',' read -ra coords <<< "$coordinates"
         echo $coordinates
         DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1
@@ -516,6 +516,14 @@ jobs:
         IFS=',' read -ra coords <<< "$coordinates"
         echo $coordinates
         DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1 sleep 1
+        sleep 2
+        
+        # Click on upload .mbz
+        echo Click on upload .mbz
+        coordinates=$(FIND_ELEMENT "title" "(.mbz)" | tail -n 1)
+        IFS=',' read -ra coords <<< "$coordinates"
+        echo $coordinates
+        DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 1 click 1
         sleep 2
         
         echo "------------"     
