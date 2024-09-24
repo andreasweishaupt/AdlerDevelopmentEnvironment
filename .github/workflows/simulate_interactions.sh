@@ -55,7 +55,7 @@ echo Click on mud-input-root-outlined
 coords=($(FIND_ELEMENT "class" "mud-switch-button"))
 coords[1]=$((coords[1] - 70))
 DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 0.5 click 1
-DISPLAY=:99 xdotool type "Macht es Spa$(printf '\u00df'), Pipelines zu erstellen?"
+DISPLAY=:99 xdotool type "Macht es Spaß, Pipelines zu erstellen?"
 sleep 1
 
 echo Click on switch-button
