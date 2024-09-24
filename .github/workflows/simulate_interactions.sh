@@ -1,4 +1,6 @@
 #!/bin/bash
+export LANG=de_DE.UTF-8
+export LC_ALL=de_DE.UTF-8
 
 # Laden Sie die FIND_ELEMENT Funktion
 source $GITHUB_WORKSPACE/.github/workflows/define_test_script.sh
@@ -115,8 +117,8 @@ sleep 1
 
 echo Click on mud-button-text-primary
 coords=($(FIND_ELEMENT "class" "mud-button-text-primary"))
-DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 0.5 click 1
-sleep 1
+DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 3 click 1
+sleep 2
 
 echo "------------"  
 
