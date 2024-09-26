@@ -10,8 +10,7 @@ DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 0.5 click 1 sleep 
 DISPLAY=:99 xdotool type "testWorld"
 DISPLAY=:99 xdotool sleep 1 key "Return"
 
-DISPLAY=:99 xdotool key ctrl+l sleep 1
-DISPLAY=:99 xdotool type "/runner/work"
+DISPLAY=:99 xdotool type "work"
 DISPLAY=:99 xdotool key Return
 sleep 2
 
