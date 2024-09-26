@@ -18,7 +18,7 @@ on:
 jobs:
 
   build-and-test:
-    if: false
+    # if: false
     # The type of runner that the job will run on
     runs-on: ubuntu-22.04
 
@@ -233,7 +233,7 @@ jobs:
           vendor/bin/behat --config $MOODLE_PARENT_DIRECTORY/moodledata_bht/behatrun/behat/behat.yml --profile headlesschrome --verbose --format pretty
           
   autorentool:
-    #if: false
+    if: false
     runs-on: ubuntu-latest
 
     steps:
