@@ -230,7 +230,7 @@ jobs:
           cat $MOODLE_PARENT_DIRECTORY/moodledata_bht/behatrun/behat/behat.yml
           source $GITHUB_ENV
           cd $MOODLE_PARENT_DIRECTORY/moodle 
-          vendor/bin/behat --config $MOODLE_PARENT_DIRECTORY/moodledata_bht/behatrun/behat/behat.yml --profile headlesschrome --verbose --format pretty
+          vendor/bin/behat --config $MOODLE_PARENT_DIRECTORY/moodledata_bht/behatrun/behat/behat.yml --profile headlesschromedriver --verbose --format pretty
           
   autorentool:
     if: false
