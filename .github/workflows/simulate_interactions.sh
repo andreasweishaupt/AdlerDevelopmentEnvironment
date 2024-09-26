@@ -7,10 +7,7 @@ source $GITHUB_WORKSPACE/.github/workflows/define_test_script.sh
 echo Click on import-world-button
 coords=($(FIND_ELEMENT "class" "import-world-button"))
 DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 0.5 click 1 sleep 1
-DISPLAY=:99 xdotool type "testWorld"
-DISPLAY=:99 xdotool sleep 1 key "Return"
 
-DISPLAY=:99 xdotool selectwindow click 1
 DISPLAY=:99 xdotool sleep 1
 DISPLAY=:99 xdotool key "downarrow" key "downarrow" key "Return" sleep 2
 DISPLAY=:99 xdotool key "ctrl+l" sleep 1
