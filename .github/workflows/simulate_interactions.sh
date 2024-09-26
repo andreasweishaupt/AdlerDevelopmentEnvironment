@@ -2,7 +2,14 @@
 
 # Laden Sie die FIND_ELEMENT Funktion
 source $GITHUB_WORKSPACE/.github/workflows/define_test_script.sh
-        
+    
+
+echo Click on import-world-button
+coords=($(FIND_ELEMENT "class" "import-world-button"))
+DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 0.5 click 1 sleep 1
+DISPLAY=:99 xdotool type "testWorld"
+DISPLAY=:99 xdotool sleep 1 key "Return"
+:'    
 echo Click on create-world-button
 coords=($(FIND_ELEMENT "class" "create-world-button"))
 DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 0.5 click 1 sleep 1
@@ -117,7 +124,7 @@ echo Click on mud-button-text-primary
 coords=($(FIND_ELEMENT "class" "mud-button-text-primary"))
 DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 3 click 1
 sleep 2
-
+'
 echo "------------"  
 
 echo "Interactions completed"
