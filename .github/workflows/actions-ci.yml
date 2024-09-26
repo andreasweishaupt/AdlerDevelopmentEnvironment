@@ -412,6 +412,10 @@ jobs:
         echo "WINDOW_Y=$window_y" >> $GITHUB_ENV
         echo "WINDOW_ID=$window_id" >> $GITHUB_ENV
     
+    - name: List workspace contents
+      run: |
+        echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
+        ls -R $GITHUB_WORKSPACE
     
     - name: Simulate interactions
       run: | 
