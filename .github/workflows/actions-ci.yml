@@ -415,7 +415,7 @@ jobs:
     - name: List workspace contents
       run: |
         echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
-        ls -R $GITHUB_WORKSPACE
+        ls -aR $GITHUB_WORKSPACE
     
     - name: Simulate interactions
       run: | 
