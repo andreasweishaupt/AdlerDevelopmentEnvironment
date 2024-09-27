@@ -241,44 +241,57 @@ jobs:
     runs-on: ubuntu-22.04
     
     steps:
-    - name: Checkout repository
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      uses: actions/checkout@v4
-        
-    - name: Load environment variables
-      uses: xom9ikk/dotenv@v2.3.0
-      with:
-        path: non-moodle
-        load-mode: strict
-
-    - name: Check Environment
-      env:
-        _MOODLE_USER: ${{ env._MOODLE_USER }}
-      run: |
-        echo "MOODLE_USER"
-        echo "$_MOODLE_USER"
-        echo "MOODLE_PW"
-        echo "$_MOODLE_PW"
-        echo "USER_NAME"
-        echo "$_USER_NAME"
-        echo "USER_PASSWORD"
-        echo "$_USER_PASSWORD"
-        echo "USER_ROLE"
-        echo "$_USER_ROLE"
-        echo "DB_ROOT_PW"
-        echo "$_DB_ROOT_PW"
-        echo "DB_MOODLE_PW"
-        echo "$_DB_MOODLE_PW"
-        echo "DB_MOODLE_USER"
-        echo "$_DB_MOODLE_USER"
-        echo "DB_MOODLE_NAME"
-        echo "$_DB_MOODLE_NAME"
-    
-    - name: docker compose
-      run: |
-        cd $GITHUB_WORKSPACE/non-moodle
-        docker compose up -d --build
+      - name: Checkout repository
+        # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+        uses: actions/checkout@v4
           
+      - name: Load environment variables
+        uses: xom9ikk/dotenv@v2.3.0
+        with:
+            path: non-moodle
+            load-mode: strict
+      
+      - name: Check Environment
+        env:
+            _MOODLE_USER: ${{ env._MOODLE_USER }}
+        run: |
+            echo "MOODLE_USER"
+            echo "$_MOODLE_USER"
+            echo "MOODLE_PW"
+            echo "$_MOODLE_PW"
+            echo "USER_NAME"
+            echo "$_USER_NAME"
+            echo "USER_PASSWORD"
+            echo "$_USER_PASSWORD"
+            echo "USER_ROLE"
+            echo "$_USER_ROLE"
+            echo "DB_ROOT_PW"
+            echo "$_DB_ROOT_PW"
+            echo "DB_MOODLE_PW"
+            echo "$_DB_MOODLE_PW"
+            echo "DB_MOODLE_USER"
+            echo "$_DB_MOODLE_USER"
+            echo "DB_MOODLE_NAME"
+            echo "$_DB_MOODLE_NAME"
+      
+      - name: docker compose
+        run: |
+            cd $GITHUB_WORKSPACE/non-moodle
+            docker compose up -d --build
+            
+      - name: Check URL
+        continue-on-error: true
+        run: |
+            curl http://127.0.0.1:8085 || echo "URL http://127.0.0.1:8085 is not reachable"
+            curl http://localhost:8085 || echo "URL http://localhost:8085 is not reachable"
+            time sleep 30
+            curl http://127.0.0.1:8085 || echo "URL http://127.0.0.1:8085 is not reachable"
+            curl http://localhost:8085 || echo "URL http://localhost:8085 is not reachable"
+            time sleep 30
+            curl http://127.0.0.1:8085 || echo "URL http://127.0.0.1:8085 is not reachable"
+            curl http://localhost:8085 || echo "URL http://localhost:8085 is not reachable"
+            time sleep 1
+        
     
   autorentool:
     if: false
