@@ -327,6 +327,8 @@ jobs:
             
             print(f"\nAlle Container wurden erfolgreich gestartet. Gesamtzeit: {int(time.time() - start_time)} Sekunden")
             EOF
+        env:
+            PYTHONUNBUFFERED: 1
            
       - name: Check Docker containers
         run: |
