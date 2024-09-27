@@ -278,6 +278,23 @@ jobs:
         run: |
             cd $GITHUB_WORKSPACE/non-moodle
             docker compose up -d --build
+           
+      - name: Check Docker containers
+        run: |
+            echo "--------Testing Docker compose up--------"
+            echo "docker ps"
+            docker ps
+            echo "docker ps -a"
+            docker ps -a
+            echo "docker logs db_moodle"
+            docker logs moodle_dev_env-db_moodle-1
+            echo "docker logs phpmyadmin"
+            docker logs moodle_dev_env-phpmyadmin-1
+            echo "docker network ls"
+            docker network ls
+            echo 'docker exec moodle_dev_env-db_moodle-1 mysql -u root -p"${_DB_ROOT_PW}" -e "SHOW DATABASES;"'
+            docker exec moodle_dev_env-db_moodle-1 mysql -u root -p"${_DB_ROOT_PW}" -e "SHOW DATABASES;"
+            echo "-----------------------------------------"
             
       - name: Check URL
         continue-on-error: true
