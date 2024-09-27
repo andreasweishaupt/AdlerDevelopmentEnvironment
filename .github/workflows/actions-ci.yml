@@ -285,18 +285,9 @@ jobs:
             import subprocess
             import time
             
-            def wait_for_log(container_name, success_message, timeout=300):
-                print(f"Warte auf Logs von {container_name}...")
-                start_time = time.time()
-                while True:
-                    logs = subprocess.run(["docker", "logs", container_name], capture_output=True, text=True).stdout
-                    if success_message in logs:
-                        print(f"Container {container_name} ist bereit: '{success_message}'")
-                        return True
-                    if time.time() - start_time > timeout:
-                        print(f"Timeout erreicht für {container_name}")
-                        return False
-                    time.sleep(5)  # Warte 5 Sekunden, bevor du erneut nach den Logs fragst
+            def check_container_log(container_name, success_message):
+                logs = subprocess.run(["docker", "logs", container_name], capture_output=True, text=True).stdout
+                return success_message in logs
             
             containers = {
                 "adlertestenvironment-moodle-1": "finished adler setup/update script",
@@ -306,16 +297,35 @@ jobs:
                 "adlertestenvironment-db_moodle-1": "ready for connections."
             }
             
-            all_ready = True
-            for container, message in containers.items():
-                if not wait_for_log(container, message):
-                    all_ready = False
+            start_time = time.time()
+            timeout = 600  # 10 minutes timeout
+            ready_containers = set()
             
-            if not all_ready:
-                print("Nicht alle Container sind bereit geworden.")
-                exit(1)
-            else:
-                print("Alle Container sind bereit!")
+            while len(ready_containers) < len(containers):
+                print(f"\nÜberprüfe Container-Status (Vergangene Zeit: {int(time.time() - start_time)} Sekunden):")
+                for container, message in containers.items():
+                    if container in ready_containers:
+                        print(f"  - {container}: Bereit")
+                    elif check_container_log(container, message):
+                        print(f"  - {container}: Gerade bereit geworden")
+                        ready_containers.add(container)
+                    else:
+                        print(f"  - {container}: Noch nicht bereit")
+                
+                if len(ready_containers) == len(containers):
+                    print("\nAlle Container sind bereit!")
+                    break
+                
+                if time.time() - start_time > timeout:
+                    print(f"\nTimeout erreicht. Nicht alle Container sind bereit geworden.")
+                    for container in containers:
+                        if container not in ready_containers:
+                            print(f"  - {container}: Nicht bereit")
+                    exit(0)
+                
+                time.sleep(10)  # Warte 10 Sekunden vor der nächsten Überprüfung
+            
+            print(f"\nAlle Container wurden erfolgreich gestartet. Gesamtzeit: {int(time.time() - start_time)} Sekunden")
             EOF
            
       - name: Check Docker containers
