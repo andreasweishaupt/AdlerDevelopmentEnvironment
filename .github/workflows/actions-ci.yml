@@ -290,15 +290,16 @@ jobs:
                 return success_message in logs
             
             containers = {
-                "adlertestenvironment-moodle-1": "finished adler setup/update script",
                 "adlertestenvironment-backend-1": "Hosting started",
-                "adlertestenvironment-frontend-1": "start worker process",
+                "adlertestenvironment-phpmyadmin-1": "FOREGROUND"
+                "adlertestenvironment-moodle-1": "finished adler setup/update script",
+                "adlertestenvironment-frontend-1": "start worker process 34",
                 "adlertestenvironment-db_backend-1": "ready for connections.",
                 "adlertestenvironment-db_moodle-1": "ready for connections."
             }
             
             start_time = time.time()
-            timeout = 600  # 10 minutes timeout
+            timeout = 300  # 5 minutes timeout
             ready_containers = set()
             
             while len(ready_containers) < len(containers):
