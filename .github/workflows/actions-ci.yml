@@ -286,14 +286,28 @@ jobs:
             docker ps
             echo "docker ps -a"
             docker ps -a
-            echo "docker logs db_moodle"
-            docker logs moodle_dev_env-db_moodle-1
-            echo "docker logs phpmyadmin"
-            docker logs moodle_dev_env-phpmyadmin-1
+            echo "docker logs adlertestenvironment-phpmyadmin-1"
+            docker logs adlertestenvironment-phpmyadmin-1
+            echo "-----"
+            echo "docker logs adlertestenvironment-moodle-1"
+            docker logs adlertestenvironment-moodle-1
+            echo "-----"
+            echo "docker logs adlertestenvironment-backend-1"
+            docker logs adlertestenvironment-backend-1
+            echo "-----"
+            echo "docker logs adlertestenvironment-frontend-1"
+            docker logs adlertestenvironment-frontend-1
+            echo "-----"
+            echo "docker logs adlertestenvironment-db_backend-1"
+            docker logs adlertestenvironment-db_backend-1
+            echo "-----"
+            echo "docker logs adlertestenvironment-db_moodle-1"
+            docker logs adlertestenvironment-db_moodle-1
+            echo "-----"
             echo "docker network ls"
             docker network ls
-            echo 'docker exec moodle_dev_env-db_moodle-1 mysql -u root -p"${_DB_ROOT_PW}" -e "SHOW DATABASES;"'
-            docker exec moodle_dev_env-db_moodle-1 mysql -u root -p"${_DB_ROOT_PW}" -e "SHOW DATABASES;"
+            echo 'docker exec adlertestenvironment-db_moodle-1 mysql -u root -p"${_DB_ROOT_PW}" -e "SHOW DATABASES;"'
+            docker exec adlertestenvironment-db_moodle-1 -u root -p"${_DB_ROOT_PW}" -e "SHOW DATABASES;"
             echo "-----------------------------------------"
             
       - name: Check URL
