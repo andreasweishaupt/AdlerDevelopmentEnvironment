@@ -278,6 +278,7 @@ jobs:
         run: |
             cd $GITHUB_WORKSPACE/non-moodle
             docker compose up -d --build
+            sleep 300
            
       - name: Check Docker containers
         run: |
