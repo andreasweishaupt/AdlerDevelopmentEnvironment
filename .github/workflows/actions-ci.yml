@@ -239,44 +239,46 @@ jobs:
           
   build-backend:
     runs-on: ubuntu-22.04
+    
+    steps:
     - name: Checkout repository
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-        uses: actions/checkout@v4
+      uses: actions/checkout@v4
         
-      - name: Load environment variables
-        uses: xom9ikk/dotenv@v2.3.0
-        with:
-          path: non-moodle
-          load-mode: strict
-  
-      - name: Check Environment
-        env:
-          _MOODLE_USER: ${{ env._MOODLE_USER }}
-        run: |
-          echo "MOODLE_USER"
-          echo "$_MOODLE_USER"
-          echo "MOODLE_PW"
-          echo "$_MOODLE_PW"
-          echo "USER_NAME"
-          echo "$_USER_NAME"
-          echo "USER_PASSWORD"
-          echo "$_USER_PASSWORD"
-          echo "USER_ROLE"
-          echo "$_USER_ROLE"
-          echo "DB_ROOT_PW"
-          echo "$_DB_ROOT_PW"
-          echo "DB_MOODLE_PW"
-          echo "$_DB_MOODLE_PW"
-          echo "DB_MOODLE_USER"
-          echo "$_DB_MOODLE_USER"
-          echo "DB_MOODLE_NAME"
-          echo "$_DB_MOODLE_NAME"
+    - name: Load environment variables
+      uses: xom9ikk/dotenv@v2.3.0
+      with:
+        path: non-moodle
+        load-mode: strict
+
+    - name: Check Environment
+      env:
+        _MOODLE_USER: ${{ env._MOODLE_USER }}
+      run: |
+        echo "MOODLE_USER"
+        echo "$_MOODLE_USER"
+        echo "MOODLE_PW"
+        echo "$_MOODLE_PW"
+        echo "USER_NAME"
+        echo "$_USER_NAME"
+        echo "USER_PASSWORD"
+        echo "$_USER_PASSWORD"
+        echo "USER_ROLE"
+        echo "$_USER_ROLE"
+        echo "DB_ROOT_PW"
+        echo "$_DB_ROOT_PW"
+        echo "DB_MOODLE_PW"
+        echo "$_DB_MOODLE_PW"
+        echo "DB_MOODLE_USER"
+        echo "$_DB_MOODLE_USER"
+        echo "DB_MOODLE_NAME"
+        echo "$_DB_MOODLE_NAME"
     
-      - name: docker compose:
-        run: |
-          echo "MOODLE_PARENT_DIRECTORY=$HOME" >> $GITHUB_ENV
-          cd $HOME/non-moodle
-          docker compose up -d --build
+    - name: docker compose
+      run: |
+        echo "MOODLE_PARENT_DIRECTORY=$HOME" >> $GITHUB_ENV
+        cd $HOME/non-moodle
+        docker compose up -d --build
           
     
   autorentool:
