@@ -329,6 +329,9 @@ jobs:
             curl http://127.0.0.1:8085 || echo "URL http://127.0.0.1:8085 is not reachable"
             curl http://localhost:8085 || echo "URL http://localhost:8085 is not reachable"
             time sleep 1
+            echo "-----"
+            echo "curl http://localhost:8086/api/Users/Login?UserName=manager&Password=Manager1234!1234"
+            curl http://localhost:8086/api/Users/Login?UserName=manager&Password=Manager1234!1234
         
     
   autorentool:
