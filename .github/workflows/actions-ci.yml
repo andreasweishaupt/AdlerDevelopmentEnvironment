@@ -276,8 +276,7 @@ jobs:
     
     - name: docker compose
       run: |
-        echo "MOODLE_PARENT_DIRECTORY=$HOME" >> $GITHUB_ENV
-        cd $HOME/non-moodle
+        cd $GITHUB_WORKSPACE/non-moodle
         docker compose up -d --build
           
     
