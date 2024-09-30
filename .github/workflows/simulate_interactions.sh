@@ -145,7 +145,7 @@ sleep 1
 echo Click on AdLer API URL
 coords=($(FIND_ELEMENT "labeltext" "AdLer API URL"))
 DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 0.5 click 1
-DISPLAY=:99 xdotool type "http://127.0.0.1:8086/api"
+DISPLAY=:99 xdotool type "http://127.0.0.1:1234/api"
 sleep 1
 
 echo Click on Benutzername
