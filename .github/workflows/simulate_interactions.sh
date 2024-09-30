@@ -145,7 +145,7 @@ sleep 1
 echo Click on AdLer API URL
 coords=($(FIND_ELEMENT "labeltext" "AdLer API URL"))
 DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 0.5 click 1
-DISPLAY=:99 xdotool type "http://localhost:8086"
+DISPLAY=:99 xdotool type "http://127.0.0.1:8086/api"
 sleep 1
 
 echo Click on Benutzername
@@ -159,6 +159,11 @@ coords=($(FIND_ELEMENT "labeltext" "Passwort"))
 DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 0.5 click 1
 DISPLAY=:99 xdotool type "Manager1234!1234"
 sleep 1
+
+echo Click on mud-icon-button-edge-end
+coords=($(FIND_ELEMENT "class" "mud-icon-button-edge-end"))
+DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 3 click 1
+sleep 2
 
 echo Click on Anmelden
 coords=($(FIND_ELEMENT "buttontext" "Anmelden"))
