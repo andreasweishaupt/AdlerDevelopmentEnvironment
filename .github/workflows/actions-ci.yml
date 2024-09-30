@@ -497,13 +497,6 @@ jobs:
 
         export LIBGL_ALWAYS_SOFTWARE=1
 
-    - name: Connect to Docker network
-      run: |
-        echo "ensure backend is running"
-        sleep 90
-        echo "curl http://adlertestenvironment-backend-1:8086/api/health"
-        curl http://adlertestenvironment-backend-1:8086/api/health
-
     - name: Start and check Xvfb
       run: |
         Xvfb :99 -screen 0 1920x1080x24 &
@@ -613,3 +606,7 @@ jobs:
           cat ./error.log
           exit 1
         fi
+        
+    - name: Setup tmate session
+      if: true
+      uses: mxschmitt/action-tmate@v3
