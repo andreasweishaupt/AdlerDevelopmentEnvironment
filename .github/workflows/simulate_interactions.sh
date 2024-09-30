@@ -64,7 +64,7 @@ DISPLAY=:99 xdotool type "testAufgabe"
 sleep 1
 
 echo Click on Mittelschwer
-coords=($(FIND_ELEMENT "text" "Mittelschwer"))
+coords=($(FIND_ELEMENT "buttontext" "Mittelschwer"))
 DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 0.5 click 1
 sleep 1
 
@@ -138,7 +138,7 @@ DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 3 click 1
 sleep 2
 
 echo Click on Einloggen
-coords=($(FIND_ELEMENT "buttontext" "Einloggen"))
+coords=($(FIND_ELEMENT "title" "Einloggen auf AdLer-Server"))
 DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 0.5 click 1
 sleep 1
 
