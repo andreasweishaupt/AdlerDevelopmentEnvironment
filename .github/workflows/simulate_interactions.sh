@@ -157,7 +157,7 @@ sleep 1
 echo Click on Passwort
 coords=($(FIND_ELEMENT "labeltext" "Passwort"))
 DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 0.5 click 1
-DISPLAY=:99 xdotool type "Manager1234!1234"
+DISPLAY=:99 xdotool type "WrongPassword"
 sleep 1
 
 echo Click on mud-icon-button-edge-end
@@ -176,8 +176,23 @@ DISPLAY=:99 xdotool sleep 0.5 key "F5" sleep 2 key "ctrl+r" sleep 0.5
 echo Click on Einloggen again
 coords=($(FIND_ELEMENT "title" "Einloggen auf AdLer-Server"))
 DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 0.5 click 1
-sleep 10
+sleep 1
 
+echo Click on Passwort
+coords=($(FIND_ELEMENT "labeltext" "Passwort"))
+DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 0.5 click 1
+DISPLAY=:99 xdotool type "Manager1234!1234"
+sleep 1
+
+echo Click on mud-icon-button-edge-end
+coords=($(FIND_ELEMENT "class" "mud-icon-button-edge-end"))
+DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 3 click 1
+sleep 2
+
+echo Click on Anmelden
+coords=($(FIND_ELEMENT "buttontext" "Anmelden"))
+DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 0.5 click 1
+sleep 10
 
 echo "------------"  
 
