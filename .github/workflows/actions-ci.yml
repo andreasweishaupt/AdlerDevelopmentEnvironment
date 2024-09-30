@@ -378,7 +378,7 @@ jobs:
             curl -G "http://localhost:8086/api/Users/Login" --data-urlencode "UserName=manager" --data-urlencode "Password=Manager1234!1234"
             
       - name: Setup tmate session
-        if: false
+        if: true
         uses: mxschmitt/action-tmate@v3
         
     
