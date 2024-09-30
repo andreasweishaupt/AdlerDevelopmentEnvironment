@@ -163,7 +163,10 @@ sleep 1
 echo Click on Anmelden
 coords=($(FIND_ELEMENT "buttontext" "Anmelden"))
 DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 0.5 click 1
-sleep 10
+sleep 5
+DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 0.5 click 1
+sleep 15
+
 
 
 
