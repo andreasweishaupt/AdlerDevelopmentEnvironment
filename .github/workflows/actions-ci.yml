@@ -16,228 +16,8 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-
-  build-and-test:
-    if: false
-    # The type of runner that the job will run on
-    runs-on: ubuntu-22.04
-
-#    services:
-#      db_moodle:
-#        image: docker.io/bitnami/mariadb:10.6
-#        ports:
-#          - 3312:3306
-#        env:
-#          MARIADB_USER: ${{ env._MOODLE_USER }}
-#          MARIADB_PASSWORD: ${{ env.DB_MOODLE_PW }}
-#          MARIADB_ROOT_PASSWORD: ${{ env.DB_ROOT_PW }}
-#          MARIADB_DATABASE: ${{ env.DB_MOODLE_NAME }}
-#          MARIADB_CHARACTER_SET: utf8mb4
-#          MARIADB_COLLATE: utf8mb4_unicode_ci
-#
-#      phpmyadmin:
-#        image: phpmyadmin/phpmyadmin
-#        ports:
-#          - 8078:80
-#        env:
-#          PMA_HOSTS: db_moodle
-#          PMA_PORT: 3306
-#          PMA_USER: root
-#          PMA_PASSWORD: ${{ env.DB_ROOT_PW }}
           
-    steps:  
-      - name: Checkout repository
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-        uses: actions/checkout@v4
-        
-      - name: Load environment variables
-        uses: xom9ikk/dotenv@v2.3.0
-        with:
-          path: moodle
-          load-mode: strict
-  
-      - name: Check Environment
-        env:
-          _MOODLE_USER: ${{ env._MOODLE_USER }}
-        run: |
-          echo "MOODLE_USER"
-          echo "$_MOODLE_USER"
-          echo "MOODLE_PW"
-          echo "$_MOODLE_PW"
-          echo "USER_NAME"
-          echo "$_USER_NAME"
-          echo "USER_PASSWORD"
-          echo "$_USER_PASSWORD"
-          echo "USER_ROLE"
-          echo "$_USER_ROLE"
-          echo "DB_ROOT_PW"
-          echo "$_DB_ROOT_PW"
-          echo "DB_MOODLE_PW"
-          echo "$_DB_MOODLE_PW"
-          echo "DB_MOODLE_USER"
-          echo "$_DB_MOODLE_USER"
-          echo "DB_MOODLE_NAME"
-          echo "$_DB_MOODLE_NAME"
-
-      - name: Set up environment variables
-        run: |
-          echo "MOODLE_PARENT_DIRECTORY=$HOME" >> $GITHUB_ENV
-          echo "WSL_USER=$USER" >> $GITHUB_ENV
-          
-      - name: Update and upgrade packages
-        if: false
-        run: |
-          if dpkg -l | grep -q php8.1; then
-            sudo apt-get purge -y $(dpkg -l | grep php8.1 | awk '{print $2}')
-          fi
-          if dpkg -l | grep -q apache2; then
-            sudo apt-get purge -y $(dpkg -l | grep apache2 | awk '{print $2}')
-          fi
-          sudo apt-get autoremove -y
-          sudo add-apt-repository -r ppa:ondrej/php -y
-          sudo rm -f /etc/apt/sources.list.d/ondrej-ubuntu-php-*.list
-          sudo apt-get update
-          sudo apt-get dist-upgrade -y
-    
-    
-      - name: Print User directory
-        run: |
-          tree -L 4 $MOODLE_PARENT_DIRECTORY
-
-      - name: Install dependencies
-        run: |
-          sudo add-apt-repository -y ppa:ondrej/php
-          sudo add-apt-repository -y ppa:ondrej/apache2
-          sudo apt-get update
-          sudo apt-get install -y zstd git jq
-          sudo apt-get install -y git locales docker-ce-cli wget unzip default-jre zstd
-
-      - name: Install Chrome and ChromeDriver
-        run: |
-          # Remove existing Chrome installations
-          sudo apt-get remove -y --purge google-chrome-stable
-          sudo apt-get autoremove -y
-          
-          # Add Google Chrome's official repository
-          wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo tee /etc/apt/trusted.gpg.d/google-chrome.asc
-          echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
-          
-          # Update package lists
-          sudo apt-get update
-          
-          # Install missing dependencies
-          sudo apt-get install -y libu2f-udev
-          
-          # Download and install Google Chrome
-          wget -q "${CHROME_URL}" -O "/tmp/${CHROME_DEB}"
-          sudo apt-get install -y "/tmp/${CHROME_DEB}"
-          
-          # Hold the package to prevent automatic updates
-          sudo apt-mark hold google-chrome-stable
-          
-          # Download and install ChromeDriver
-          wget -q --user-agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.5735.90 Safari/537.36" "${CHROMEDRIVER_URL}" -O "/tmp/${CHROMEDRIVER_ZIP}"
-          unzip -o "/tmp/${CHROMEDRIVER_ZIP}" -d /tmp
-          sudo mv /tmp/chromedriver /usr/bin/chromedriver
-          sudo chmod +x /usr/bin/chromedriver
-          
-          # Verify installation
-          chromedriver --version
-        env:
-          CHROME_VERSION: "114.0.5735.90"
-          CHROME_DEB: "google-chrome-stable_114.0.5735.90-1_amd64.deb"
-          CHROME_URL: "https://mirror.cs.uchicago.edu/google-chrome/pool/main/g/google-chrome-stable/google-chrome-stable_114.0.5735.90-1_amd64.deb"
-          CHROMEDRIVER_ZIP: "chromedriver_linux64.zip"
-          CHROMEDRIVER_URL: "https://old.chromedriver.getwebdriver.com/114.0.5735.90/chromedriver_linux64.zip"
-
-#      - name: Prepare Moodle directory
-#        run: |
-#          getent passwd
-#          getent passwd 1000
-#          sudo mkdir -p $HOME/moodle
-#          sudo chown -R $USER:$USER $HOME/moodle
-          
-      - name: Download Moodle
-        run: |
-          cd $HOME
-          chmod +x $GITHUB_WORKSPACE/moodle/download_adler_moodle.sh
-          $GITHUB_WORKSPACE/moodle/download_adler_moodle.sh
-          
-      - name: Generate config.php
-        if: false
-        run: |
-          cp $MOODLE_PARENT_DIRECTORY/moodle/config-dist.php $MOODLE_PARENT_DIRECTORY/moodle/config.php
-          sed -i "s/\$CFG->dbtype    = 'pgsql';/\$CFG->dbtype    = 'mysqli';/" $MOODLE_PARENT_DIRECTORY/moodle/config.php
-          sed -i "s/\$CFG->dbhost    = 'localhost';/\$CFG->dbhost    = 'db_moodle';/" $MOODLE_PARENT_DIRECTORY/moodle/config.php
-          sed -i "s/\$CFG->dbname    = 'moodle';/\$CFG->dbname    = '$_DB_MOODLE_NAME';/" $MOODLE_PARENT_DIRECTORY/moodle/config.php
-          sed -i "s/\$CFG->dbuser    = 'username';/\$CFG->dbuser    = '$_DB_MOODLE_USER';/" $MOODLE_PARENT_DIRECTORY/moodle/config.php
-          sed -i "s/\$CFG->dbpass    = 'password';/\$CFG->dbpass    = '$_DB_MOODLE_PW';/" $MOODLE_PARENT_DIRECTORY/moodle/config.php
-          sed -i "s|\$CFG->wwwroot   = 'http://example.com/moodle';|\$CFG->wwwroot   = 'http://localhost:8001';|" $MOODLE_PARENT_DIRECTORY/moodle/config.php
-          sed -i "s|\$CFG->dataroot  = '/home/example/moodledata';|\$CFG->dataroot  = '/home/runner/moodledata';|" $MOODLE_PARENT_DIRECTORY/moodle/config.php
-      
-      - name: Print User directory
-        run: |
-          tree -L 4 $MOODLE_PARENT_DIRECTORY
-
-      - name: Set up Moodle
-        run: |
-          cd $HOME/moodle
-          chmod +x $GITHUB_WORKSPACE/moodle/setup.sh
-          docker ps
-          $GITHUB_WORKSPACE/moodle/setup.sh
-          
-
-      - name: Check Docker containers
-        run: |
-          echo "--------Testing Docker compose up--------"
-          echo "docker ps"
-          docker ps
-          echo "docker ps -a"
-          docker ps -a
-          echo "docker logs db_moodle"
-          docker logs moodle_dev_env-db_moodle-1
-          echo "docker logs phpmyadmin"
-          docker logs moodle_dev_env-phpmyadmin-1
-          echo "docker network ls"
-          docker network ls
-          echo 'docker exec moodle_dev_env-db_moodle-1 mysql -u root -p"${_DB_ROOT_PW}" -e "SHOW DATABASES;"'
-          docker exec moodle_dev_env-db_moodle-1 mysql -u root -p"${_DB_ROOT_PW}" -e "SHOW DATABASES;"
-          echo "-----------------------------------------"
-         
-        
-      - name: Download Selenium
-        run: |
-          cd $MOODLE_PARENT_DIRECTORY/moodle
-          wget -N https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.23.0/selenium-server-4.23.0.jar
-          PATH=./:$PATH java -jar selenium-server-4.23.0.jar standalone --selenium-manager true &
-          
-      - name: Print User directory
-        run: |
-          tree -L 3 $MOODLE_PARENT_DIRECTORY
-      
-      - name: Check URL
-        run: |
-          curl http://127.0.0.1:5080 || echo "URL http://127.0.0.1:5080 is not reachable"
-        continue-on-error: true
-
-      - name: Setup tmate session
-        if: false
-        uses: mxschmitt/action-tmate@v3
-
-      - name: Run behat
-        continue-on-error: true
-        run: |
-          cat $MOODLE_PARENT_DIRECTORY/moodle/config.php
-          cat $MOODLE_PARENT_DIRECTORY/moodledata_bht/behatrun/behat/behat.yml
-          source $GITHUB_ENV
-          cd $MOODLE_PARENT_DIRECTORY/moodle 
-          vendor/bin/behat --config $MOODLE_PARENT_DIRECTORY/moodledata_bht/behatrun/behat/behat.yml --profile headlesschromedriver --verbose --format pretty
-          
-      - name: Sleep for using backend
-        run: |
-            Sleep 6000
-          
-  build-backend:
+  build-backend-and-run-authoring-tool:
     runs-on: ubuntu-22.04
     
     steps:
@@ -250,6 +30,11 @@ jobs:
         with:
             path: non-moodle
             load-mode: strict
+            
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+            python-version: '3.x'
       
       - name: Check Environment
         env:
@@ -373,240 +158,212 @@ jobs:
             docker network connect adler-network adlertestenvironment-backend-1
             
       - name: Check URL
-        continue-on-error: true
         run: |
-            curl http://127.0.0.1:8085 || echo "URL http://127.0.0.1:8085 is not reachable"
-            curl http://localhost:8085 || echo "URL http://localhost:8085 is not reachable"
-            time sleep 1
-            echo "-----"
-            echo "curl http://localhost:8086/api/Users/Login?UserName=manager&Password=Manager1234!1234"
-            curl -G "http://localhost:8086/api/Users/Login" --data-urlencode "UserName=manager" --data-urlencode "Password=Manager1234!1234"
             echo "curl http://localhost:8086/api/health"
             curl http://localhost:8086/api/health
             echo "curl http://127.0.0.1:8086/api/health"
             curl http://127.0.0.1:8086/api/health
             echo "curl http://0.0.0.0:8086/api/health"
             curl http://0.0.0.0:8086/api/health
-            echo "curl http://adlertestenvironment-backend-1:8086/api/health"
-            curl http://adlertestenvironment-backend-1:8086/api/health
             
+      - name: Install dependencies
+        run: |
+            lscpu
+            sudo apt-get update
+            sudo apt-get install -y wget xvfb xdotool ffmpeg \
+                libgtk-3-0 libnotify4 libgconf-2-4 libnss3 libxss1 libasound2 libgbm1 \
+                libx11-xcb1 libxcb-dri3-0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 \
+                libxcb-randr0 libxcb-render-util0 libxcb-shape0 libxcb-xfixes0 libxcb-xinerama0 libxcb-xkb1 \
+                x11-utils libxkbcommon-x11-0
+            python -m pip install --upgrade pip
+            pip install selenium
+
+      - name: Install Chrome and ChromeDriver
+        run: |
+            # Remove existing Chrome installations
+            sudo apt-get remove -y --purge google-chrome-stable
+            sudo apt-get autoremove -y
+            
+            # Add Google Chrome's official repository
+            wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo tee /etc/apt/trusted.gpg.d/google-chrome.asc
+            echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
+            
+            # Update package lists
+            sudo apt-get update
+            
+            # Install missing dependencies
+            sudo apt-get install -y libu2f-udev
+            
+            # Download and install Google Chrome
+            wget -q "${CHROME_URL}" -O "/tmp/${CHROME_DEB}"
+            sudo apt-get install -y "/tmp/${CHROME_DEB}"
+            
+            # Hold the package to prevent automatic updates
+            sudo apt-mark hold google-chrome-stable
+            
+            # Download and install ChromeDriver
+            wget -q --user-agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.5735.90 Safari/537.36" "${CHROMEDRIVER_URL}" -O "/tmp/${CHROMEDRIVER_ZIP}"
+            unzip -o "/tmp/${CHROMEDRIVER_ZIP}" -d /tmp
+            sudo mv /tmp/chromedriver /usr/bin/chromedriver
+            sudo chmod +x /usr/bin/chromedriver
+            
+            # Verify installation
+            chromedriver --version
+        env:
+            CHROME_VERSION: "114.0.5735.90"
+            CHROME_DEB_BACKUP: "google-chrome-stable_114.0.5735.90-1_amd64.deb"
+            CHROME_DEB: "google-chrome-stable_110.0.5481.77-1_amd64.deb"
+            CHROME_URL_BACKUP: "https://mirror.cs.uchicago.edu/google-chrome/pool/main/g/google-chrome-stable/google-chrome-stable_114.0.5735.90-1_amd64.deb"
+            CHROME_URL: "https://mirror.cs.uchicago.edu/google-chrome/pool/main/g/google-chrome-stable/google-chrome-stable_110.0.5481.77-1_amd64.deb"
+            CHROMEDRIVER_ZIP: "chromedriver_linux64.zip"
+            CHROMEDRIVER_URL_BACKUP: "https://old.chromedriver.getwebdriver.com/114.0.5735.90/chromedriver_linux64.zip"
+            CHROMEDRIVER_URL: "https://old.chromedriver.getwebdriver.com/110.0.5481.77/chromedriver_linux64.zip"
+
+      - name: Make skripts executable
+        run: |
+            chmod +x $GITHUB_WORKSPACE/.github/workflows/browser_functions.py
+            chmod +x $GITHUB_WORKSPACE/.github/workflows/define_browser_functions.sh
+            chmod +x $GITHUB_WORKSPACE/.github/workflows/test_script.py
+            chmod +x $GITHUB_WORKSPACE/.github/workflows/define_test_script.sh
+            chmod +x $GITHUB_WORKSPACE/.github/workflows/simulate_interactions.sh
+        
+
+      - name: Download latest Autorentool release
+        run: |
+            LATEST_RELEASE=$(curl -s https://api.github.com/repos/ProjektAdLer/Autorentool/releases/latest)
+            DOWNLOAD_URL=$(echo $LATEST_RELEASE | jq -r '.assets[] | select(.name | endswith("linux-unpacked.tar.gz")) | .browser_download_url')
+            echo "$DOWNLOAD_URL"
+            wget -q -O AuthoringTool.tar.gz $DOWNLOAD_URL
+            tar -xvzf AuthoringTool.tar.gz
+            #chmod +x AuthoringTool.AppImage
+
+      - name: Fix some problems
+        run: |
+            sudo apt-get update
+            
+            export LIBGL_ALWAYS_SOFTWARE=1
+            
+            sudo apt-get install -y iproute2
+            sudo ip addr add 127.0.0.1 dev lo
+            
+            sudo apt-get install -y libxtst6 xdg-utils libatspi2.0-0 libsecret-1-0 
+            
+            export ELECTRON_DISABLE_SANDBOX=1
+            
+            export LIBGL_ALWAYS_SOFTWARE=1
+
+      - name: Start and check Xvfb
+        run: |
+            Xvfb :99 -screen 0 1920x1080x24 &
+            echo "Waiting for Xvfb to be ready..."
+            for attempt in $(seq 1 30); do
+                if xdpyinfo -display :99 >/dev/null 2>&1; then
+                    echo "Xvfb is ready after $attempt attempt(s)"
+                    break
+                fi
+                sleep 0.5
+            done
+            xdpyinfo -display :99
+            echo "Xvfb is ready"
+            echo "DISPLAY=:99" >> $GITHUB_ENV
+                
+      - name: Start screen and recording
+        run: |
+            ffmpeg -f x11grab -video_size 1920x1080 -i :99 -codec:v libx264 -r 30 -v verbose screen_recording.mp4 &
+            echo $! > ffmpeg_pid.txt
+            sleep 1
+    
+      - name: Run Autorentool
+        run: |
+            if ! DISPLAY=:99 xdpyinfo >/dev/null 2>&1; then
+                echo "ERROR: X server is not running properly"
+            else
+                echo "X server is running properly"
+            fi
+            
+            echo "Attempt $attempt of $max_attempts to start Authoring Tool"
+            ./linux-unpacked/authoring-tool --remote-debugging-port=9222 &
+            tool_pid=$!
+            sleep 5  # Wait time to allow for initialization
+            
+            max_attempts=5
+            for attempt in $(seq 1 $max_attempts); do
+                echo "Attempt $attempt of $max_attempts to start Authoring Tool"
+                # Check if the application is running
+                window_id=$(DISPLAY=:99 xdotool search --name "Autorentool v2.1.7" | head -n 1)
+                if [ -n "$window_id" ]; then
+                    echo "Authoring Tool started successfully and loaded correctly on attempt $attempt"
+                    break
+                else
+                    echo "Attempt $attempt failed"
+                
+                    if [ $attempt -eq $max_attempts ]; then
+                        echo "All $max_attempts attempts failed. Aborting pipeline."
+                        exit 1
+                    else
+                        DISPLAY=:99 xdotool key "ctrl+r" sleep 2
+                    fi
+                fi
+            done
+            
+            # Check if the tool is actually running
+            if ! ps -p $tool_pid > /dev/null; then
+                echo "Authoring Tool process is not running. Aborting pipeline."
+                exit 1
+            fi
+            echo "Authoring Tool is running with PID $tool_pid"
+        
+      - name: Get window position
+        run: |
+            window_id=$(DISPLAY=:99 xdotool search --name "Autorentool v2.1.7" | head -n 1)
+            if [ -n "$window_id" ]; then
+                window_info=$(xwininfo -id $window_id)
+                window_x=$(echo "$window_info" | grep "Absolute upper-left X" | awk '{print $4}')
+                window_y=$(echo "$window_info" | grep "Absolute upper-left Y" | awk '{print $4}')
+                window_width=$(echo "$window_info" | grep "Width" | awk '{print $2}')
+                window_height=$(echo "$window_info" | grep "Height" | awk '{print $2}')
+                echo "Window position: $window_x, $window_y, $window_width, $window_height"
+            else
+                echo "AuthoringTool window not found"
+                exit 1
+            fi
+            echo "WINDOW_X=$window_x" >> $GITHUB_ENV
+            echo "WINDOW_Y=$window_y" >> $GITHUB_ENV
+            echo "WINDOW_ID=$window_id" >> $GITHUB_ENV
+    
+      - name: List workspace contents
+        run: |
+            echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
+            ls -aR $GITHUB_WORKSPACE
+    
+      - name: Simulate interactions
+        run: | 
+            $GITHUB_WORKSPACE/.github/workflows/simulate_interactions.sh
+
+      - name: Stop screen recording
+        if: always()
+        run: |
+            sleep 2
+            kill $(cat ffmpeg_pid.txt)
+            sleep 10  # Give ffmpeg time to finish writing
+
+      - name: Upload screen recording
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+            name: screen-recording
+            path: screen_recording.mp4
+
+      - name: Check for errors
+        if: always()
+        run: |
+            if [ -f ./error.log ]; then
+                cat ./error.log
+                exit 1
+            fi
+          
       - name: Setup tmate session
-        if: true
+        if: false
         uses: mxschmitt/action-tmate@v3
         
     
-  autorentool:
-    # if: false
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.x'
-      
-    - name: Sleep for docker network
-      run: sleep 30
-      
-    - name: Install dependencies
-      run: |
-        lscpu
-        sudo apt-get update
-        sudo apt-get install -y wget xvfb xdotool ffmpeg \
-          libgtk-3-0 libnotify4 libgconf-2-4 libnss3 libxss1 libasound2 libgbm1 \
-          libx11-xcb1 libxcb-dri3-0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 \
-          libxcb-randr0 libxcb-render-util0 libxcb-shape0 libxcb-xfixes0 libxcb-xinerama0 libxcb-xkb1 \
-          x11-utils libxkbcommon-x11-0
-        python -m pip install --upgrade pip
-        pip install selenium
-
-    - name: Install Chrome and ChromeDriver
-      run: |
-        # Remove existing Chrome installations
-        sudo apt-get remove -y --purge google-chrome-stable
-        sudo apt-get autoremove -y
-        
-        # Add Google Chrome's official repository
-        wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo tee /etc/apt/trusted.gpg.d/google-chrome.asc
-        echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
-        
-        # Update package lists
-        sudo apt-get update
-        
-        # Install missing dependencies
-        sudo apt-get install -y libu2f-udev
-        
-        # Download and install Google Chrome
-        wget -q "${CHROME_URL}" -O "/tmp/${CHROME_DEB}"
-        sudo apt-get install -y "/tmp/${CHROME_DEB}"
-        
-        # Hold the package to prevent automatic updates
-        sudo apt-mark hold google-chrome-stable
-        
-        # Download and install ChromeDriver
-        wget -q --user-agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.5735.90 Safari/537.36" "${CHROMEDRIVER_URL}" -O "/tmp/${CHROMEDRIVER_ZIP}"
-        unzip -o "/tmp/${CHROMEDRIVER_ZIP}" -d /tmp
-        sudo mv /tmp/chromedriver /usr/bin/chromedriver
-        sudo chmod +x /usr/bin/chromedriver
-        
-        # Verify installation
-        chromedriver --version
-      env:
-        CHROME_VERSION: "114.0.5735.90"
-        CHROME_DEB_BACKUP: "google-chrome-stable_114.0.5735.90-1_amd64.deb"
-        CHROME_DEB: "google-chrome-stable_110.0.5481.77-1_amd64.deb"
-        CHROME_URL_BACKUP: "https://mirror.cs.uchicago.edu/google-chrome/pool/main/g/google-chrome-stable/google-chrome-stable_114.0.5735.90-1_amd64.deb"
-        CHROME_URL: "https://mirror.cs.uchicago.edu/google-chrome/pool/main/g/google-chrome-stable/google-chrome-stable_110.0.5481.77-1_amd64.deb"
-        CHROMEDRIVER_ZIP: "chromedriver_linux64.zip"
-        CHROMEDRIVER_URL_BACKUP: "https://old.chromedriver.getwebdriver.com/114.0.5735.90/chromedriver_linux64.zip"
-        CHROMEDRIVER_URL: "https://old.chromedriver.getwebdriver.com/110.0.5481.77/chromedriver_linux64.zip"
-
-    - name: Make skripts executable
-      run: |
-        chmod +x $GITHUB_WORKSPACE/.github/workflows/browser_functions.py
-        chmod +x $GITHUB_WORKSPACE/.github/workflows/define_browser_functions.sh
-        chmod +x $GITHUB_WORKSPACE/.github/workflows/test_script.py
-        chmod +x $GITHUB_WORKSPACE/.github/workflows/define_test_script.sh
-        chmod +x $GITHUB_WORKSPACE/.github/workflows/simulate_interactions.sh
-        
-
-    - name: Download latest Autorentool release
-      run: |
-        LATEST_RELEASE=$(curl -s https://api.github.com/repos/ProjektAdLer/Autorentool/releases/latest)
-        DOWNLOAD_URL=$(echo $LATEST_RELEASE | jq -r '.assets[] | select(.name | endswith("linux-unpacked.tar.gz")) | .browser_download_url')
-        echo "$DOWNLOAD_URL"
-        wget -q -O AuthoringTool.tar.gz $DOWNLOAD_URL
-        tar -xvzf AuthoringTool.tar.gz
-        #chmod +x AuthoringTool.AppImage
-
-    - name: Fix some problems
-      run: |
-        sudo apt-get update
-        
-        export LIBGL_ALWAYS_SOFTWARE=1
-
-        sudo apt-get install -y iproute2
-        sudo ip addr add 127.0.0.1 dev lo
-
-        sudo apt-get install -y libxtst6 xdg-utils libatspi2.0-0 libsecret-1-0 
-        
-        export ELECTRON_DISABLE_SANDBOX=1
-
-        export LIBGL_ALWAYS_SOFTWARE=1
-
-    - name: Start and check Xvfb
-      run: |
-        Xvfb :99 -screen 0 1920x1080x24 &
-        echo "Waiting for Xvfb to be ready..."
-        for attempt in $(seq 1 30); do
-          if xdpyinfo -display :99 >/dev/null 2>&1; then
-            echo "Xvfb is ready after $attempt attempt(s)"
-            break
-          fi
-          sleep 0.5
-        done
-        xdpyinfo -display :99
-        echo "Xvfb is ready"
-        echo "DISPLAY=:99" >> $GITHUB_ENV
-                
-    - name: Start screen and recording
-      run: |
-        ffmpeg -f x11grab -video_size 1920x1080 -i :99 -codec:v libx264 -r 30 -v verbose screen_recording.mp4 &
-        echo $! > ffmpeg_pid.txt
-        sleep 1
-    
-    - name: Run Autorentool
-      run: |
-        if ! DISPLAY=:99 xdpyinfo >/dev/null 2>&1; then
-          echo "ERROR: X server is not running properly"
-        else
-          echo "X server is running properly"
-        fi
-        
-        echo "Attempt $attempt of $max_attempts to start Authoring Tool"
-        ./linux-unpacked/authoring-tool --remote-debugging-port=9222 &
-        tool_pid=$!
-        sleep 5  # Wait time to allow for initialization
-          
-        max_attempts=5
-        for attempt in $(seq 1 $max_attempts); do
-          echo "Attempt $attempt of $max_attempts to start Authoring Tool"
-          # Check if the application is running
-          window_id=$(DISPLAY=:99 xdotool search --name "Autorentool v2.1.7" | head -n 1)
-          if [ -n "$window_id" ]; then
-            echo "Authoring Tool started successfully and loaded correctly on attempt $attempt"
-            break
-          else
-            echo "Attempt $attempt failed"
-        
-            if [ $attempt -eq $max_attempts ]; then
-              echo "All $max_attempts attempts failed. Aborting pipeline."
-              exit 1
-            else
-              DISPLAY=:99 xdotool key "ctrl+r" sleep 2
-            fi
-          fi
-        done
-        
-        # Check if the tool is actually running
-        if ! ps -p $tool_pid > /dev/null; then
-          echo "Authoring Tool process is not running. Aborting pipeline."
-          exit 1
-        fi
-        echo "Authoring Tool is running with PID $tool_pid"
-        
-    - name: Get window position
-      run: |
-        window_id=$(DISPLAY=:99 xdotool search --name "Autorentool v2.1.7" | head -n 1)
-        if [ -n "$window_id" ]; then
-          window_info=$(xwininfo -id $window_id)
-          window_x=$(echo "$window_info" | grep "Absolute upper-left X" | awk '{print $4}')
-          window_y=$(echo "$window_info" | grep "Absolute upper-left Y" | awk '{print $4}')
-          window_width=$(echo "$window_info" | grep "Width" | awk '{print $2}')
-          window_height=$(echo "$window_info" | grep "Height" | awk '{print $2}')
-          echo "Window position: $window_x, $window_y, $window_width, $window_height"
-        else
-          echo "AuthoringTool window not found"
-          exit 1
-        fi
-        echo "WINDOW_X=$window_x" >> $GITHUB_ENV
-        echo "WINDOW_Y=$window_y" >> $GITHUB_ENV
-        echo "WINDOW_ID=$window_id" >> $GITHUB_ENV
-    
-    - name: List workspace contents
-      run: |
-        echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
-        ls -aR $GITHUB_WORKSPACE
-    
-    - name: Simulate interactions
-      run: | 
-        $GITHUB_WORKSPACE/.github/workflows/simulate_interactions.sh
-
-    - name: Stop screen recording
-      if: always()
-      run: |
-        sleep 2
-        kill $(cat ffmpeg_pid.txt)
-        sleep 10  # Give ffmpeg time to finish writing
-
-    - name: Upload screen recording
-      if: always()
-      uses: actions/upload-artifact@v4
-      with:
-        name: screen-recording
-        path: screen_recording.mp4
-
-    - name: Check for errors
-      if: always()
-      run: |
-        if [ -f ./error.log ]; then
-          cat ./error.log
-          exit 1
-        fi
-        
-    - name: Setup tmate session
-      if: true
-      uses: mxschmitt/action-tmate@v3
