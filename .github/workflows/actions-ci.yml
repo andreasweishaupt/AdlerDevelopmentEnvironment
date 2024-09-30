@@ -59,9 +59,6 @@ jobs:
             echo "DB_MOODLE_NAME"
             echo "$_DB_MOODLE_NAME"
       
-      - name: Create Docker network
-        run: docker network create adler-network
-        
       - name: docker compose
         run: |
             cd $GITHUB_WORKSPACE/non-moodle
@@ -154,8 +151,6 @@ jobs:
             echo "docker network ls"
             docker network ls
             echo "-----------------------------------------"
-            echo "docker network connect adler-network adlertestenvironment-backend-1"
-            docker network connect adler-network adlertestenvironment-backend-1
             
       - name: Check URL
         run: |
@@ -361,7 +356,43 @@ jobs:
                 cat ./error.log
                 exit 1
             fi
-          
+            
+      - name: Check Docker containers
+        run: |
+            echo "--------Testing Docker compose up--------"
+            echo "docker ps"
+            docker ps
+            echo "docker ps -a"
+            docker ps -a
+            sleep 1
+            echo "docker logs adlertestenvironment-phpmyadmin-1"
+            docker logs adlertestenvironment-phpmyadmin-1
+            sleep 5
+            echo "-----"
+            echo "docker logs adlertestenvironment-moodle-1"
+            docker logs adlertestenvironment-moodle-1
+            sleep 5
+            echo "-----"
+            echo "docker logs adlertestenvironment-backend-1"
+            docker logs adlertestenvironment-backend-1
+            sleep 5
+            echo "-----"
+            echo "docker logs adlertestenvironment-frontend-1"
+            docker logs adlertestenvironment-frontend-1
+            sleep 5
+            echo "-----"
+            echo "docker logs adlertestenvironment-db_backend-1"
+            docker logs adlertestenvironment-db_backend-1
+            sleep 5
+            echo "-----"
+            echo "docker logs adlertestenvironment-db_moodle-1"
+            docker logs adlertestenvironment-db_moodle-1
+            sleep 5
+            echo "-----"
+            echo "docker network ls"
+            docker network ls
+            echo "-----------------------------------------"    
+            
       - name: Setup tmate session
         if: false
         uses: mxschmitt/action-tmate@v3
