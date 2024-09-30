@@ -281,8 +281,6 @@ jobs:
         run: |
             cd $GITHUB_WORKSPACE/non-moodle
             docker compose up -d --build
-            echo "docker network connect adler-network adlertestenvironment-backend-1"
-            docker network connect adler-network adlertestenvironment-backend-1
             
       - name: Wait for containers to be ready
         run: |
@@ -371,6 +369,8 @@ jobs:
             echo "docker network ls"
             docker network ls
             echo "-----------------------------------------"
+            echo "docker network connect adler-network adlertestenvironment-backend-1"
+            docker network connect adler-network adlertestenvironment-backend-1
             
       - name: Check URL
         continue-on-error: true
@@ -381,6 +381,14 @@ jobs:
             echo "-----"
             echo "curl http://localhost:8086/api/Users/Login?UserName=manager&Password=Manager1234!1234"
             curl -G "http://localhost:8086/api/Users/Login" --data-urlencode "UserName=manager" --data-urlencode "Password=Manager1234!1234"
+            echo "curl http://localhost:8086/api/health"
+            curl http://localhost:8086/api/health
+            echo "curl http://127.0.0.1:8086/api/health"
+            curl http://127.0.0.1:8086/api/health
+            echo "curl http://0.0.0.0:8086/api/health"
+            curl http://0.0.0.0:8086/api/health
+            echo "curl http://adlertestenvironment-backend-1:8086/api/health"
+            curl http://adlertestenvironment-backend-1:8086/api/health
             
       - name: Setup tmate session
         if: true
@@ -399,8 +407,10 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: '3.x'
-        
-
+      
+    - name: Sleep for docker network
+      run: sleep 30
+      
     - name: Install dependencies
       run: |
         lscpu
@@ -490,9 +500,7 @@ jobs:
     - name: Connect to Docker network
       run: |
         echo "ensure backend is running"
-        sleep 120
-        docker network connect adler-network adlertestenvironment-backend-1
-        sleep 5
+        sleep 90
         echo "curl http://adlertestenvironment-backend-1:8086/api/health"
         curl http://adlertestenvironment-backend-1:8086/api/health
 
