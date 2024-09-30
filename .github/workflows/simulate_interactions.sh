@@ -168,11 +168,15 @@ sleep 2
 echo Click on Anmelden
 coords=($(FIND_ELEMENT "buttontext" "Anmelden"))
 DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 0.5 click 1
-sleep 5
+sleep 10
+
+echo Refresh
+DISPLAY=:99 xdotool sleep 0.5 key "F5" sleep 2 key "ctrl+r" sleep 0.5
+
+echo Click on Einloggen again
+coords=($(FIND_ELEMENT "title" "Einloggen auf AdLer-Server"))
 DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 0.5 click 1
-sleep 15
-
-
+sleep 10
 
 
 echo "------------"  
