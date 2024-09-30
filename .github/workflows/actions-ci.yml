@@ -274,10 +274,15 @@ jobs:
             echo "DB_MOODLE_NAME"
             echo "$_DB_MOODLE_NAME"
       
+      - name: Create Docker network
+        run: docker network create adler-network
+        
       - name: docker compose
         run: |
             cd $GITHUB_WORKSPACE/non-moodle
             docker compose up -d --build
+            echo "docker network connect adler-network adlertestenvironment-backend-1"
+            docker network connect adler-network adlertestenvironment-backend-1
             
       - name: Wait for containers to be ready
         run: |
@@ -299,7 +304,7 @@ jobs:
             }
             
             start_time = time.time()
-            timeout = 300  # 5 minutes timeout
+            timeout = 120  # 2 minutes timeout
             ready_containers = set()
             
             while len(ready_containers) < len(containers):
@@ -383,7 +388,7 @@ jobs:
         
     
   autorentool:
-    if: false
+    # if: false
     runs-on: ubuntu-latest
 
     steps:
@@ -482,6 +487,14 @@ jobs:
 
         export LIBGL_ALWAYS_SOFTWARE=1
 
+    - name: Connect to Docker network
+      run: |
+        echo "ensure backend is running"
+        sleep 120
+        docker network connect adler-network adlertestenvironment-backend-1
+        sleep 5
+        echo "curl http://adlertestenvironment-backend-1:8086/api/health"
+        curl http://adlertestenvironment-backend-1:8086/api/health
 
     - name: Start and check Xvfb
       run: |
