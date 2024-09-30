@@ -50,15 +50,22 @@ def find_element_coordinates(identifier, identifier_type, index=0):
                 elements = WebDriverWait(driver, 5).until(
                     EC.presence_of_all_elements_located((By.TAG_NAME, identifier))
                 )
-            elif identifier_type == "text":
+            elif identifier_type == "buttontext":
                 buttons = WebDriverWait(driver, 5).until(
                     EC.presence_of_all_elements_located((By.XPATH, "//button[not(ancestor::*[contains(@style,'display:none') or contains(@style,'display: none')])]"))
                 )
                 elements = [button for button in buttons if identifier.lower() in button.text.lower()]
                 if not elements:
                     raise TimeoutException(f"No buttons found with text: {identifier}")
+            elif identifier_type == "labeltext":
+                labels = WebDriverWait(driver, 5).until(
+                    EC.presence_of_all_elements_located((By.XPATH, "//label[not(ancestor::*[contains(@style,'display:none') or contains(@style,'display: none')])]"))
+                )
+                elements = [label for label in labels if identifier.lower() in label.text.lower()]
+                if not elements:
+                    raise TimeoutException(f"No labels found with text: {identifier}")
             else:
-                raise ValueError("Invalid identifier_type. Use 'class', 'src', 'identifier', 'title', 'type', 'tag' or 'text'.")
+                raise ValueError("Invalid identifier_type. Use 'class', 'src', 'identifier', 'title', 'type', 'tag', 'buttontext' or 'labeltext'.")
             
             if not elements:
                 raise TimeoutException(f"No elements found with {identifier_type}: {identifier}")
