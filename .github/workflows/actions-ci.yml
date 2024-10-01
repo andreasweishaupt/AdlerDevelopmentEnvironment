@@ -166,8 +166,6 @@ jobs:
         run: |
             echo "curl http://localhost:8085"
             curl http://localhost:8085
-            echo "curl http://localhost"
-            curl http://localhost
             echo "curl -L http://localhost:8085"
             curl -L http://localhost:8085
     
