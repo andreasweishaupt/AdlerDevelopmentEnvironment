@@ -161,6 +161,16 @@ jobs:
             echo "curl http://0.0.0.0:8086/api/health"
             curl http://0.0.0.0:8086/api/health
             
+      - name: Test Moodle
+        run: |
+            echo "curl http://localhost:8085"
+            curl http://localhost:8085
+            echo "curl http://localhost"
+            curl http://localhost
+            echo "curl -L http://localhost:8085"
+            curl -L http://localhost:8085
+    
+            
       - name: Install dependencies
         run: |
             lscpu
@@ -214,11 +224,6 @@ jobs:
             CHROMEDRIVER_URL_BACKUP: "https://old.chromedriver.getwebdriver.com/114.0.5735.90/chromedriver_linux64.zip"
             CHROMEDRIVER_URL: "https://old.chromedriver.getwebdriver.com/110.0.5481.77/chromedriver_linux64.zip"
 
-      - name: Test Moodle
-        run: |
-            echo "curl http://localhost:8085"
-            curl http://localhost:8085
-    
       - name: Make skripts executable
         run: |
             chmod +x $GITHUB_WORKSPACE/.github/workflows/browser_functions.py
