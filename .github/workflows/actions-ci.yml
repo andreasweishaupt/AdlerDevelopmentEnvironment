@@ -232,6 +232,7 @@ jobs:
             sleep 5
             
             # Perform interactions using xdotool
+            xdotool key Return
             xdotool key F5  # Refresh the page
             sleep 2
             xdotool mousemove 100 200 click 1  # Click at coordinates (100, 200)
