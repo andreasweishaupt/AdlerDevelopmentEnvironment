@@ -233,7 +233,12 @@ jobs:
             
             # Perform interactions using xdotool
             xdotool key Return
-            xdotool key F5  # Refresh the page
+            sleep 2
+            xdotool key "ctrl+l"
+            sleep 1
+            xdotool type "http://localhost:8085"
+            sleep 1
+            xdotool key Return
             sleep 2
             xdotool mousemove 100 200 click 1  # Click at coordinates (100, 200)
             sleep 2
