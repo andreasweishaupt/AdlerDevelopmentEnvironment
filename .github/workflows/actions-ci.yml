@@ -214,6 +214,54 @@ jobs:
             CHROMEDRIVER_URL_BACKUP: "https://old.chromedriver.getwebdriver.com/114.0.5735.90/chromedriver_linux64.zip"
             CHROMEDRIVER_URL: "https://old.chromedriver.getwebdriver.com/110.0.5481.77/chromedriver_linux64.zip"
 
+      - name: Check Moodle and perform interactions
+        run: |
+            # Start Xvfb
+            Xvfb :99 -screen 0 1920x1080x24 &
+            export DISPLAY=:99
+            
+            # Start screen recording
+            ffmpeg -f x11grab -video_size 1920x1080 -i :99 -codec:v libx264 -r 30 -v verbose moodle_check.mp4 &
+            FFMPEG_PID=$!
+            
+            # Open Chrome and navigate to Moodle
+            google-chrome --no-sandbox --headless --remote-debugging-port=9222 http://localhost:8085 &
+            CHROME_PID=$!
+            
+            # Wait for Chrome to load
+            sleep 5
+            
+            # Perform interactions using xdotool
+            xdotool key F5  # Refresh the page
+            sleep 2
+            xdotool mousemove 100 200 click 1  # Click at coordinates (100, 200)
+            sleep 2
+            xdotool type "admin"  # Type "admin" (assuming it's a login field)
+            sleep 1
+            xdotool key Tab
+            xdotool type "password"  # Type "password"
+            sleep 1
+            xdotool key Return  # Press Enter to submit
+            
+            # Wait for a moment to capture the result
+            sleep 5
+            
+            # Stop Chrome
+            kill $CHROME_PID
+            
+            # Stop screen recording
+            kill $FFMPEG_PID
+            sleep 5  # Give ffmpeg time to finish writing
+            
+            # Upload the video as an artifact
+            echo "MOODLE_CHECK_VIDEO=moodle_check.mp4" >> $GITHUB_ENV
+
+      - name: Upload Moodle check video
+        uses: actions/upload-artifact@v4
+        with:
+            name: moodle-check-video
+            path: ${{ env.MOODLE_CHECK_VIDEO }}
+    
       - name: Make skripts executable
         run: |
             chmod +x $GITHUB_WORKSPACE/.github/workflows/browser_functions.py
