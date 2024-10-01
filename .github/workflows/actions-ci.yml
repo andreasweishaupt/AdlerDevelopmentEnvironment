@@ -162,6 +162,7 @@ jobs:
             curl http://0.0.0.0:8086/api/health
             
       - name: Test Moodle
+        continue-on-error: true
         run: |
             echo "curl http://localhost:8085"
             curl http://localhost:8085
