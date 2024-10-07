@@ -168,7 +168,7 @@ sleep 2
 echo Click on Anmelden
 coords=($(FIND_ELEMENT "buttontext" "Anmelden"))
 DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 0.5 click 1
-sleep 10
+sleep 3
 
 echo Refresh
 DISPLAY=:99 xdotool sleep 0.5 key "F5" sleep 2 key "ctrl+r" sleep 0.5
@@ -192,7 +192,25 @@ sleep 2
 echo Click on Anmelden
 coords=($(FIND_ELEMENT "buttontext" "Anmelden"))
 DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 0.5 click 1
+sleep 3
+
+echo Refresh
+DISPLAY=:99 xdotool sleep 0.5 key "F5" sleep 2 key "ctrl+r" sleep 0.5
+
+echo Click on upload .mbz
+coords=($(FIND_ELEMENT "title" "(.mbz)"))
+DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 0.5 click 1
+sleep 1
+
+echo Click on mud-button-text-primary
+coords=($(FIND_ELEMENT "class" "mud-button-text-primary"))
+DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 3 click 1
 sleep 10
+
+echo Click on Anmelden
+coords=($(FIND_ELEMENT "buttontext" "Anmelden"))
+DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 0.5 click 1
+sleep 3
 
 echo "------------"  
 
