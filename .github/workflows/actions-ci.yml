@@ -37,14 +37,17 @@ jobs:
             _USER_PASSWORD_ARRAY=($(grep _USER_PASSWORD non-moodle/.env | cut -d ':' -f2- | sed 's/^[[:space:]]*//' | tr ',' ' '))
             _USER_ROLE_ARRAY=($(grep _USER_ROLE non-moodle/.env | cut -d ':' -f2- | sed 's/^[[:space:]]*//' | tr ',' ' '))
             
-            echo "_USER_NAME_ARRAY=${_USER_NAME_ARRAY[*]}" >> $GITHUB_ENV
-            echo "_USER_PASSWORD_ARRAY=${_USER_PASSWORD_ARRAY[*]}" >> $GITHUB_ENV
-            echo "_USER_ROLE_ARRAY=${_USER_ROLE_ARRAY[*]}" >> $GITHUB_ENV
+            echo "_USER_NAME_ARRAY_0=${_USER_NAME_ARRAY[0]}" >> $GITHUB_ENV
+            echo "_USER_NAME_ARRAY_1=${_USER_NAME_ARRAY[1]}" >> $GITHUB_ENV
+            echo "_USER_PASSWORD_ARRAY_0=${_USER_PASSWORD_ARRAY[0]}" >> $GITHUB_ENV
+            echo "_USER_PASSWORD_ARRAY_1=${_USER_PASSWORD_ARRAY[1]}" >> $GITHUB_ENV
+            echo "_USER_ROLE_ARRAY_0=${_USER_ROLE_ARRAY[0]}" >> $GITHUB_ENV
+            echo "_USER_ROLE_ARRAY_1=${_USER_ROLE_ARRAY[1]}" >> $GITHUB_ENV
             
             # Debug output
-            echo "User names: ${_USER_NAME_ARRAY[*]}"
-            echo "First user name: ${_USER_NAME_ARRAY[0]}"
-            echo "Second user name: ${_USER_NAME_ARRAY[1]}"
+            echo "User names: ${_USER_NAME_ARRAY*}"
+            echo "First user name: ${_USER_NAME_ARRAY_0}"
+            echo "Second user name: ${_USER_NAME_ARRAY_1}"
             
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -60,9 +63,9 @@ jobs:
             echo "MOODLE_PW"
             echo "$_MOODLE_PW"
             echo "USER_NAME"
-            echo "$_USER_NAME"
-            echo "First user name: ${_USER_NAME_ARRAY[0]}"
-            echo "Second user name: ${_USER_NAME_ARRAY[1]}"
+            echo "$_USER_NAME_ARRAY*"
+            echo "First user name: ${_USER_NAME_ARRAY_0}"
+            echo "Second user name: ${_USER_NAME_ARRAY_1}"
             echo "USER_PASSWORD"
             echo "$_USER_PASSWORD"
             echo "USER_ROLE"
@@ -189,8 +192,8 @@ jobs:
       - name: Execute Moodle steps
         run: |
             # URL-Kodierung der Werte
-            USERNAME=$(python -c "import urllib.parse; print(urllib.parse.quote('${_USER_NAME_ARRAY[0]}'))")
-            PASSWORD=$(python -c "import urllib.parse; print(urllib.parse.quote('${_USER_PASSWORD_ARRAY[0]}'))")
+            USERNAME=$(python -c "import urllib.parse; print(urllib.parse.quote('${_USER_NAME_ARRAY_0}'))")
+            PASSWORD=$(python -c "import urllib.parse; print(urllib.parse.quote('${_USER_PASSWORD_ARRAY_0}'))")
             echo $USERNAME
             echo $PASSWORD
                 
