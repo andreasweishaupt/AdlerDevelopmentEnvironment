@@ -192,8 +192,8 @@ jobs:
       - name: Execute Moodle steps
         run: |
             # URL-Kodierung der Werte
-            USERNAME=$(python -c "import urllib.parse; print(urllib.parse.quote('${_MOODLE_USER}'))")
-            PASSWORD=$(python -c "import urllib.parse; print(urllib.parse.quote('${_MOODLE_PW}'))")
+            USERNAME=$(python -c "import urllib.parse; print(urllib.parse.quote('${_USER_NAME_ARRAY_1}'))")
+            PASSWORD=$(python -c "import urllib.parse; print(urllib.parse.quote('${_USER_PASSWORD_ARRAY_1}'))")
             echo $USERNAME
             echo $PASSWORD
             
@@ -448,8 +448,8 @@ jobs:
       - name: Execute Moodle steps
         run: |
             # URL-Kodierung der Werte
-            USERNAME=$(python -c "import urllib.parse; print(urllib.parse.quote('${_MOODLE_USER}'))")
-            PASSWORD=$(python -c "import urllib.parse; print(urllib.parse.quote('${_MOODLE_PW}'))")
+            USERNAME=$(python -c "import urllib.parse; print(urllib.parse.quote('${_USER_NAME_ARRAY_1}'))")
+            PASSWORD=$(python -c "import urllib.parse; print(urllib.parse.quote('${_USER_PASSWORD_ARRAY_1}'))")
             echo $USERNAME
             echo $PASSWORD
             
