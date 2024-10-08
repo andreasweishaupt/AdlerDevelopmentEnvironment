@@ -192,8 +192,8 @@ jobs:
       - name: Execute Moodle steps
         run: |
             # URL-Kodierung der Werte
-            USERNAME=$(python -c "import urllib.parse; print(urllib.parse.quote('${_USER_NAME_ARRAY_1}'))")
-            PASSWORD=$(python -c "import urllib.parse; print(urllib.parse.quote('${_USER_PASSWORD_ARRAY_1}'))")
+            USERNAME=$(python -c "import urllib.parse; print(urllib.parse.quote('${_MOODLE_USER}'))")
+            PASSWORD=$(python -c "import urllib.parse; print(urllib.parse.quote('${_MOODLE_PW}'))")
             echo $USERNAME
             echo $PASSWORD
             
@@ -210,7 +210,7 @@ jobs:
             echo "Kurse erhalten: $COURSES_RESPONSE"
             
       - name: Setup tmate session
-        #if: false
+        if: false
         uses: mxschmitt/action-tmate@v3
             
       - name: Install dependencies
@@ -448,8 +448,8 @@ jobs:
       - name: Execute Moodle steps
         run: |
             # URL-Kodierung der Werte
-            USERNAME=$(python -c "import urllib.parse; print(urllib.parse.quote('${_USER_NAME_ARRAY_1}'))")
-            PASSWORD=$(python -c "import urllib.parse; print(urllib.parse.quote('${_USER_PASSWORD_ARRAY_1}'))")
+            USERNAME=$(python -c "import urllib.parse; print(urllib.parse.quote('${_MOODLE_USER}'))")
+            PASSWORD=$(python -c "import urllib.parse; print(urllib.parse.quote('${_MOODLE_PW}'))")
             echo $USERNAME
             echo $PASSWORD
             
