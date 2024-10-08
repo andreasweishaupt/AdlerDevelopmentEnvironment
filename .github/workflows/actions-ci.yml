@@ -209,6 +209,10 @@ jobs:
             COURSES_RESPONSE=$(curl -s "${TEST_URL}")
             echo "Kurse erhalten: $COURSES_RESPONSE"
             
+      - name: Setup tmate session
+        #if: false
+        uses: mxschmitt/action-tmate@v3
+            
       - name: Install dependencies
         run: |
             lscpu
