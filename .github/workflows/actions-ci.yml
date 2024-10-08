@@ -33,9 +33,9 @@ jobs:
             
       - name: Load multi-value environment variables
         run: |
-            _USER_NAME_ARRAY=($(grep _USER_NAME non-moodle/.env | cut -d '=' -f2- | tr ',' ' '))
-            _USER_PASSWORD_ARRAY=($(grep _USER_PASSWORD non-moodle/.env | cut -d '=' -f2- | tr ',' ' '))
-            _USER_ROLE_ARRAY=($(grep _USER_ROLE non-moodle/.env | cut -d '=' -f2- | tr ',' ' '))
+            _USER_NAME_ARRAY=($(grep _USER_NAME non-moodle/.env | cut -d '=' -f2- | sed 's/^[[:space:]]*//' | tr ',' ' '))
+            _USER_PASSWORD_ARRAY=($(grep _USER_PASSWORD non-moodle/.env | cut -d '=' -f2- | sed 's/^[[:space:]]*//' | tr ',' ' '))
+            _USER_ROLE_ARRAY=($(grep _USER_ROLE non-moodle/.env | cut -d '=' -f2- | sed 's/^[[:space:]]*//' | tr ',' ' '))
             
             echo "_USER_NAME_ARRAY=${_USER_NAME_ARRAY[*]}" >> $GITHUB_ENV
             echo "_USER_PASSWORD_ARRAY=${_USER_PASSWORD_ARRAY[*]}" >> $GITHUB_ENV
