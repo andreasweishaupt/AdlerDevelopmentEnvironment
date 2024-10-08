@@ -31,6 +31,15 @@ jobs:
             path: non-moodle
             load-mode: strict
             
+      - name: Load multi-value environment variables
+        run: |
+            IFS=',' read -ra _USER_NAME <<< "$(grep _USER_NAME non-moodle/.env | cut -d '=' -f2-)"
+            IFS=',' read -ra _USER_PASSWORD <<< "$(grep _USER_PASSWORD non-moodle/.env | cut -d '=' -f2-)"
+            IFS=',' read -ra _USER_ROLE <<< "$(grep _USER_ROLE non-moodle/.env | cut -d '=' -f2-)"
+            echo "_USER_NAME=${_USER_NAME[*]}" >> $GITHUB_ENV
+            echo "_USER_PASSWORD=${_USER_PASSWORD[*]}" >> $GITHUB_ENV
+            echo "_USER_ROLE=${_USER_ROLE[*]}" >> $GITHUB_ENV
+            
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
