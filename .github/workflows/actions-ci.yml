@@ -188,9 +188,17 @@ jobs:
     
       - name: Execute Moodle steps
         run: |
-            # Token abrufen
-            TEST_URL=$(echo "${_URL_MOODLE}/login/token.php?username=${_USER_NAME_ARRAY[0]}&password=${_USER_PASSWORD_ARRAY[0]}&service=adler_services")
+            # URL-Kodierung der Werte
+            USERNAME=$(python -c "import urllib.parse; print(urllib.parse.quote('${_USER_NAME_ARRAY[0]}'))")
+            PASSWORD=$(python -c "import urllib.parse; print(urllib.parse.quote('${_USER_PASSWORD_ARRAY[0]}'))")
+            echo $USERNAME
+            echo $PASSWORD
+                
+            # Erstellen der TEST_URL
+            TEST_URL="${_URL_MOODLE}/login/token.php?username=${USERNAME}&password=${PASSWORD}&service=adler_services"
             echo "TEST_URL: ${TEST_URL}"
+            
+            # Token abrufen
             TOKEN_RESPONSE=$(curl -s "${TEST_URL}")
             TOKEN=$(echo $TOKEN_RESPONSE | jq -r '.token')
             
