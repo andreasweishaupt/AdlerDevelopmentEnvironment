@@ -45,7 +45,7 @@ jobs:
             echo "_USER_ROLE_ARRAY_1=${_USER_ROLE_ARRAY[1]}" >> $GITHUB_ENV
             
             # Debug output
-            echo "User names: ${_USER_NAME_ARRAY*}"
+            echo "User names: ${_USER_NAME_ARRAY}"
             echo "First user name: ${_USER_NAME_ARRAY_0}"
             echo "Second user name: ${_USER_NAME_ARRAY_1}"
             
@@ -63,7 +63,7 @@ jobs:
             echo "MOODLE_PW"
             echo "$_MOODLE_PW"
             echo "USER_NAME"
-            echo "$_USER_NAME_ARRAY*"
+            echo "$_USER_NAME_ARRAY"
             echo "First user name: ${_USER_NAME_ARRAY_0}"
             echo "Second user name: ${_USER_NAME_ARRAY_1}"
             echo "USER_PASSWORD"
