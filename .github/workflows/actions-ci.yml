@@ -189,7 +189,7 @@ jobs:
       - name: Execute Moodle steps
         run: |
             # Token abrufen
-            TOKEN_RESPONSE=$(curl -s "$_MOODLE_URL/login/token.php?username=$_USER_NAME_ARRAY[0]&password=$_USER_PASSWORD_ARRAY[0]&service=adler_services")
+            TOKEN_RESPONSE=$(curl -s "${_MOODLE_URL}/login/token.php?username=${_USER_NAME_ARRAY[0]}&password=${_USER_PASSWORD_ARRAY[0]}&service=adler_services")
             TOKEN=$(echo $TOKEN_RESPONSE | jq -r '.token')
             
             echo "Token erhalten: $TOKEN"
