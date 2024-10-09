@@ -26,6 +26,8 @@ echo Click on create-world-button
 coords=($(FIND_ELEMENT "class" "create-world-button"))
 DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 0.5 click 1 sleep 1
 DISPLAY=:99 xdotool type "testWorld"
+DISPLAY=:99 xdotool sleep 1 key "Tab"
+DISPLAY=:99 xdotool type "testWorldSn"
 DISPLAY=:99 xdotool sleep 1 key "Return"
 
 echo Click on space-metadata-icon
