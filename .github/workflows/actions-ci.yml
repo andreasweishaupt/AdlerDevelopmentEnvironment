@@ -201,6 +201,7 @@ jobs:
             TEST_URL="${_URL_MOODLE}/login/token.php?username=${USERNAME}&password=${PASSWORD}&service=adler_services"
             echo "TEST_URL: ${TEST_URL}"
             TOKEN_RESPONSE=$(curl -s "${TEST_URL}")
+            echo "Token-Response erhalten: $TOKEN_RESPONSE"
             TOKEN=$(echo $TOKEN_RESPONSE | jq -r '.token')
             echo "Token erhalten: $TOKEN"
             
@@ -457,6 +458,7 @@ jobs:
             TEST_URL="${_URL_MOODLE}/login/token.php?username=${USERNAME}&password=${PASSWORD}&service=adler_services"
             echo "TEST_URL: ${TEST_URL}"
             TOKEN_RESPONSE=$(curl -s "${TEST_URL}")
+            echo "Token-Response erhalten: $TOKEN_RESPONSE"
             TOKEN=$(echo $TOKEN_RESPONSE | jq -r '.token')
             echo "Token erhalten: $TOKEN"
             
@@ -467,7 +469,7 @@ jobs:
             
             
       - name: Setup tmate session
-        if: false
+        # if: false
         uses: mxschmitt/action-tmate@v3
         
     
