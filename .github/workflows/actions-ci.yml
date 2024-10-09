@@ -206,19 +206,19 @@ jobs:
             echo "Token erhalten: $TOKEN"
             
             # Webservice Seiten Informationen
-            TEST_URL="${_URL_MOODLE}/webservice/rest/server.php?wstoken=${TOKEN}&wsfunction=core_webservice_get_site_info"
+            TEST_URL="${_URL_MOODLE}/webservice/rest/server.php?wstoken=${TOKEN}&wsfunction=core_webservice_get_site_info&moodlewsrestformat=json"
             echo "TEST_URL: ${TEST_URL}"
             INFORMATION_RESPONSE=$(curl -s "${TEST_URL}")
             echo "Information erhalten: $INFORMATION_RESPONSE"
             
             # Alle Kurse abrufen
-            TEST_URL="${_URL_MOODLE}/webservice/rest/server.php?wstoken=${TOKEN}&wsfunction=core_course_get_courses"
+            TEST_URL="${_URL_MOODLE}/webservice/rest/server.php?wstoken=${TOKEN}&wsfunction=core_course_get_courses&moodlewsrestformat=json"
             echo "TEST_URL: ${TEST_URL}"
             COURSES_RESPONSE=$(curl -s "${TEST_URL}")
             echo "Kurse erhalten: $COURSES_RESPONSE"
             
             # Alle Kurse mit Kurzname abrufen
-            TEST_URL="${_URL_MOODLE}/webservice/rest/server.php?wstoken=${TOKEN}&wsfunction=core_course_get_courses_by_field&field=shortname&value=testWorldSn"
+            TEST_URL="${_URL_MOODLE}/webservice/rest/server.php?wstoken=${TOKEN}&wsfunction=core_course_get_courses_by_field&field=shortname&value=testWorldSn&moodlewsrestformat=json"
             echo "TEST_URL: ${TEST_URL}"
             COURSES_RESPONSE=$(curl -s "${TEST_URL}")
             echo "Kurse erhalten: $COURSES_RESPONSE"
@@ -476,19 +476,19 @@ jobs:
             echo "Token erhalten: $TOKEN"
             
             # Webservice Seiten Informationen
-            TEST_URL="${_URL_MOODLE}/webservice/rest/server.php?wstoken=${TOKEN}&wsfunction=core_webservice_get_site_info"
+            TEST_URL="${_URL_MOODLE}/webservice/rest/server.php?wstoken=${TOKEN}&wsfunction=core_webservice_get_site_info&moodlewsrestformat=json"
             echo "TEST_URL: ${TEST_URL}"
             INFORMATION_RESPONSE=$(curl -s "${TEST_URL}")
             echo "Information erhalten: $INFORMATION_RESPONSE"
             
             # Alle Kurse abrufen
-            TEST_URL="${_URL_MOODLE}/webservice/rest/server.php?wstoken=${TOKEN}&wsfunction=core_course_get_courses"
+            TEST_URL="${_URL_MOODLE}/webservice/rest/server.php?wstoken=${TOKEN}&wsfunction=core_course_get_courses&moodlewsrestformat=json"
             echo "TEST_URL: ${TEST_URL}"
             COURSES_RESPONSE=$(curl -s "${TEST_URL}")
             echo "Kurse erhalten: $COURSES_RESPONSE"
             
             # Alle Kurse mit Kurzname abrufen
-            TEST_URL="${_URL_MOODLE}/webservice/rest/server.php?wstoken=${TOKEN}&wsfunction=core_course_get_courses_by_field&field=shortname&value=testWorldSn"
+            TEST_URL="${_URL_MOODLE}/webservice/rest/server.php?wstoken=${TOKEN}&wsfunction=core_course_get_courses_by_field&field=shortname&value=testWorldSn&moodlewsrestformat=json"
             echo "TEST_URL: ${TEST_URL}"
             COURSES_RESPONSE=$(curl -s "${TEST_URL}")
             echo "Kurse erhalten: $COURSES_RESPONSE"
