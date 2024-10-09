@@ -207,6 +207,7 @@ jobs:
             
             # Alle Kurse abrufen
             TEST_URL="${_URL_MOODLE}/webservice/rest/server.php?wstoken=${TOKEN}&wsfunction=core_course_get_courses_by_field"
+            echo "TEST_URL: ${TEST_URL}"
             COURSES_RESPONSE=$(curl -s "${TEST_URL}")
             echo "Kurse erhalten: $COURSES_RESPONSE"
             
@@ -464,6 +465,7 @@ jobs:
             
             # Alle Kurse abrufen
             TEST_URL="${_URL_MOODLE}/webservice/rest/server.php?wstoken=${TOKEN}&wsfunction=core_course_get_courses_by_field"
+            echo "TEST_URL: ${TEST_URL}"
             COURSES_RESPONSE=$(curl -s "${TEST_URL}")
             echo "Kurse erhalten: $COURSES_RESPONSE"
             
