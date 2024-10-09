@@ -468,6 +468,7 @@ jobs:
             
       - name: Execute Moodle steps
         run: |
+            # Manager
             # URL-Kodierung der Werte
             USERNAME=$(python -c "import urllib.parse; print(urllib.parse.quote('${_USER_NAME_ARRAY_1}'))")
             PASSWORD=$(python -c "import urllib.parse; print(urllib.parse.quote('${_USER_PASSWORD_ARRAY_1}'))")
@@ -488,17 +489,32 @@ jobs:
             INFORMATION_RESPONSE=$(curl -s "${TEST_URL}")
             echo "Information erhalten: $INFORMATION_RESPONSE"
             
-            # Alle Kurse abrufen
-            TEST_URL="${_URL_MOODLE}/webservice/rest/server.php?wstoken=${TOKEN}&wsfunction=core_course_get_courses&moodlewsrestformat=json"
+            # Kurs mit Name suchen
+            TEST_URL="${_URL_MOODLE}/webservice/rest/server.php?wstoken=${TOKEN}&wsfunction=core_course_search_courses&criterianame=search&criteriavalue=testWorld&moodlewsrestformat=json"
             echo "TEST_URL: ${TEST_URL}"
             COURSES_RESPONSE=$(curl -s "${TEST_URL}")
             echo "Kurse erhalten: $COURSES_RESPONSE"
             
-            # Alle Kurse mit Kurzname abrufen
-            TEST_URL="${_URL_MOODLE}/webservice/rest/server.php?wstoken=${TOKEN}&wsfunction=core_course_get_courses_by_field&field=shortname&value=testWorldSn&moodlewsrestformat=json"
+            # Student
+            # URL-Kodierung der Werte
+            USERNAME=$(python -c "import urllib.parse; print(urllib.parse.quote('${_USER_NAME_ARRAY_0}'))")
+            PASSWORD=$(python -c "import urllib.parse; print(urllib.parse.quote('${_USER_PASSWORD_ARRAY_0}'))")
+            echo $USERNAME
+            echo $PASSWORD
+            
+            # Token abrufen
+            TEST_URL="${_URL_MOODLE}/login/token.php?username=${USERNAME}&password=${PASSWORD}&service=adler_services"
             echo "TEST_URL: ${TEST_URL}"
-            COURSES_RESPONSE=$(curl -s "${TEST_URL}")
-            echo "Kurse erhalten: $COURSES_RESPONSE"
+            TOKEN_RESPONSE=$(curl -s "${TEST_URL}")
+            echo "Token-Response erhalten: $TOKEN_RESPONSE"
+            TOKEN=$(echo $TOKEN_RESPONSE | jq -r '.token')
+            echo "Token erhalten: $TOKEN"
+            
+            # Webservice Seiten Informationen
+            TEST_URL="${_URL_MOODLE}/webservice/rest/server.php?wstoken=${TOKEN}&wsfunction=core_webservice_get_site_info&moodlewsrestformat=json"
+            echo "TEST_URL: ${TEST_URL}"
+            INFORMATION_RESPONSE=$(curl -s "${TEST_URL}")
+            echo "Information erhalten: $INFORMATION_RESPONSE"
             
             # Kurs mit Name suchen
             TEST_URL="${_URL_MOODLE}/webservice/rest/server.php?wstoken=${TOKEN}&wsfunction=core_course_search_courses&criterianame=search&criteriavalue=testWorld&moodlewsrestformat=json"
