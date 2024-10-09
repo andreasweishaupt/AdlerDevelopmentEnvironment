@@ -205,6 +205,12 @@ jobs:
             TOKEN=$(echo $TOKEN_RESPONSE | jq -r '.token')
             echo "Token erhalten: $TOKEN"
             
+            # Webservice Seiten Informationen
+            TEST_URL="${_URL_MOODLE}/webservice/rest/server.php?wstoken=${TOKEN}&wsfunction=core_webservice_get_site_info"
+            echo "TEST_URL: ${TEST_URL}"
+            INFORMATION_RESPONSE=$(curl -s "${TEST_URL}")
+            echo "Information erhalten: $INFORMATION_RESPONSE"
+            
             # Alle Kurse abrufen
             TEST_URL="${_URL_MOODLE}/webservice/rest/server.php?wstoken=${TOKEN}&wsfunction=core_course_get_courses"
             echo "TEST_URL: ${TEST_URL}"
@@ -468,6 +474,12 @@ jobs:
             echo "Token-Response erhalten: $TOKEN_RESPONSE"
             TOKEN=$(echo $TOKEN_RESPONSE | jq -r '.token')
             echo "Token erhalten: $TOKEN"
+            
+            # Webservice Seiten Informationen
+            TEST_URL="${_URL_MOODLE}/webservice/rest/server.php?wstoken=${TOKEN}&wsfunction=core_webservice_get_site_info"
+            echo "TEST_URL: ${TEST_URL}"
+            INFORMATION_RESPONSE=$(curl -s "${TEST_URL}")
+            echo "Information erhalten: $INFORMATION_RESPONSE"
             
             # Alle Kurse abrufen
             TEST_URL="${_URL_MOODLE}/webservice/rest/server.php?wstoken=${TOKEN}&wsfunction=core_course_get_courses"
