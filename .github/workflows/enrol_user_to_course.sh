@@ -60,6 +60,12 @@ options.add_argument("--disable-gpu")
 options.add_argument("--window-size=1920,1080")
 options.add_argument("--ignore-certificate-errors")
 options.add_argument("--ignore-ssl-errors")
+options.add_argument("--disable-features=PreloadMediaEngagementData,MediaEngagementBypassAutoplayPolicies")
+options.add_argument("--disable-popup-blocking")
+options.add_argument("--disable-notifications")
+options.add_experimental_option("prefs", {
+    "profile.default_content_setting_values.automatic_downloads": 1,
+})
 
 try:
     print("Initializing Chrome driver...")
