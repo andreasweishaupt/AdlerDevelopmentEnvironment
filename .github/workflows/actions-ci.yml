@@ -380,6 +380,7 @@ jobs:
                 exit 1
             fi
             echo "Authoring Tool is running with PID $tool_pid"
+            echo "AUTHORING_TOOL_PID=$tool_pid" >> $GITHUB_ENV
         
       - name: Get window position
         run: |
@@ -407,6 +408,9 @@ jobs:
       - name: Simulate interactions
         run: | 
             $GITHUB_WORKSPACE/.github/workflows/simulate_interactions.sh
+            
+            kill $AUTHORING_TOOL_PID
+            pkill chrome
 
       - name: Stop screen recording
         if: always()
@@ -522,10 +526,6 @@ jobs:
             COURSES_RESPONSE=$(curl -s "${TEST_URL}")
             echo "Kurse erhalten: $COURSES_RESPONSE"
             
-            # Start Xvfb
-            Xvfb :99 -screen 0 1920x1080x24 &
-            export DISPLAY=:99
-            
       - name: Start screen and recording
         run: |
             ffmpeg -f x11grab -video_size 1920x1080 -i :99 -codec:v libx264 -r 30 -v verbose moodle_check.mp4 &
@@ -535,6 +535,12 @@ jobs:
       - name: Enrol Student
         run: |
             chmod +x $GITHUB_WORKSPACE/.github/workflows/enrol_user_to_course.sh
+            
+            if ! DISPLAY=:99 xdpyinfo >/dev/null 2>&1; then
+                echo "ERROR: X server is not running properly"
+            else
+                echo "X server is running properly"
+            fi
             
             COURSENAME="testWorld"
             USERNAME=$(python -c "import urllib.parse; print(urllib.parse.quote('${_USER_NAME_ARRAY_0}'))")
