@@ -534,6 +534,7 @@ jobs:
       - name: Enrol Student
         run: |
             chmod +x $GITHUB_WORKSPACE/.github/workflows/enrol_user_to_course.sh
+            chmod +x $GITHUB_WORKSPACE/.github/workflows/enrol_student.py
             
             if ! DISPLAY=:99 xdpyinfo >/dev/null 2>&1; then
                 echo "ERROR: X server is not running properly"
