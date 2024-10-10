@@ -550,6 +550,8 @@ jobs:
             echo "USERNAME: $USERNAME"
             echo "PASSWORD: $PASSWORD"
             
+            google-chrome --no-sandbox $_URL_MOODLE --remote-debugging-port=9222
+            
             $GITHUB_WORKSPACE/.github/workflows/enrol_user_to_course.sh $_URL_MOODLE $COURSENAME $USERNAME $PASSWORD 
             
             sleep 4
