@@ -70,9 +70,10 @@ try:
 	
 	# Warte kurz, damit das Popup-Fenster erscheinen kann
 	print("Wait")
-	time.sleep(7)
+	time.sleep(10)
 	
 	# Sende Return-Tastendruck um Popup-Fenster zu schließen
+	ActionChains(driver).send_keys(Keys.TAB).pause(1).key_down(Keys.SHIFT).send_keys(Keys.TAB).key_up(Keys.SHIFT)pause(1).perform()
 	print("Press Return")
 	ActionChains(driver).send_keys(Keys.RETURN).perform()
 	
