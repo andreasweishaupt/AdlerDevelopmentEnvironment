@@ -23,8 +23,8 @@ def enrol_student(moodleurl, username, password, course_id):
 	options.add_argument("--window-size=1920,1080")
 	options.add_argument("--ignore-certificate-errors")
 	options.add_argument("--ignore-ssl-errors")
-    prefs = {"profile.default_content_setting_values.notifications" : 2}
-    options.add_experimental_option("prefs",prefs)
+	prefs = {"profile.default_content_setting_values.notifications" : 2}
+	options.add_experimental_option("prefs",prefs)
 	
 	try:
 		print("Initializing Chrome driver...")
@@ -100,14 +100,14 @@ def enrol_student(moodleurl, username, password, course_id):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 5:
-        print("Usage: python enrol_student.py <moodleurl> <username> <password> <course_id>")
-        sys.exit(1)
-    
-    moodleurl = sys.argv[1]
-    username = sys.argv[2]
-    password = sys.argv[3]
-    course_id = sys.argv[4]
-    
-    enrol_student(moodleurl, username, password, course_id)
-    sys.exit(0)
+	if len(sys.argv) != 5:
+		print("Usage: python enrol_student.py <moodleurl> <username> <password> <course_id>")
+		sys.exit(1)
+	
+	moodleurl = sys.argv[1]
+	username = sys.argv[2]
+	password = sys.argv[3]
+	course_id = sys.argv[4]
+	
+	enrol_student(moodleurl, username, password, course_id)
+	sys.exit(0)
