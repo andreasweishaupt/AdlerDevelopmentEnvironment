@@ -41,6 +41,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.action_chains import ActionChains
 
 # Shell variables
 moodleurl = "$moodleurl"
@@ -60,12 +62,6 @@ options.add_argument("--disable-gpu")
 options.add_argument("--window-size=1920,1080")
 options.add_argument("--ignore-certificate-errors")
 options.add_argument("--ignore-ssl-errors")
-options.add_argument("--disable-features=PreloadMediaEngagementData,MediaEngagementBypassAutoplayPolicies")
-options.add_argument("--disable-popup-blocking")
-options.add_argument("--disable-notifications")
-options.add_experimental_option("prefs", {
-    "profile.default_content_setting_values.automatic_downloads": 1,
-})
 
 try:
     print("Initializing Chrome driver...")
@@ -74,6 +70,13 @@ try:
 
     # Login
     print(f"Navigating to login page: {moodleurl}/login/index.php")
+	
+	# Warte kurz, damit das Popup-Fenster erscheinen kann
+	time.sleep(2)
+
+	# Sende Return-Tastendruck um Popup-Fenster zu schließen
+	ActionChains(driver).send_keys(Keys.RETURN).perform()
+	
     driver.get(f"{moodleurl}/login/index.php")
     time.sleep(10)  # Increased wait time
     
