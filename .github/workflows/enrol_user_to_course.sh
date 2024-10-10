@@ -68,9 +68,12 @@ try:
 	driver = webdriver.Chrome(service=service, options=options)
 	print("Chrome driver initialized successfully")
 	
+	print(f"Navigating to login page: {moodleurl}/login/index.php")
+	driver.get(f"{moodleurl}/login/index.php")
+	
 	# Warte kurz, damit das Popup-Fenster erscheinen kann
 	print("Wait")
-	time.sleep(10)
+	time.sleep(2)
 	
 	# Sende Return-Tastendruck um Popup-Fenster zu schließen
 	ActionChains(driver).send_keys(Keys.TAB).pause(1).key_down(Keys.SHIFT).send_keys(Keys.TAB).key_up(Keys.SHIFT).pause(1).perform()
