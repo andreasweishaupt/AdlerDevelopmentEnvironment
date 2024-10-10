@@ -53,7 +53,7 @@ TIMEOUT = 60  # seconds
 
 service = Service('/usr/bin/chromedriver')
 options = Options()
-options.add_argument("--headless")
+# options.add_argument("--headless") 
 options.add_argument("--no-sandbox")
 options.add_argument("--disable-dev-shm-usage")
 options.add_argument("--disable-gpu")
@@ -73,6 +73,7 @@ try:
     
     print("Current page title:", driver.title)
     print("Current URL:", driver.current_url)
+    print("Page source:", driver.page_source) 
     
     print("Waiting for username field...")
     username_field = WebDriverWait(driver, TIMEOUT).until(EC.presence_of_element_located((By.ID, "username")))
