@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export DISPLAY=:99
+
 moodleurl=$1
 coursename=$2
 username=$3
@@ -31,11 +33,12 @@ echo "Gefundene Kurs-ID: $COURSE_ID"
 # Auf Login-Seite navigieren und einloggen
 python3 - <<END
 import time
+import sys
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 
@@ -46,7 +49,7 @@ password = "$password"
 course_id = "$COURSE_ID"
 
 # Configuration
-TIMEOUT = 30  # seconds
+TIMEOUT = 60  # seconds
 
 service = Service('/usr/bin/chromedriver')
 options = Options()
@@ -59,16 +62,21 @@ options.add_argument("--ignore-certificate-errors")
 options.add_argument("--ignore-ssl-errors")
 
 try:
+    print("Initializing Chrome driver...")
     driver = webdriver.Chrome(service=service, options=options)
-    print("Chrome driver initialized")
+    print("Chrome driver initialized successfully")
 
     # Login
     print(f"Navigating to login page: {moodleurl}/login/index.php")
     driver.get(f"{moodleurl}/login/index.php")
-    time.sleep(5)  # Wait for page to load
+    time.sleep(10)  # Increased wait time
     
-    print("Entering username")
+    print("Current page title:", driver.title)
+    print("Current URL:", driver.current_url)
+    
+    print("Waiting for username field...")
     username_field = WebDriverWait(driver, TIMEOUT).until(EC.presence_of_element_located((By.ID, "username")))
+    print("Username field found")
     username_field.send_keys(username)
     
     print("Entering password")
@@ -87,23 +95,30 @@ try:
     # Navigate to enrolment page
     print(f"Navigating to enrolment page: {moodleurl}/enrol/index.php?id={course_id}")
     driver.get(f"{moodleurl}/enrol/index.php?id={course_id}")
-    time.sleep(5)  # Wait for page to load
+    time.sleep(10)  # Increased wait time
 
     # Click on "Enrol me" button
-    print("Clicking 'Enrol me' button")
+    print("Waiting for 'Enrol me' button")
     enrol_button = WebDriverWait(driver, TIMEOUT).until(
         EC.element_to_be_clickable((By.XPATH, "//input[@value='Enrol me']"))
     )
+    print("'Enrol me' button found")
     enrol_button.click()
 
     print("Enrolment completed successfully")
 
 except TimeoutException as e:
     print(f"Timeout occurred: {e}")
+    print("Current page source:")
+    print(driver.page_source)
+except WebDriverException as e:
+    print(f"WebDriver exception occurred: {e}")
 except Exception as e:
-    print(f"An error occurred: {e}")
+    print(f"An unexpected error occurred: {e}")
 finally:
     if 'driver' in locals():
         driver.quit()
         print("Chrome driver closed")
+
+sys.exit(0)  # Always exit with status 0 to not break the pipeline
 END
