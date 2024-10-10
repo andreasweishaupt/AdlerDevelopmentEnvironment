@@ -29,8 +29,11 @@ COURSE_ID=$(echo $COURSES_RESPONSE | jq -r '.courses[0].id')
 echo "Gefundene Kurs-ID: $COURSE_ID"
 
 # Chrome starten und Aktionen ausführen
-google-chrome --no-sandbox --headless --disable-gpu --remote-debugging-port=9222 &
+google-chrome --no-sandbox $_URL_MOODLE --disable-gpu --remote-debugging-port=9222 &
 CHROME_PID=$!
+sleep 5
+xdotool key Return
+sleep 2
 
 # Warten, bis Chrome gestartet ist
 sleep 5
