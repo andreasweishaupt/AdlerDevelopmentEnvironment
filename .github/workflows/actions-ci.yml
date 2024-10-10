@@ -522,6 +522,46 @@ jobs:
             COURSES_RESPONSE=$(curl -s "${TEST_URL}")
             echo "Kurse erhalten: $COURSES_RESPONSE"
             
+            # Start Xvfb
+            Xvfb :99 -screen 0 1920x1080x24 &
+            export DISPLAY=:99
+            
+      - name: Start screen and recording
+        run: |
+            ffmpeg -f x11grab -video_size 1920x1080 -i :99 -codec:v libx264 -r 30 -v verbose moodle_check.mp4 &
+            echo $! > ffmpeg_pid.txt
+            sleep 1
+        
+      - name: Enrol Student
+        run: |
+            chmod +x $GITHUB_WORKSPACE/.github/workflows/enrol_user_to_course.sh
+            
+            COURSENAME="testWorld"
+            USERNAME=$(python -c "import urllib.parse; print(urllib.parse.quote('${_USER_NAME_ARRAY_0}'))")
+            PASSWORD=$(python -c "import urllib.parse; print(urllib.parse.quote('${_USER_PASSWORD_ARRAY_0}'))")
+            
+            echo "_URL_MOODLE: $_URL_MOODLE"
+            echo "COURSENAME: $COURSENAME" 
+            echo "USERNAME: $USERNAME"
+            echo "PASSWORD: $PASSWORD"
+            
+            $GITHUB_WORKSPACE/.github/workflows/enrol_user_to_course.sh $_URL_MOODLE $COURSENAME $USERNAME $PASSWORD 
+            
+            sleep 4
+            
+      - name: Stop screen recording
+        if: always()
+        run: |
+            sleep 1
+            kill $(cat ffmpeg_pid.txt)
+            sleep 10  # Give ffmpeg time to finish writing
+
+      - name: Upload screen recording
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+            name: moodle_check
+            path: moodle_check.mp4
             
       - name: Setup tmate session
         if: false
