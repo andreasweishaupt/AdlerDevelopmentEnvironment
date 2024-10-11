@@ -31,22 +31,10 @@ def enrol_student(moodleurl, username, password, course_id):
 		driver = webdriver.Chrome(service=service, options=options)
 		print("Chrome driver initialized successfully")
 		
-		print(f"Navigating to login page: {moodleurl}/login/index.php")
-		driver.get(f"http://{moodleurl}/login/index.php")
-		
-		# Warte kurz, damit das Popup-Fenster erscheinen kann
-		print("Wait")
-		time.sleep(2)
-		
-		# Sende Return-Tastendruck um Popup-Fenster zu schließen
-		#ActionChains(driver).send_keys(Keys.TAB).pause(1).key_down(Keys.SHIFT).send_keys(Keys.TAB).key_up(Keys.SHIFT).pause(1).perform()
-		print("Press Return")
-		#ActionChains(driver).send_keys(Keys.RETURN).perform()
-		
 		# Login
 		print(f"Navigating to login page: {moodleurl}/login/index.php")
 		driver.get(f"http://{moodleurl}/login/index.php")
-		time.sleep(10)  # Increased wait time
+		time.sleep(3)  # Increased wait time
 		
 		print("Current page title:", driver.title)
 		print("Current URL:", driver.current_url)
@@ -56,10 +44,12 @@ def enrol_student(moodleurl, username, password, course_id):
 		username_field = WebDriverWait(driver, TIMEOUT).until(EC.presence_of_element_located((By.ID, "username")))
 		print("Username field found")
 		username_field.send_keys(username)
+		time.sleep(1)
 		
 		print("Entering password")
 		password_field = driver.find_element(By.ID, "password")
 		password_field.send_keys(password)
+		time.sleep(1)
 		
 		print("Clicking login button")
 		login_button = driver.find_element(By.ID, "loginbtn")

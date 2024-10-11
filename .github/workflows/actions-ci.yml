@@ -543,8 +543,8 @@ jobs:
             fi
             
             COURSENAME="testWorld"
-            USERNAME=$(python -c "import urllib.parse; print(urllib.parse.quote('${_USER_NAME_ARRAY_0}'))")
-            PASSWORD=$(python -c "import urllib.parse; print(urllib.parse.quote('${_USER_PASSWORD_ARRAY_0}'))")
+            USERNAME=$_USER_NAME_ARRAY_0
+            PASSWORD=$_USER_PASSWORD_ARRAY_0
             
             echo "_URL_MOODLE: $_URL_MOODLE"
             echo "COURSENAME: $COURSENAME" 

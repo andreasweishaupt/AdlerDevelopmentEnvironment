@@ -12,8 +12,11 @@ echo "coursename: $coursename"
 echo "username: $username"
 echo "password: $password"
 
+URL_USERNAME=$(python -c "import urllib.parse; print(urllib.parse.quote('${_USER_NAME_ARRAY_0}'))")
+URL_PASSWORD=$(python -c "import urllib.parse; print(urllib.parse.quote('${_USER_PASSWORD_ARRAY_0}'))")
+
 # Token abrufen
-TEST_URL="${moodleurl}/login/token.php?username=${username}&password=${password}&service=adler_services"
+TEST_URL="${moodleurl}/login/token.php?username=${URL_USERNAME}&password=${URL_PASSWORD}&service=adler_services"
 echo "TEST_URL: ${TEST_URL}"
 TOKEN_RESPONSE=$(curl -s "${TEST_URL}")
 echo "Token-Response erhalten: $TOKEN_RESPONSE"
