@@ -31,14 +31,13 @@ def enrol_student(moodleurl, username, password, course_id):
 		driver = webdriver.Chrome(service=service, options=options)
 		print("Chrome driver initialized successfully")
 		
-		# Login
-		print(f"Navigating to login page: {moodleurl}/login/index.php")
-		driver.get(f"http://{moodleurl}/login/index.php")
-		time.sleep(3)  # Increased wait time
+		# Navigate to enrolment page
+		print(f"Navigating to enrolment page: {moodleurl}/enrol/index.php?id={course_id}")
+		driver.get(f"http://{moodleurl}/enrol/index.php?id={course_id}")
 		
 		print("Current page title:", driver.title)
 		print("Current URL:", driver.current_url)
-		#print("Page source:", driver.page_source) 
+		# print("Page source:", driver.page_source) 
 		
 		print("Waiting for username field...")
 		username_field = WebDriverWait(driver, TIMEOUT).until(EC.presence_of_element_located((By.ID, "username")))
@@ -57,21 +56,7 @@ def enrol_student(moodleurl, username, password, course_id):
 		
 		print("Current page title:", driver.title)
 		print("Current URL:", driver.current_url)
-		print("Page source:", driver.page_source) 
-		
-		# Wait for login to complete
-		print("Waiting for login to complete")
-		WebDriverWait(driver, TIMEOUT).until(EC.presence_of_element_located((By.CLASS_NAME, "usertext")))
-		print("Login completed")
-		
-		# Navigate to enrolment page
-		print(f"Navigating to enrolment page: {moodleurl}/enrol/index.php?id={course_id}")
-		driver.get(f"http://{moodleurl}/enrol/index.php?id={course_id}")
-		time.sleep(10)  # Increased wait time
-		
-		print("Current page title:", driver.title)
-		print("Current URL:", driver.current_url)
-		print("Page source:", driver.page_source) 
+		# print("Page source:", driver.page_source) 
 		
 		# Click on "Enrol me" button
 		print("Waiting for 'Enrol me' button")
@@ -80,6 +65,8 @@ def enrol_student(moodleurl, username, password, course_id):
 		)
 		print("'Enrol me' button found")
 		enrol_button.click()
+		
+		time.sleep(3)
 		
 		print("Enrolment completed successfully")
 	
