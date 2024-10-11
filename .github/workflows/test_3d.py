@@ -8,7 +8,8 @@ from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 
-def enrol_student(moodleurl, username, password, course_id):
+
+def test_3d(3d_url, username, password, course_id):
 	# Configuration
 	TIMEOUT = 15  # seconds
 	
@@ -28,12 +29,12 @@ def enrol_student(moodleurl, username, password, course_id):
 		print("Chrome driver initialized successfully")
 		
 		# Navigate to enrolment page
-		print(f"Navigating to enrolment page: {moodleurl}/enrol/index.php?id={course_id}")
-		driver.get(f"{moodleurl}/enrol/index.php?id={course_id}")
+		print(f"Navigating to enrolment page: {3d_url}")
+		driver.get(f"{3d_url}")
 		
 		print("Current page title:", driver.title)
 		print("Current URL:", driver.current_url)
-		# print("Page source:", driver.page_source) 
+		print("Page source:", driver.page_source) 
 		
 		print("Waiting for username field...")
 		username_field = WebDriverWait(driver, TIMEOUT).until(EC.presence_of_element_located((By.ID, "username")))
@@ -52,26 +53,19 @@ def enrol_student(moodleurl, username, password, course_id):
 		
 		print("Current page title:", driver.title)
 		print("Current URL:", driver.current_url)
-		# print("Page source:", driver.page_source) 
+		print("Page source:", driver.page_source) 
 		
-		# Click on "Enrol me" button
-		print("Waiting for 'Enrol me' button")
-		enrol_button = WebDriverWait(driver, TIMEOUT).until(
-			EC.element_to_be_clickable((By.XPATH, "//input[@value='Enrol me']"))
-		)
-		print("'Enrol me' button found")
-		enrol_button.click()
 		
 		# Wait for the success message
 		try:
 			success_message = WebDriverWait(driver, TIMEOUT).until(
 				EC.presence_of_element_located((By.CLASS_NAME, "alert-success"))
 			)
-			print("Enrolment completed successfully")
+			print("Test 3d completed successfully")
 			print("Success message:", success_message.text)
 			return True
 		except TimeoutException:
-			print("Enrolment failed: Success message not found")
+			print("Test 3d failed: Success message not found")
 			return False
 	
 	except TimeoutException as e:
@@ -88,20 +82,21 @@ def enrol_student(moodleurl, username, password, course_id):
 			print("Chrome driver closed")
 
 
+
 if __name__ == "__main__":
 	if len(sys.argv) != 5:
-		print("Usage: python enrol_student.py <moodleurl> <username> <password> <course_id>")
+		print("Usage: test_3d.py <3d_url> <username> <password> <course_id>")
 		sys.exit(1)
 	
-	moodleurl = sys.argv[1]
+	3d_url = sys.argv[1]
 	username = sys.argv[2]
 	password = sys.argv[3]
 	course_id = sys.argv[4]
 	
-	success = enrol_student(moodleurl, username, password, course_id)
+	success = test_3d(moodleurl, username, password, course_id)
 	if success:
-		print("Enrolment process completed successfully")
+		print("Test 3d process completed successfully")
 		sys.exit(0)
 	else:
-		print("Enrolment process failed")
+		print("Test 3d process failed")
 		sys.exit(1)
