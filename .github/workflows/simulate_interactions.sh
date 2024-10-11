@@ -58,7 +58,8 @@ echo Neue Aufgabe umbenennen
 coords=($(FIND_ELEMENT "type" "text"))
 DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 0.5 click 1
 DISPLAY=:99 xdotool sleep 0.5 key "ctrl+a" key "BackSpace" sleep 0.5
-DISPLAY=:99 xdotool type "testAufgabe" sleep 0.5
+DISPLAY=:99 xdotool type "testAufgabe"
+sleep 0.5
 
 echo Click on Mittelschwer
 coords=($(FIND_ELEMENT "buttontext" "Mittelschwer"))
@@ -68,7 +69,8 @@ echo Click on mud-input-root-outlined
 coords=($(FIND_ELEMENT "class" "mud-switch-button"))
 coords[1]=$((coords[1] - 70))
 DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 0.5 click 1
-DISPLAY=:99 xdotool type "Macht es Spass, Pipelines zu erstellen?" sleep 0.5
+DISPLAY=:99 xdotool type "Macht es Spass, Pipelines zu erstellen?"
+sleep 0.5
 
 echo Click on switch-button
 coords=($(FIND_ELEMENT "class" "mud-switch-button"))
@@ -130,17 +132,20 @@ DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 0.5 click 1 sleep 
 echo Click on AdLer API URL
 coords=($(FIND_ELEMENT "labeltext" "AdLer API URL"))
 DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 0.5 click 1
-DISPLAY=:99 xdotool type "http://127.0.0.1:8086/api" sleep 0.5
+DISPLAY=:99 xdotool type "http://127.0.0.1:8086/api"
+sleep 0.5
 
 echo Click on Benutzername
 coords=($(FIND_ELEMENT "labeltext" "Benutzername"))
 DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 0.5 click 1
-DISPLAY=:99 xdotool type "manager" sleep 0.5
+DISPLAY=:99 xdotool type "manager"
+sleep 0.5
 
 echo Click on Passwort
 coords=($(FIND_ELEMENT "labeltext" "Passwort"))
 DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 0.5 click 1
-DISPLAY=:99 xdotool type "Manager1234!1234" sleep 0.5
+DISPLAY=:99 xdotool type "Manager1234!1234"
+sleep 0.5
 
 echo Click on mud-icon-button-edge-end
 coords=($(FIND_ELEMENT "class" "mud-icon-button-edge-end"))
