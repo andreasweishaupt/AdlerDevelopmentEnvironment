@@ -2,7 +2,16 @@
 
 # Laden Sie die FIND_ELEMENT Funktion
 source $GITHUB_WORKSPACE/.github/workflows/define_test_script.sh
-    
+
+backendurl=$1
+coursename=$2
+username=$3
+password=$4
+
+echo "backendurl: $backendurl"
+echo "coursename: $coursename"
+echo "username: $username"
+echo "password: $password"
 
 :'
 echo Click on import-world-button
@@ -25,9 +34,9 @@ sleep 2
 echo Click on create-world-button
 coords=($(FIND_ELEMENT "class" "create-world-button"))
 DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 0.5 click 1 sleep 0.5
-DISPLAY=:99 xdotool type "testWorld"
+DISPLAY=:99 xdotool type $coursename
 DISPLAY=:99 xdotool sleep 0.5 key "Tab"
-DISPLAY=:99 xdotool type "testWorldSn"
+DISPLAY=:99 xdotool type "shortName"
 DISPLAY=:99 xdotool sleep 0.5 key "Return"
 
 echo Click on space-metadata-icon
@@ -132,19 +141,19 @@ DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 0.5 click 1 sleep 
 echo Click on AdLer API URL
 coords=($(FIND_ELEMENT "labeltext" "AdLer API URL"))
 DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 0.5 click 1
-DISPLAY=:99 xdotool type "http://127.0.0.1:8086/api"
+DISPLAY=:99 xdotool type "${backendurl}/api"
 sleep 0.5
 
 echo Click on Benutzername
 coords=($(FIND_ELEMENT "labeltext" "Benutzername"))
 DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 0.5 click 1
-DISPLAY=:99 xdotool type "manager"
+DISPLAY=:99 xdotool type $username
 sleep 0.5
 
 echo Click on Passwort
 coords=($(FIND_ELEMENT "labeltext" "Passwort"))
 DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 0.5 click 1
-DISPLAY=:99 xdotool type "Manager1234!1234"
+DISPLAY=:99 xdotool type $password
 sleep 0.5
 
 echo Click on mud-icon-button-edge-end

@@ -395,7 +395,17 @@ jobs:
     
       - name: Simulate interactions
         run: | 
-            $GITHUB_WORKSPACE/.github/workflows/simulate_interactions.sh
+            BACKEND_URL="http://${_URL_BACKEND}"
+            COURSENAME="testWorld"
+            USERNAME=$_USER_NAME_ARRAY_1
+            PASSWORD=$_USER_PASSWORD_ARRAY_1
+            
+            echo "MOODLE_URL: $MOODLE_URL"
+            echo "COURSENAME: $COURSENAME" 
+            echo "USERNAME: $USERNAME"
+            echo "PASSWORD: $PASSWORD"
+            
+            $GITHUB_WORKSPACE/.github/workflows/simulate_interactions.sh $BACKEND_URL $COURSENAME $USERNAME $PASSWORD 
             
             kill $AUTHORING_TOOL_PID
 
