@@ -93,7 +93,7 @@ if __name__ == "__main__":
 	password = sys.argv[3]
 	course_name = sys.argv[4]
 	
-	success = test_3d(moodleurl, username, password, course_name)
+	success = test_3d(url_3d, username, password, course_name)
 	if success:
 		print("Test 3d process completed successfully")
 		sys.exit(0)
