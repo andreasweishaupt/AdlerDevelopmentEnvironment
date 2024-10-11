@@ -51,6 +51,7 @@ def test_3d(url_3d, username, password, course_name):
 		print("Clicking login button")
 		login_button = driver.find_element(By.CSS_SELECTOR, "[data-testid='loginButton']")
 		login_button.click()
+		time.sleep(2)
 		
 		print("Current page title:", driver.title)
 		print("Current URL:", driver.current_url)
