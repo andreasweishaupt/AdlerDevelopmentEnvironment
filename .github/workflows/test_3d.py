@@ -51,7 +51,17 @@ def test_3d(url_3d, username, password, course_name):
 		print("Clicking login button")
 		login_button = driver.find_element(By.CSS_SELECTOR, "[data-testid='loginButton']")
 		login_button.click()
-		time.sleep(2)
+		WebDriverWait(driver, TIMEOUT).until(EC.presence_of_element_located((By.CSS_SELECTOR, "[data-testid='logout']")))
+		
+		lernwelt_button = WebDriverWait(driver, TIMEOUT).until(
+			EC.element_to_be_clickable((By.XPATH, "//button[.//p[contains(text(), 'zum Lernwelt-Menü')]]"))
+		)
+		print("'zum Lernwelt-Menü' button found")
+		lernwelt_button.click()
+		print("Clicked on 'zum Lernwelt-Menü' button")
+
+		# Warten Sie hier, bis die nächste Seite geladen ist
+		time.sleep(5)
 		
 		print("Current page title:", driver.title)
 		print("Current URL:", driver.current_url)
