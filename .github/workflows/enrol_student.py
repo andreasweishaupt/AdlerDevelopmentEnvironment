@@ -32,20 +32,20 @@ def enrol_student(moodleurl, username, password, course_id):
 		print("Chrome driver initialized successfully")
 		
 		print(f"Navigating to login page: {moodleurl}/login/index.php")
-		driver.get(f"{moodleurl}/login/index.php")
+		driver.get(f"http://{moodleurl}/login/index.php")
 		
 		# Warte kurz, damit das Popup-Fenster erscheinen kann
 		print("Wait")
 		time.sleep(2)
 		
 		# Sende Return-Tastendruck um Popup-Fenster zu schließen
-		ActionChains(driver).send_keys(Keys.TAB).pause(1).key_down(Keys.SHIFT).send_keys(Keys.TAB).key_up(Keys.SHIFT).pause(1).perform()
+		#ActionChains(driver).send_keys(Keys.TAB).pause(1).key_down(Keys.SHIFT).send_keys(Keys.TAB).key_up(Keys.SHIFT).pause(1).perform()
 		print("Press Return")
-		ActionChains(driver).send_keys(Keys.RETURN).perform()
+		#ActionChains(driver).send_keys(Keys.RETURN).perform()
 		
 		# Login
 		print(f"Navigating to login page: {moodleurl}/login/index.php")
-		driver.get(f"{moodleurl}/login/index.php")
+		driver.get(f"http://{moodleurl}/login/index.php")
 		time.sleep(10)  # Increased wait time
 		
 		print("Current page title:", driver.title)
