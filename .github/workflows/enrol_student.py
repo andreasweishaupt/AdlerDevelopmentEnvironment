@@ -12,7 +12,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 
 def enrol_student(moodleurl, username, password, course_id):
 	# Configuration
-	TIMEOUT = 60  # seconds
+	TIMEOUT = 15  # seconds
 	
 	service = Service('/usr/bin/chromedriver')
 	options = Options()
@@ -66,9 +66,17 @@ def enrol_student(moodleurl, username, password, course_id):
 		print("'Enrol me' button found")
 		enrol_button.click()
 		
-		time.sleep(3)
-		
-		print("Enrolment completed successfully")
+		# Wait for the success message
+		try:
+			success_message = WebDriverWait(driver, TIMEOUT).until(
+				EC.presence_of_element_located((By.CLASS_NAME, "alert-success"))
+			)
+			print("Enrolment completed successfully")
+			print("Success message:", success_message.text)
+			return True
+		except TimeoutException:
+			print("Enrolment failed: Success message not found")
+			return False
 	
 	except TimeoutException as e:
 		print(f"Timeout occurred: {e}")
@@ -94,5 +102,10 @@ if __name__ == "__main__":
 	password = sys.argv[3]
 	course_id = sys.argv[4]
 	
-	enrol_student(moodleurl, username, password, course_id)
-	sys.exit(0)
+	success = enrol_student(moodleurl, username, password, course_id)
+	if success:
+		print("Enrolment process completed successfully")
+		sys.exit(0)
+	else:
+		print("Enrolment process failed")
+		sys.exit(1)
