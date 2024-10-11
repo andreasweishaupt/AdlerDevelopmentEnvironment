@@ -146,27 +146,27 @@ jobs:
             sleep 1
             echo "docker logs adlertestenvironment-phpmyadmin-1"
             docker logs adlertestenvironment-phpmyadmin-1
-            sleep 5
+            sleep 3
             echo "-----"
             echo "docker logs adlertestenvironment-moodle-1"
             docker logs adlertestenvironment-moodle-1
-            sleep 5
+            sleep 3
             echo "-----"
             echo "docker logs adlertestenvironment-backend-1"
             docker logs adlertestenvironment-backend-1
-            sleep 5
+            sleep 3
             echo "-----"
             echo "docker logs adlertestenvironment-frontend-1"
             docker logs adlertestenvironment-frontend-1
-            sleep 5
+            sleep 3
             echo "-----"
             echo "docker logs adlertestenvironment-db_backend-1"
             docker logs adlertestenvironment-db_backend-1
-            sleep 5
+            sleep 3
             echo "-----"
             echo "docker logs adlertestenvironment-db_moodle-1"
             docker logs adlertestenvironment-db_moodle-1
-            sleep 5
+            sleep 3
             echo "-----"
             echo "docker network ls"
             docker network ls
@@ -210,18 +210,6 @@ jobs:
             echo "TEST_URL: ${TEST_URL}"
             INFORMATION_RESPONSE=$(curl -s "${TEST_URL}")
             echo "Information erhalten: $INFORMATION_RESPONSE"
-            
-            # Alle Kurse abrufen
-            TEST_URL="${_URL_MOODLE}/webservice/rest/server.php?wstoken=${TOKEN}&wsfunction=core_course_get_courses&moodlewsrestformat=json"
-            echo "TEST_URL: ${TEST_URL}"
-            COURSES_RESPONSE=$(curl -s "${TEST_URL}")
-            echo "Kurse erhalten: $COURSES_RESPONSE"
-            
-            # Alle Kurse mit Kurzname abrufen
-            TEST_URL="${_URL_MOODLE}/webservice/rest/server.php?wstoken=${TOKEN}&wsfunction=core_course_get_courses_by_field&field=shortname&value=testWorldSn&moodlewsrestformat=json"
-            echo "TEST_URL: ${TEST_URL}"
-            COURSES_RESPONSE=$(curl -s "${TEST_URL}")
-            echo "Kurse erhalten: $COURSES_RESPONSE"
             
             # Kurs mit Name suchen
             TEST_URL="${_URL_MOODLE}/webservice/rest/server.php?wstoken=${TOKEN}&wsfunction=core_course_search_courses&criterianame=search&criteriavalue=testWorld&moodlewsrestformat=json"
@@ -331,7 +319,7 @@ jobs:
                 fi
                 sleep 0.5
             done
-            xdpyinfo -display :99
+            # xdpyinfo -display :99
             echo "Xvfb is ready"
             echo "DISPLAY=:99" >> $GITHUB_ENV
                 
@@ -401,6 +389,7 @@ jobs:
             echo "WINDOW_ID=$window_id" >> $GITHUB_ENV
     
       - name: List workspace contents
+        if: false
         run: |
             echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
             ls -aR $GITHUB_WORKSPACE
@@ -416,7 +405,7 @@ jobs:
         run: |
             sleep 2
             kill $(cat ffmpeg_pid.txt)
-            sleep 10  # Give ffmpeg time to finish writing
+            sleep 5  # Give ffmpeg time to finish writing
 
       - name: Upload screen recording
         if: always()
@@ -443,27 +432,27 @@ jobs:
             sleep 1
             echo "docker logs adlertestenvironment-phpmyadmin-1"
             docker logs adlertestenvironment-phpmyadmin-1
-            sleep 5
+            sleep 3
             echo "-----"
             echo "docker logs adlertestenvironment-moodle-1"
             docker logs adlertestenvironment-moodle-1
-            sleep 5
+            sleep 3
             echo "-----"
             echo "docker logs adlertestenvironment-backend-1"
             docker logs adlertestenvironment-backend-1
-            sleep 5
+            sleep 3
             echo "-----"
             echo "docker logs adlertestenvironment-frontend-1"
             docker logs adlertestenvironment-frontend-1
-            sleep 5
+            sleep 3
             echo "-----"
             echo "docker logs adlertestenvironment-db_backend-1"
             docker logs adlertestenvironment-db_backend-1
-            sleep 5
+            sleep 3
             echo "-----"
             echo "docker logs adlertestenvironment-db_moodle-1"
             docker logs adlertestenvironment-db_moodle-1
-            sleep 5
+            sleep 3
             echo "-----"
             echo "docker network ls"
             docker network ls
@@ -553,14 +542,14 @@ jobs:
             
             $GITHUB_WORKSPACE/.github/workflows/enrol_user_to_course.sh $_URL_MOODLE $COURSENAME $USERNAME $PASSWORD 
             
-            sleep 4
+            sleep 1
             
       - name: Stop screen recording
         if: always()
         run: |
             sleep 1
             kill $(cat ffmpeg_pid.txt)
-            sleep 10  # Give ffmpeg time to finish writing
+            sleep 5  # Give ffmpeg time to finish writing
 
       - name: Upload screen recording
         if: always()
