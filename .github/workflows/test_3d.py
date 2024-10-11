@@ -34,7 +34,8 @@ def test_3d(url_3d, username, password, course_name):
 		
 		print("Current page title:", driver.title)
 		print("Current URL:", driver.current_url)
-		print("Page source:", driver.page_source) 
+		# print("Page source:", driver.page_source) 
+		print("Page body:", driver.find_element(By.TAG_NAME, 'body').get_attribute('innerHTML'))
 		
 		print("Waiting for username field...")
 		username_field = WebDriverWait(driver, TIMEOUT).until(EC.presence_of_element_located((By.ID, "username")))
@@ -53,8 +54,8 @@ def test_3d(url_3d, username, password, course_name):
 		
 		print("Current page title:", driver.title)
 		print("Current URL:", driver.current_url)
-		print("Page source:", driver.page_source) 
-		
+		# print("Page source:", driver.page_source) 
+		print("Page body:", driver.find_element(By.TAG_NAME, 'body').get_attribute('innerHTML'))
 		
 		# Wait for the success message
 		try:
@@ -71,7 +72,8 @@ def test_3d(url_3d, username, password, course_name):
 	except TimeoutException as e:
 		print(f"Timeout occurred: {e}")
 		print("Current page source:")
-		print(driver.page_source)
+		# print(driver.page_source)
+		print("Page body:", driver.find_element(By.TAG_NAME, 'body').get_attribute('innerHTML'))
 	except WebDriverException as e:
 		print(f"WebDriver exception occurred: {e}")
 	except Exception as e:
