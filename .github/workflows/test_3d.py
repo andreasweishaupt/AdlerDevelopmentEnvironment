@@ -56,10 +56,23 @@ def test_3d(url_3d, username, password, course_name):
 		lernwelt_button = WebDriverWait(driver, TIMEOUT).until(
 			EC.element_to_be_clickable((By.XPATH, "//button[.//p[contains(text(), 'zum Lernwelt-Menü')]]"))
 		)
-		print("'zum Lernwelt-Menü' button found")
 		lernwelt_button.click()
 		print("Clicked on 'zum Lernwelt-Menü' button")
-
+		
+		testworld_button = WebDriverWait(driver, TIMEOUT).until(
+			EC.element_to_be_clickable((By.XPATH, "//button[contains(., f'{course_name}')]"))
+		)
+		testworld_button.click()
+		print("Clicked on f'{course_name} button")
+		
+		# Warten auf den "Lernwelt öffnen!" Button und darauf klicken
+		print("Waiting for 'Lernwelt öffnen!' button...")
+		lernwelt_oeffnen_button = WebDriverWait(driver, TIMEOUT).until(
+			EC.element_to_be_clickable((By.XPATH, "//button[contains(., 'Lernwelt öffnen!')]"))
+		)
+		lernwelt_oeffnen_button.click()
+		print("Clicked on 'Lernwelt öffnen!' button")
+		
 		# Warten Sie hier, bis die nächste Seite geladen ist
 		time.sleep(5)
 		
