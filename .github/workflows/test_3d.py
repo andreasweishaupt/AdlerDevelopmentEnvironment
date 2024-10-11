@@ -9,7 +9,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 
 
-def test_3d(url_3d, username, password, course_name):
+def test_3d(url_3d, username, password, course_name, space_name, element_name):
 	# Configuration
 	TIMEOUT = 20  # seconds
 	
@@ -73,6 +73,24 @@ def test_3d(url_3d, username, password, course_name):
 		lernwelt_oeffnen_button.click()
 		print("Clicked on 'Lernwelt öffnen!' button")
 		
+		close_button = WebDriverWait(driver, TIMEOUT).until(
+			EC.element_to_be_clickable((By.XPATH, "//img[@alt='CloseButton']"))
+		)
+		close_button.click()
+		print("Clicked on 'CloseButton'")
+		
+		testspace_button = WebDriverWait(driver, TIMEOUT).until(
+			EC.element_to_be_clickable((By.XPATH, f"//button[.//p[contains(text(), '{space_name}')]]"))
+		)
+		testspace_button.click()
+		print(f"Clicked on '{space_name}' button")
+		
+		enter_button = WebDriverWait(driver, TIMEOUT).until(
+			EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Lernraum betreten!')]"))
+		)
+		enter_button.click()
+		print("Clicked on 'Lernraum betreten!' button")
+		
 		# Warten Sie hier, bis die nächste Seite geladen ist
 		time.sleep(5)
 		
@@ -110,16 +128,18 @@ def test_3d(url_3d, username, password, course_name):
 
 
 if __name__ == "__main__":
-	if len(sys.argv) != 5:
-		print("Usage: test_3d.py <url_3d> <username> <password> <course_name>")
+	if len(sys.argv) != 7:
+		print("Usage: test_3d.py <url_3d> <username> <password> <course_name> <space_name> <element_name>")
 		sys.exit(1)
 	
 	url_3d = sys.argv[1]
 	username = sys.argv[2]
 	password = sys.argv[3]
 	course_name = sys.argv[4]
+    space_name = sys.argv[5]
+    element_name = sys.argv[6]
 	
-	success = test_3d(url_3d, username, password, course_name)
+	success = test_3d(url_3d, username, password, course_name, space_name, element_name)
 	if success:
 		print("Test 3d process completed successfully")
 		sys.exit(0)

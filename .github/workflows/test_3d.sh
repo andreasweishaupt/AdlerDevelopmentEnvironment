@@ -3,13 +3,17 @@
 export DISPLAY=:99
 
 url_3d=$1
-coursename=$2
-username=$3
-password=$4
+username=$2
+password=$3
+coursename=$4
+spacename=$5
+elementname=$6
 
 echo "url_3d: $url_3d"
 echo "coursename: $coursename"
 echo "username: $username"
 echo "password: $password"
+echo "spacename: $spacename"
+echo "elementname: $elementname"
 
-python3 $GITHUB_WORKSPACE/.github/workflows/test_3d.py "$url_3d" "$username" "$password" "$COURSE_ID"
+python3 $GITHUB_WORKSPACE/.github/workflows/test_3d.py "$url_3d" "$username" "$password" "$coursename" "$spacename" "$elementname"

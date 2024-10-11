@@ -399,13 +399,18 @@ jobs:
             COURSENAME="testWorld"
             USERNAME=$_USER_NAME_ARRAY_1
             PASSWORD=$_USER_PASSWORD_ARRAY_1
+            SPACENAME="testSpace"
+            ELEMENTNAME="testElement"
             
             echo "MOODLE_URL: $MOODLE_URL"
             echo "COURSENAME: $COURSENAME" 
             echo "USERNAME: $USERNAME"
             echo "PASSWORD: $PASSWORD"
+            echo "SPACENAME: $SPACENAME"
+            echo "ELEMENTNAME: $ELEMENTNAME"
             
-            $GITHUB_WORKSPACE/.github/workflows/simulate_interactions.sh $BACKEND_URL $COURSENAME $USERNAME $PASSWORD 
+            
+            $GITHUB_WORKSPACE/.github/workflows/simulate_interactions.sh $BACKEND_URL $COURSENAME $USERNAME $PASSWORD $SPACENAME $ELEMENTNAME
             
             kill $AUTHORING_TOOL_PID
 
@@ -579,8 +584,10 @@ jobs:
             COURSENAME="testWorld"
             USERNAME=$_USER_NAME_ARRAY_0
             PASSWORD=$_USER_PASSWORD_ARRAY_0
+            SPACENAME="testSpace"
+            ELEMENTNAME="testElement"
             
-            $GITHUB_WORKSPACE/.github/workflows/test_3d.sh $URL_3D $COURSENAME $USERNAME $PASSWORD 
+            $GITHUB_WORKSPACE/.github/workflows/test_3d.sh $URL_3D $USERNAME $PASSWORD $COURSENAME $SPACENAME $ELEMENTNAME
 
       - name: Stop screen recording
         if: always()

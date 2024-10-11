@@ -7,13 +7,17 @@ backendurl=$1
 coursename=$2
 username=$3
 password=$4
+spacename=$5
+elementname=$6
 
 echo "backendurl: $backendurl"
 echo "coursename: $coursename"
 echo "username: $username"
 echo "password: $password"
+echo "spacename: $spacename"
+echo "elementname: $elementname"
 
-:'
+echo '
 echo Click on import-world-button
 coords=($(FIND_ELEMENT "class" "import-world-button"))
 DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 0.5 click 1 sleep 1
@@ -42,7 +46,7 @@ DISPLAY=:99 xdotool sleep 0.5 key "Return"
 echo Click on space-metadata-icon
 coords=($(FIND_ELEMENT "src" "space-metadata-icon.png"))
 DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 0.5 click 1 sleep 0.5
-DISPLAY=:99 xdotool type "testSpace"
+DISPLAY=:99 xdotool type $spacename
 DISPLAY=:99 xdotool sleep 0.5 key "Return" sleep 0.5
 
 echo Click on slot ele_0
@@ -52,7 +56,7 @@ DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 0.5 click 1 sleep 
 echo Click on adaptivityelement-icon
 coords=($(FIND_ELEMENT "src" "adaptivityelement-icon.png"))
 DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 0.5 click 1 sleep 0.5
-DISPLAY=:99 xdotool type "testElement"
+DISPLAY=:99 xdotool type $elementname
 DISPLAY=:99 xdotool sleep 0.5 key "Return" sleep 0.5
 
 echo Click on add-tasks
