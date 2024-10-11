@@ -23,8 +23,6 @@ def enrol_student(moodleurl, username, password, course_id):
 	options.add_argument("--window-size=1920,1080")
 	options.add_argument("--ignore-certificate-errors")
 	options.add_argument("--ignore-ssl-errors")
-	prefs = {"profile.default_content_setting_values.notifications" : 2}
-	options.add_experimental_option("prefs",prefs)
 	
 	try:
 		print("Initializing Chrome driver...")
