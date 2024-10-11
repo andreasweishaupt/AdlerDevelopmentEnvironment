@@ -136,8 +136,8 @@ if __name__ == "__main__":
 	username = sys.argv[2]
 	password = sys.argv[3]
 	course_name = sys.argv[4]
-    space_name = sys.argv[5]
-    element_name = sys.argv[6]
+	space_name = sys.argv[5]
+	element_name = sys.argv[6]
 	
 	success = test_3d(url_3d, username, password, course_name, space_name, element_name)
 	if success:
