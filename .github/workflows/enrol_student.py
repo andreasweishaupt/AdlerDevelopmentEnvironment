@@ -38,7 +38,7 @@ def enrol_student(moodleurl, username, password, course_id):
 		
 		print("Current page title:", driver.title)
 		print("Current URL:", driver.current_url)
-		print("Page source:", driver.page_source) 
+		#print("Page source:", driver.page_source) 
 		
 		print("Waiting for username field...")
 		username_field = WebDriverWait(driver, TIMEOUT).until(EC.presence_of_element_located((By.ID, "username")))
@@ -55,6 +55,10 @@ def enrol_student(moodleurl, username, password, course_id):
 		login_button = driver.find_element(By.ID, "loginbtn")
 		login_button.click()
 		
+		print("Current page title:", driver.title)
+		print("Current URL:", driver.current_url)
+		print("Page source:", driver.page_source) 
+		
 		# Wait for login to complete
 		print("Waiting for login to complete")
 		WebDriverWait(driver, TIMEOUT).until(EC.presence_of_element_located((By.CLASS_NAME, "usertext")))
@@ -62,8 +66,12 @@ def enrol_student(moodleurl, username, password, course_id):
 		
 		# Navigate to enrolment page
 		print(f"Navigating to enrolment page: {moodleurl}/enrol/index.php?id={course_id}")
-		driver.get(f"{moodleurl}/enrol/index.php?id={course_id}")
+		driver.get(f"http://{moodleurl}/enrol/index.php?id={course_id}")
 		time.sleep(10)  # Increased wait time
+		
+		print("Current page title:", driver.title)
+		print("Current URL:", driver.current_url)
+		print("Page source:", driver.page_source) 
 		
 		# Click on "Enrol me" button
 		print("Waiting for 'Enrol me' button")
