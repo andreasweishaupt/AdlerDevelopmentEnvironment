@@ -146,27 +146,27 @@ jobs:
             sleep 1
             echo "docker logs adlertestenvironment-phpmyadmin-1"
             docker logs adlertestenvironment-phpmyadmin-1
-            sleep 3
+            sleep 2
             echo "-----"
             echo "docker logs adlertestenvironment-moodle-1"
             docker logs adlertestenvironment-moodle-1
-            sleep 3
+            sleep 2
             echo "-----"
             echo "docker logs adlertestenvironment-backend-1"
             docker logs adlertestenvironment-backend-1
-            sleep 3
+            sleep 2
             echo "-----"
             echo "docker logs adlertestenvironment-frontend-1"
             docker logs adlertestenvironment-frontend-1
-            sleep 3
+            sleep 2
             echo "-----"
             echo "docker logs adlertestenvironment-db_backend-1"
             docker logs adlertestenvironment-db_backend-1
-            sleep 3
+            sleep 2
             echo "-----"
             echo "docker logs adlertestenvironment-db_moodle-1"
             docker logs adlertestenvironment-db_moodle-1
-            sleep 3
+            sleep 2
             echo "-----"
             echo "docker network ls"
             docker network ls
@@ -327,7 +327,6 @@ jobs:
         run: |
             ffmpeg -f x11grab -video_size 1920x1080 -i :99 -codec:v libx264 -r 30 -v verbose screen_recording.mp4 &
             echo $! > ffmpeg_pid.txt
-            sleep 1
     
       - name: Run Autorentool
         run: |
@@ -340,7 +339,7 @@ jobs:
             echo "Attempt $attempt of $max_attempts to start Authoring Tool"
             ./linux-unpacked/authoring-tool --remote-debugging-port=9222 &
             tool_pid=$!
-            sleep 5  # Wait time to allow for initialization
+            sleep 3  # Wait time to allow for initialization
             
             max_attempts=5
             for attempt in $(seq 1 $max_attempts); do
@@ -403,7 +402,7 @@ jobs:
       - name: Stop screen recording
         if: always()
         run: |
-            sleep 2
+            sleep 1
             kill $(cat ffmpeg_pid.txt)
             sleep 5  # Give ffmpeg time to finish writing
 
@@ -432,27 +431,27 @@ jobs:
             sleep 1
             echo "docker logs adlertestenvironment-phpmyadmin-1"
             docker logs adlertestenvironment-phpmyadmin-1
-            sleep 3
+            sleep 2
             echo "-----"
             echo "docker logs adlertestenvironment-moodle-1"
             docker logs adlertestenvironment-moodle-1
-            sleep 3
+            sleep 2
             echo "-----"
             echo "docker logs adlertestenvironment-backend-1"
             docker logs adlertestenvironment-backend-1
-            sleep 3
+            sleep 2
             echo "-----"
             echo "docker logs adlertestenvironment-frontend-1"
             docker logs adlertestenvironment-frontend-1
-            sleep 3
+            sleep 2
             echo "-----"
             echo "docker logs adlertestenvironment-db_backend-1"
             docker logs adlertestenvironment-db_backend-1
-            sleep 3
+            sleep 2
             echo "-----"
             echo "docker logs adlertestenvironment-db_moodle-1"
             docker logs adlertestenvironment-db_moodle-1
-            sleep 3
+            sleep 2
             echo "-----"
             echo "docker network ls"
             docker network ls
@@ -518,7 +517,6 @@ jobs:
         run: |
             ffmpeg -f x11grab -video_size 1920x1080 -i :99 -codec:v libx264 -r 30 -v verbose moodle_check.mp4 &
             echo $! > ffmpeg_pid.txt
-            sleep 1
         
       - name: Enrol Student
         run: |
@@ -541,8 +539,6 @@ jobs:
             echo "PASSWORD: $PASSWORD"
             
             $GITHUB_WORKSPACE/.github/workflows/enrol_user_to_course.sh $_URL_MOODLE $COURSENAME $USERNAME $PASSWORD 
-            
-            sleep 1
             
       - name: Stop screen recording
         if: always()
