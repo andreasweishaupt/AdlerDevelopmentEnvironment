@@ -565,12 +565,12 @@ jobs:
             chmod +x $GITHUB_WORKSPACE/.github/workflows/test_3d.sh
             chmod +x $GITHUB_WORKSPACE/.github/workflows/test_3d.py
             
-            3D_URL="http://${_URL_3D}"
+            URL_3D="http://${_URL_3D}"
             COURSENAME="testWorld"
             USERNAME=$_USER_NAME_ARRAY_0
             PASSWORD=$_USER_PASSWORD_ARRAY_0
             
-            $GITHUB_WORKSPACE/.github/workflows/test_3d.sh $3D_URL $COURSENAME $USERNAME $PASSWORD 
+            $GITHUB_WORKSPACE/.github/workflows/test_3d.sh $URL_3D $COURSENAME $USERNAME $PASSWORD 
 
       - name: Stop screen recording
         if: always()

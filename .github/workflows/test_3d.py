@@ -9,7 +9,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 
 
-def test_3d(3d_url, username, password, course_id):
+def test_3d(url_3d, username, password, course_name):
 	# Configuration
 	TIMEOUT = 15  # seconds
 	
@@ -29,8 +29,8 @@ def test_3d(3d_url, username, password, course_id):
 		print("Chrome driver initialized successfully")
 		
 		# Navigate to enrolment page
-		print(f"Navigating to enrolment page: {3d_url}")
-		driver.get(f"{3d_url}")
+		print(f"Navigating to enrolment page: {url_3d}")
+		driver.get(f"{url_3d}")
 		
 		print("Current page title:", driver.title)
 		print("Current URL:", driver.current_url)
@@ -85,15 +85,15 @@ def test_3d(3d_url, username, password, course_id):
 
 if __name__ == "__main__":
 	if len(sys.argv) != 5:
-		print("Usage: test_3d.py <3d_url> <username> <password> <course_id>")
+		print("Usage: test_3d.py <url_3d> <username> <password> <course_name>")
 		sys.exit(1)
 	
-	3d_url = sys.argv[1]
+	url_3d = sys.argv[1]
 	username = sys.argv[2]
 	password = sys.argv[3]
-	course_id = sys.argv[4]
+	course_name = sys.argv[4]
 	
-	success = test_3d(moodleurl, username, password, course_id)
+	success = test_3d(moodleurl, username, password, course_name)
 	if success:
 		print("Test 3d process completed successfully")
 		sys.exit(0)
