@@ -31,7 +31,7 @@ def enrol_student(moodleurl, username, password, course_id):
 		
 		# Navigate to enrolment page
 		print(f"Navigating to enrolment page: {moodleurl}/enrol/index.php?id={course_id}")
-		driver.get(f"http://{moodleurl}/enrol/index.php?id={course_id}")
+		driver.get(f"{moodleurl}/enrol/index.php?id={course_id}")
 		
 		print("Current page title:", driver.title)
 		print("Current URL:", driver.current_url)

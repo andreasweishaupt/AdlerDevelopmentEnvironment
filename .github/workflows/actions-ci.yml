@@ -529,16 +529,17 @@ jobs:
                 echo "X server is running properly"
             fi
             
+            MOODLE_URL="http://${_URL_MOODLE}"
             COURSENAME="testWorld"
             USERNAME=$_USER_NAME_ARRAY_0
             PASSWORD=$_USER_PASSWORD_ARRAY_0
             
-            echo "_URL_MOODLE: $_URL_MOODLE"
+            echo "MOODLE_URL: $MOODLE_URL"
             echo "COURSENAME: $COURSENAME" 
             echo "USERNAME: $USERNAME"
             echo "PASSWORD: $PASSWORD"
             
-            $GITHUB_WORKSPACE/.github/workflows/enrol_user_to_course.sh $_URL_MOODLE $COURSENAME $USERNAME $PASSWORD 
+            $GITHUB_WORKSPACE/.github/workflows/enrol_user_to_course.sh $MOODLE_URL $COURSENAME $USERNAME $PASSWORD 
             
       - name: Stop screen recording
         if: always()
