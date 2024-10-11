@@ -38,7 +38,7 @@ def test_3d(url_3d, username, password, course_name):
 		print("Page body:", driver.find_element(By.TAG_NAME, 'body').get_attribute('innerHTML'))
 		
 		print("Waiting for username field...")
-		username_field = WebDriverWait(driver, TIMEOUT).until(EC.presence_of_element_located(By.XPATH, "//data-testid[@value='userName']"))
+		username_field = WebDriverWait(driver, TIMEOUT).until(EC.presence_of_element_located((By.XPATH, "//data-testid[@value='userName']")))
 		print("Username field found")
 		username_field.send_keys(username)
 		time.sleep(1)
