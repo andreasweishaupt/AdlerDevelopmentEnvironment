@@ -84,18 +84,22 @@ def test_3d(url_3d, username, password, course_name, space_name, element_name):
 		)
 		testspace_button.click()
 		print(f"Clicked on '{space_name}' button")
+        
+        WebDriverWait(driver, TIMEOUT).until(EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Lernraum betreten!')]")))
+        
+        
 		
-		enter_button = WebDriverWait(driver, TIMEOUT).until(
-			EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Lernraum betreten!')]"))
-		)
-		enter_button.click()
-		print("Clicked on 'Lernraum betreten!' button")
-		
-		weiter_button = WebDriverWait(driver, TIMEOUT).until(
-			EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Weiter zum Lernraum')]"))
-		)
-		weiter_button.click()
-		print("Clicked on 'Weiter zum Lernraum' button")
+		#enter_button = WebDriverWait(driver, TIMEOUT).until(
+		#	EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Lernraum betreten!')]"))
+		#)
+		#enter_button.click()
+		#print("Clicked on 'Lernraum betreten!' button")
+		#
+		#weiter_button = WebDriverWait(driver, TIMEOUT).until(
+		#	EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Weiter zum Lernraum')]"))
+		#)
+		#weiter_button.click()
+		#print("Clicked on 'Weiter zum Lernraum' button")
 		
 		# Warten Sie hier, bis die nächste Seite geladen ist
 		time.sleep(5)
