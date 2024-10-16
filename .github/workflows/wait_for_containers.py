@@ -14,8 +14,10 @@ def check_container_log(container_name, success_pattern):
                 check=True,
                 timeout=5
             ).stdout
-            print(f"Logs for {container_name}:")
-            print(logs)
+            # Ausgabe nur der letzten 5 Zeilen
+            last_five_lines = '\n'.join(logs.splitlines()[-5:])
+            print(f"Logs for {container_name} (last 5 lines):")
+            print(last_five_lines)
             return bool(re.search(success_pattern, logs))
         except subprocess.TimeoutExpired:
             print(f"Timeout while fetching logs for {container_name}. Attempt {attempt + 1} of {max_attempts}")
