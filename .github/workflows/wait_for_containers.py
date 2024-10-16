@@ -8,16 +8,15 @@ def check_container_log(container_name, success_pattern):
     for attempt in range(max_attempts):
         try:
             logs = subprocess.run(
-                ["docker", "logs", container_name],
+                ["docker", "logs", "--tail", "10", container_name],
                 capture_output=True,
                 text=True,
                 check=True,
                 timeout=5
             ).stdout
             # Ausgabe nur der letzten 5 Zeilen
-            last_five_lines = '\n'.join(logs.splitlines()[-5:])
-            print(f"Logs for {container_name} (last 5 lines):")
-            print(last_five_lines)
+            print(f"Logs for {container_name} (last 10 lines):")
+            print(logs.strip())
             return bool(re.search(success_pattern, logs))
         except subprocess.TimeoutExpired:
             print(f"Timeout while fetching logs for {container_name}. Attempt {attempt + 1} of {max_attempts}")
