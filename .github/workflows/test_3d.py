@@ -91,36 +91,23 @@ def test_3d(url_3d, username, password, course_name, space_name, element_name):
         WebDriverWait(driver, timeout).until(
             EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Lernraum betreten!')]")))
 
-        # enter_button = WebDriverWait(driver, timeout).until(
-        #	EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Lernraum betreten!')]"))
-        # )
-        # enter_button.click()
-        # print("Clicked on 'Lernraum betreten!' button")
-        #
-        # weiter_button = WebDriverWait(driver, timeout).until(
-        #	EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Weiter zum Lernraum')]"))
-        # )
-        # weiter_button.click()
-        # print("Clicked on 'Weiter zum Lernraum' button")
-
-        # Warten Sie hier, bis die nächste Seite geladen ist
-        time.sleep(5)
-
         print("Current page title:", driver.title)
         print("Current URL:", driver.current_url)
         # print("Page source:", driver.page_source)
         print("Page body:", driver.find_element(By.TAG_NAME, 'body').get_attribute('innerHTML'))
 
-        # Wait for the success message
-        try:
-            success_message = WebDriverWait(driver, timeout).until(
-                EC.presence_of_element_located((By.CLASS_NAME, "alert-success"))
-            )
-            print("Test 3d completed successfully")
-            print("Success message:", success_message.text)
+        page_source = driver.page_source
+        if course_name in page_source and space_name in page_source and element_name in page_source:
+            print(f"Found all required elements: {course_name}, {space_name}, {element_name}")
             return True
-        except TimeoutException:
-            print("Test 3d failed: Success message not found")
+        else:
+            print("Not all required elements were found on the page.")
+            if course_name not in page_source:
+                print(f"{course_name} not found.")
+            if space_name not in page_source:
+                print(f"{space_name} not found.")
+            if element_name not in page_source:
+                print(f"{element_name} not found.")
             return False
 
     except TimeoutException as e:
