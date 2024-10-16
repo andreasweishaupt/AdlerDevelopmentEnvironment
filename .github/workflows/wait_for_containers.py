@@ -4,11 +4,27 @@ import re
 
 
 def check_container_log(container_name, success_pattern):
-    logs = subprocess.run(["docker", "logs", container_name], capture_output=True, text=True).stdout
-    if container_name == "adlertestenvironment-phpmyadmin-1":
-        print(container_name)
-        print(logs)
-    return bool(re.search(success_pattern, logs))
+    max_attempts = 3
+    for attempt in range(max_attempts):
+        try:
+            logs = subprocess.run(
+                ["docker", "logs", container_name],
+                capture_output=True,
+                text=True,
+                check=True,
+                timeout=5
+            ).stdout
+            print(f"Logs for {container_name}:")
+            print(logs)
+            return bool(re.search(success_pattern, logs))
+        except subprocess.TimeoutExpired:
+            print(f"Timeout while fetching logs for {container_name}. Attempt {attempt + 1} of {max_attempts}")
+        except subprocess.CalledProcessError as e:
+            print(f"Error fetching logs for {container_name}: {e}")
+            return False
+        time.sleep(5)  # Wait before retrying
+    print(f"Failed to fetch logs for {container_name} after {max_attempts} attempts")
+    return False
 
 
 containers = {
