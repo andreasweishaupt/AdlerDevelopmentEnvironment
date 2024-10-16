@@ -39,15 +39,13 @@ def enrol_student(moodleurl, username, password, course_id):
 		username_field = WebDriverWait(driver, TIMEOUT).until(EC.presence_of_element_located((By.ID, "username")))
 		print("Username field found")
 		username_field.send_keys(username)
-		time.sleep(1)
 		
 		print("Entering password")
-		password_field = driver.find_element(By.ID, "password")
+		password_field = WebDriverWait(driver, TIMEOUT).until(EC.presence_of_element_located((By.ID, "password")))
 		password_field.send_keys(password)
-		time.sleep(1)
 		
 		print("Clicking login button")
-		login_button = driver.find_element(By.ID, "loginbtn")
+		login_button = WebDriverWait(driver, TIMEOUT).until(EC.presence_of_element_located((By.ID, "loginbtn")))
 		login_button.click()
 		
 		print("Current page title:", driver.title)

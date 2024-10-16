@@ -1,6 +1,5 @@
 import subprocess
 import time
-import re
 
 
 def check_container_log(container_name, success_pattern):
@@ -15,10 +14,10 @@ def check_container_log(container_name, success_pattern):
                 timeout=5
             ).stdout
             # Ausgabe nur der letzten 5 Zeilen
-            last_five_lines = '\n'.join(logs.splitlines()[-5:])
-            print(f"Logs for {container_name} (last 5 lines):")
-            print(last_five_lines)
-            return bool(re.search(success_pattern, logs))
+            # last_five_lines = '\n'.join(logs.splitlines()[-5:])
+            # print(f"Logs for {container_name} (last 5 lines):")
+            # print(last_five_lines)
+            return success_pattern in logs
         except subprocess.TimeoutExpired:
             print(f"Timeout while fetching logs for {container_name}. Attempt {attempt + 1} of {max_attempts}")
         except subprocess.CalledProcessError as e:
@@ -30,12 +29,12 @@ def check_container_log(container_name, success_pattern):
 
 
 containers = {
-    "adlertestenvironment-backend-1": r"Hosting started",
-    "adlertestenvironment-phpmyadmin-1": r"resuming normal operations",
-    "adlertestenvironment-moodle-1": r"finished adler setup/update script",
-    "adlertestenvironment-frontend-1": r"Configuration complete; ready for start up",
-    "adlertestenvironment-db_backend-1": r"ready for connections.",
-    "adlertestenvironment-db_moodle-1": r"ready for connections."
+    "adlertestenvironment-backend-1": "Hosting started",
+    "adlertestenvironment-phpmyadmin-1": "resuming normal operations",
+    "adlertestenvironment-moodle-1": "finished adler setup/update script",
+    "adlertestenvironment-frontend-1": "Configuration complete; ready for start up",
+    "adlertestenvironment-db_backend-1": "ready for connections.",
+    "adlertestenvironment-db_moodle-1": "ready for connections."
 }
 
 start_time = time.time()
