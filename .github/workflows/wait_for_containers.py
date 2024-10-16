@@ -10,7 +10,7 @@ def check_container_log(container_name, success_pattern):
 
 containers = {
     "adlertestenvironment-backend-1": r"Hosting started",
-    "adlertestenvironment-phpmyadmin-1": r"configured -- resuming normal operations",
+    "adlertestenvironment-phpmyadmin-1": r"resuming normal operations",
     "adlertestenvironment-moodle-1": r"finished adler setup/update script",
     "adlertestenvironment-frontend-1": r"Configuration complete; ready for start up",
     "adlertestenvironment-db_backend-1": r"ready for connections.",

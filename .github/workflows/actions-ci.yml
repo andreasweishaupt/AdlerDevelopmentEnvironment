@@ -89,6 +89,8 @@ jobs:
             chmod +x $GITHUB_WORKSPACE/.github/workflows/wait_for_containers.py
             
             python3 $GITHUB_WORKSPACE/.github/workflows/wait_for_containers.py
+        env:
+            PYTHONUNBUFFERED: 1
           
            
       - name: Check Docker containers
