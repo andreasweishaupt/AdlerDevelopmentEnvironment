@@ -5,7 +5,7 @@ import re
 
 def check_container_log(container_name, success_pattern):
     logs = subprocess.run(["docker", "logs", container_name], capture_output=True, text=True).stdout
-    if container_name is "adlertestenvironment-phpmyadmin-1" or container_name is "adlertestenvironment-db_moodle-1":
+    if container_name is "adlertestenvironment-phpmyadmin-1":
         print(logs)
     return bool(re.search(success_pattern, logs))
 
