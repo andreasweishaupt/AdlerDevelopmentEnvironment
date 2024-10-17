@@ -16,7 +16,7 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-
+          
   build-backend-and-run-authoring-tool:
     runs-on: ubuntu-22.04
     
@@ -24,501 +24,547 @@ jobs:
       - name: Checkout repository
         # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
         uses: actions/checkout@v4
-
+          
       - name: Load environment variables
         uses: xom9ikk/dotenv@v2.3.0
         with:
-          path: non-moodle
-          load-mode: strict
-
+            path: non-moodle
+            load-mode: strict
+            
       - name: Load multi-value environment variables
         run: |
-          _USER_NAME_ARRAY=($(grep _USER_NAME non-moodle/.env | cut -d ':' -f2- | sed 's/^[[:space:]]*//' | tr ',' ' '))
-          _USER_PASSWORD_ARRAY=($(grep _USER_PASSWORD non-moodle/.env | cut -d ':' -f2- | sed 's/^[[:space:]]*//' | tr ',' ' '))
-          _USER_ROLE_ARRAY=($(grep _USER_ROLE non-moodle/.env | cut -d ':' -f2- | sed 's/^[[:space:]]*//' | tr ',' ' '))
-          
-          echo "_USER_NAME_ARRAY_0=${_USER_NAME_ARRAY[0]}" >> $GITHUB_ENV
-          echo "_USER_NAME_ARRAY_1=${_USER_NAME_ARRAY[1]}" >> $GITHUB_ENV
-          echo "_USER_PASSWORD_ARRAY_0=${_USER_PASSWORD_ARRAY[0]}" >> $GITHUB_ENV
-          echo "_USER_PASSWORD_ARRAY_1=${_USER_PASSWORD_ARRAY[1]}" >> $GITHUB_ENV
-          echo "_USER_ROLE_ARRAY_0=${_USER_ROLE_ARRAY[0]}" >> $GITHUB_ENV
-          echo "_USER_ROLE_ARRAY_1=${_USER_ROLE_ARRAY[1]}" >> $GITHUB_ENV
-          
-          # Debug output
-          echo "User names: ${_USER_NAME_ARRAY}"
-          echo "First user name: ${_USER_NAME_ARRAY_0}"
-          echo "Second user name: ${_USER_NAME_ARRAY_1}"
-
+            _USER_NAME_ARRAY=($(grep _USER_NAME non-moodle/.env | cut -d ':' -f2- | sed 's/^[[:space:]]*//' | tr ',' ' '))
+            _USER_PASSWORD_ARRAY=($(grep _USER_PASSWORD non-moodle/.env | cut -d ':' -f2- | sed 's/^[[:space:]]*//' | tr ',' ' '))
+            _USER_ROLE_ARRAY=($(grep _USER_ROLE non-moodle/.env | cut -d ':' -f2- | sed 's/^[[:space:]]*//' | tr ',' ' '))
+            
+            echo "_USER_NAME_ARRAY_0=${_USER_NAME_ARRAY[0]}" >> $GITHUB_ENV
+            echo "_USER_NAME_ARRAY_1=${_USER_NAME_ARRAY[1]}" >> $GITHUB_ENV
+            echo "_USER_PASSWORD_ARRAY_0=${_USER_PASSWORD_ARRAY[0]}" >> $GITHUB_ENV
+            echo "_USER_PASSWORD_ARRAY_1=${_USER_PASSWORD_ARRAY[1]}" >> $GITHUB_ENV
+            echo "_USER_ROLE_ARRAY_0=${_USER_ROLE_ARRAY[0]}" >> $GITHUB_ENV
+            echo "_USER_ROLE_ARRAY_1=${_USER_ROLE_ARRAY[1]}" >> $GITHUB_ENV
+            
+            # Debug output
+            echo "User names: ${_USER_NAME_ARRAY}"
+            echo "First user name: ${_USER_NAME_ARRAY_0}"
+            echo "Second user name: ${_USER_NAME_ARRAY_1}"
+            
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
-
+            python-version: '3.x'
+      
       - name: Check Environment
         env:
-          _MOODLE_USER: ${{ env._MOODLE_USER }}
+            _MOODLE_USER: ${{ env._MOODLE_USER }}
         run: |
-          echo "MOODLE_USER"
-          echo "$_MOODLE_USER"
-          echo "MOODLE_PW"
-          echo "$_MOODLE_PW"
-          echo "USER_NAME"
-          echo "$_USER_NAME_ARRAY"
-          echo "First user name: ${_USER_NAME_ARRAY_0}"
-          echo "Second user name: ${_USER_NAME_ARRAY_1}"
-          echo "USER_PASSWORD"
-          echo "$_USER_PASSWORD"
-          echo "USER_ROLE"
-          echo "$_USER_ROLE"
-          echo "DB_ROOT_PW"
-          echo "$_DB_ROOT_PW"
-          echo "DB_MOODLE_PW"
-          echo "$_DB_MOODLE_PW"
-          echo "DB_MOODLE_USER"
-          echo "$_DB_MOODLE_USER"
-          echo "DB_MOODLE_NAME"
-          echo "$_DB_MOODLE_NAME"
-
+            echo "MOODLE_USER"
+            echo "$_MOODLE_USER"
+            echo "MOODLE_PW"
+            echo "$_MOODLE_PW"
+            echo "USER_NAME"
+            echo "$_USER_NAME_ARRAY"
+            echo "First user name: ${_USER_NAME_ARRAY_0}"
+            echo "Second user name: ${_USER_NAME_ARRAY_1}"
+            echo "USER_PASSWORD"
+            echo "$_USER_PASSWORD"
+            echo "USER_ROLE"
+            echo "$_USER_ROLE"
+            echo "DB_ROOT_PW"
+            echo "$_DB_ROOT_PW"
+            echo "DB_MOODLE_PW"
+            echo "$_DB_MOODLE_PW"
+            echo "DB_MOODLE_USER"
+            echo "$_DB_MOODLE_USER"
+            echo "DB_MOODLE_NAME"
+            echo "$_DB_MOODLE_NAME"
+      
       - name: docker compose
         run: |
-          cd $GITHUB_WORKSPACE/non-moodle
-          docker compose up -d --build
-
+            cd $GITHUB_WORKSPACE/non-moodle
+            docker compose up -d --build
+            
       - name: Wait for containers to be ready
         run: |
-          chmod +x $GITHUB_WORKSPACE/.github/workflows/wait_for_containers.py
-          
-          python3 $GITHUB_WORKSPACE/.github/workflows/wait_for_containers.py
+            chmod +x $GITHUB_WORKSPACE/.github/workflows/wait_for_containers.py
+            
+            python3 $GITHUB_WORKSPACE/.github/workflows/wait_for_containers.py
         env:
-          PYTHONUNBUFFERED: 1
-
-
+            PYTHONUNBUFFERED: 1
+          
+           
       - name: Check Docker containers
         run: |
-          echo "--------Testing Docker compose up--------"
-          docker ps
-          docker ps -a
-          sleep 1
-          echo "-----"
-          
-          echo "docker logs adlertestenvironment-phpmyadmin-1"
-          docker logs adlertestenvironment-phpmyadmin-1
-          sleep 4
-          echo "-----"
-          echo "docker logs adlertestenvironment-moodle-1"
-          docker logs adlertestenvironment-moodle-1
-          sleep 4
-          echo "-----"
-          echo "docker logs adlertestenvironment-backend-1"
-          docker logs adlertestenvironment-backend-1
-          sleep 4
-          echo "-----"
-          echo "docker logs adlertestenvironment-frontend-1"
-          docker logs adlertestenvironment-frontend-1
-          sleep 4
-          echo "-----"
-          echo "docker logs adlertestenvironment-db_backend-1"
-          docker logs adlertestenvironment-db_backend-1
-          sleep 4
-          echo "-----"
-          echo "docker logs adlertestenvironment-db_moodle-1"
-          docker logs adlertestenvironment-db_moodle-1
-          sleep 4
-          echo "-----"
-          
-          echo "Docker Networks:"
-          docker network ls
-          echo "-----------------------------------------"
-
+            echo "--------Testing Docker compose up--------"
+            echo "docker ps"
+            docker ps
+            echo "docker ps -a"
+            docker ps -a
+            sleep 3
+            echo "docker logs adlertestenvironment-phpmyadmin-1"
+            docker logs adlertestenvironment-phpmyadmin-1
+            sleep 5
+            echo "-----"
+            echo "docker logs adlertestenvironment-moodle-1"
+            docker logs adlertestenvironment-moodle-1
+            sleep 5
+            echo "-----"
+            echo "docker logs adlertestenvironment-backend-1"
+            docker logs adlertestenvironment-backend-1
+            sleep 5
+            echo "-----"
+            echo "docker logs adlertestenvironment-frontend-1"
+            docker logs adlertestenvironment-frontend-1
+            sleep 5
+            echo "-----"
+            echo "docker logs adlertestenvironment-db_backend-1"
+            docker logs adlertestenvironment-db_backend-1
+            sleep 5
+            echo "-----"
+            echo "docker logs adlertestenvironment-db_moodle-1"
+            docker logs adlertestenvironment-db_moodle-1
+            sleep 5
+            echo "-----"
+            echo "docker network ls"
+            docker network ls
+            echo "-----------------------------------------"
+            
       - name: Check URL
         run: |
-          echo "curl http://${_URL_BACKEND}/api/health"
-          curl http://${_URL_BACKEND}/api/health
-
+            echo "curl http://localhost:8086/api/health"
+            curl http://localhost:8086/api/health
+            echo "curl http://127.0.0.1:8086/api/health"
+            curl http://127.0.0.1:8086/api/health
+            echo "curl http://0.0.0.0:8086/api/health"
+            curl http://0.0.0.0:8086/api/health
+            
+      - name: Test Moodle
+        continue-on-error: true
+        run: |
+            echo "curl http://localhost:8085"
+            curl http://localhost:8085
+            echo "curl -L http://localhost:8085"
+            curl -L http://localhost:8085
+    
       - name: Execute Moodle steps
         run: |
-          # URL-Kodierung der Werte
-          USERNAME=$(python -c "import urllib.parse; print(urllib.parse.quote('${_USER_NAME_ARRAY_1}'))")
-          PASSWORD=$(python -c "import urllib.parse; print(urllib.parse.quote('${_USER_PASSWORD_ARRAY_1}'))")
-          echo $USERNAME
-          echo $PASSWORD
-          
-          # Token abrufen
-          TEST_URL="${_URL_MOODLE}/login/token.php?username=${USERNAME}&password=${PASSWORD}&service=adler_services"
-          echo "TEST_URL: ${TEST_URL}"
-          TOKEN_RESPONSE=$(curl -s "${TEST_URL}")
-          echo "Token-Response erhalten: $TOKEN_RESPONSE"
-          TOKEN=$(echo $TOKEN_RESPONSE | jq -r '.token')
-          echo "Token erhalten: $TOKEN"
-          
-          # Webservice Seiten Informationen
-          TEST_URL="${_URL_MOODLE}/webservice/rest/server.php?wstoken=${TOKEN}&wsfunction=core_webservice_get_site_info&moodlewsrestformat=json"
-          echo "TEST_URL: ${TEST_URL}"
-          INFORMATION_RESPONSE=$(curl -s "${TEST_URL}")
-          echo "Information erhalten: $INFORMATION_RESPONSE"
-          
-          # Kurs mit Name suchen
-          TEST_URL="${_URL_MOODLE}/webservice/rest/server.php?wstoken=${TOKEN}&wsfunction=core_course_search_courses&criterianame=search&criteriavalue=testWorld&moodlewsrestformat=json"
-          echo "TEST_URL: ${TEST_URL}"
-          COURSES_RESPONSE=$(curl -s "${TEST_URL}")
-          echo "Kurse erhalten: $COURSES_RESPONSE"
-
+            # URL-Kodierung der Werte
+            USERNAME=$(python -c "import urllib.parse; print(urllib.parse.quote('${_USER_NAME_ARRAY_1}'))")
+            PASSWORD=$(python -c "import urllib.parse; print(urllib.parse.quote('${_USER_PASSWORD_ARRAY_1}'))")
+            echo $USERNAME
+            echo $PASSWORD
+            
+            # Token abrufen
+            TEST_URL="${_URL_MOODLE}/login/token.php?username=${USERNAME}&password=${PASSWORD}&service=adler_services"
+            echo "TEST_URL: ${TEST_URL}"
+            TOKEN_RESPONSE=$(curl -s "${TEST_URL}")
+            echo "Token-Response erhalten: $TOKEN_RESPONSE"
+            TOKEN=$(echo $TOKEN_RESPONSE | jq -r '.token')
+            echo "Token erhalten: $TOKEN"
+            
+            # Webservice Seiten Informationen
+            TEST_URL="${_URL_MOODLE}/webservice/rest/server.php?wstoken=${TOKEN}&wsfunction=core_webservice_get_site_info&moodlewsrestformat=json"
+            echo "TEST_URL: ${TEST_URL}"
+            INFORMATION_RESPONSE=$(curl -s "${TEST_URL}")
+            echo "Information erhalten: $INFORMATION_RESPONSE"
+            
+            # Kurs mit Name suchen
+            TEST_URL="${_URL_MOODLE}/webservice/rest/server.php?wstoken=${TOKEN}&wsfunction=core_course_search_courses&criterianame=search&criteriavalue=testWorld&moodlewsrestformat=json"
+            echo "TEST_URL: ${TEST_URL}"
+            COURSES_RESPONSE=$(curl -s "${TEST_URL}")
+            echo "Kurse erhalten: $COURSES_RESPONSE"
+            
+            
+      - name: Setup tmate session
+        if: false
+        uses: mxschmitt/action-tmate@v3
+            
       - name: Install dependencies
         run: |
-          lscpu
-          sudo apt-get update
-          sudo apt-get install -y wget xvfb xdotool ffmpeg \
-              libgtk-3-0 libnotify4 libgconf-2-4 libnss3 libxss1 libasound2 libgbm1 \
-              libx11-xcb1 libxcb-dri3-0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 \
-              libxcb-randr0 libxcb-render-util0 libxcb-shape0 libxcb-xfixes0 libxcb-xinerama0 libxcb-xkb1 \
-              x11-utils libxkbcommon-x11-0
-          python -m pip install --upgrade pip
-          pip install selenium
+            lscpu
+            sudo apt-get update
+            sudo apt-get install -y wget xvfb xdotool ffmpeg \
+                libgtk-3-0 libnotify4 libgconf-2-4 libnss3 libxss1 libasound2 libgbm1 \
+                libx11-xcb1 libxcb-dri3-0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 \
+                libxcb-randr0 libxcb-render-util0 libxcb-shape0 libxcb-xfixes0 libxcb-xinerama0 libxcb-xkb1 \
+                x11-utils libxkbcommon-x11-0
+            python -m pip install --upgrade pip
+            pip install selenium
 
       - name: Install Chrome and ChromeDriver
         run: |
-          # Remove existing Chrome installations
-          sudo apt-get remove -y --purge google-chrome-stable
-          sudo apt-get autoremove -y
-          
-          # Add Google Chrome's official repository
-          wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo tee /etc/apt/trusted.gpg.d/google-chrome.asc
-          echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
-          
-          # Update package lists
-          sudo apt-get update
-          
-          # Install missing dependencies
-          sudo apt-get install -y libu2f-udev
-          
-          # Download and install Google Chrome
-          wget -q "${CHROME_URL}" -O "/tmp/${CHROME_DEB}"
-          sudo apt-get install -y "/tmp/${CHROME_DEB}"
-          
-          # Hold the package to prevent automatic updates
-          sudo apt-mark hold google-chrome-stable
-          
-          # Download and install ChromeDriver
-          wget -q --user-agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.5735.90 Safari/537.36" "${CHROMEDRIVER_URL}" -O "/tmp/${CHROMEDRIVER_ZIP}"
-          unzip -o "/tmp/${CHROMEDRIVER_ZIP}" -d /tmp
-          sudo mv /tmp/chromedriver /usr/bin/chromedriver
-          sudo chmod +x /usr/bin/chromedriver
-          
-          # Verify installation
-          chromedriver --version
+            # Remove existing Chrome installations
+            sudo apt-get remove -y --purge google-chrome-stable
+            sudo apt-get autoremove -y
+            
+            # Add Google Chrome's official repository
+            wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo tee /etc/apt/trusted.gpg.d/google-chrome.asc
+            echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
+            
+            # Update package lists
+            sudo apt-get update
+            
+            # Install missing dependencies
+            sudo apt-get install -y libu2f-udev
+            
+            # Download and install Google Chrome
+            wget -q "${CHROME_URL}" -O "/tmp/${CHROME_DEB}"
+            sudo apt-get install -y "/tmp/${CHROME_DEB}"
+            
+            # Hold the package to prevent automatic updates
+            sudo apt-mark hold google-chrome-stable
+            
+            # Download and install ChromeDriver
+            wget -q --user-agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.5735.90 Safari/537.36" "${CHROMEDRIVER_URL}" -O "/tmp/${CHROMEDRIVER_ZIP}"
+            unzip -o "/tmp/${CHROMEDRIVER_ZIP}" -d /tmp
+            sudo mv /tmp/chromedriver /usr/bin/chromedriver
+            sudo chmod +x /usr/bin/chromedriver
+            
+            # Verify installation
+            chromedriver --version
         env:
-          CHROME_VERSION: "114.0.5735.90"
-          CHROME_DEB_BACKUP: "google-chrome-stable_114.0.5735.90-1_amd64.deb"
-          CHROME_DEB: "google-chrome-stable_110.0.5481.77-1_amd64.deb"
-          CHROME_URL_BACKUP: "https://mirror.cs.uchicago.edu/google-chrome/pool/main/g/google-chrome-stable/google-chrome-stable_114.0.5735.90-1_amd64.deb"
-          CHROME_URL: "https://mirror.cs.uchicago.edu/google-chrome/pool/main/g/google-chrome-stable/google-chrome-stable_110.0.5481.77-1_amd64.deb"
-          CHROMEDRIVER_ZIP: "chromedriver_linux64.zip"
-          CHROMEDRIVER_URL_BACKUP: "https://old.chromedriver.getwebdriver.com/114.0.5735.90/chromedriver_linux64.zip"
-          CHROMEDRIVER_URL: "https://old.chromedriver.getwebdriver.com/110.0.5481.77/chromedriver_linux64.zip"
+            CHROME_VERSION: "114.0.5735.90"
+            CHROME_DEB_BACKUP: "google-chrome-stable_114.0.5735.90-1_amd64.deb"
+            CHROME_DEB: "google-chrome-stable_110.0.5481.77-1_amd64.deb"
+            CHROME_URL_BACKUP: "https://mirror.cs.uchicago.edu/google-chrome/pool/main/g/google-chrome-stable/google-chrome-stable_114.0.5735.90-1_amd64.deb"
+            CHROME_URL: "https://mirror.cs.uchicago.edu/google-chrome/pool/main/g/google-chrome-stable/google-chrome-stable_110.0.5481.77-1_amd64.deb"
+            CHROMEDRIVER_ZIP: "chromedriver_linux64.zip"
+            CHROMEDRIVER_URL_BACKUP: "https://old.chromedriver.getwebdriver.com/114.0.5735.90/chromedriver_linux64.zip"
+            CHROMEDRIVER_URL: "https://old.chromedriver.getwebdriver.com/110.0.5481.77/chromedriver_linux64.zip"
+
+      - name: Make skripts executable
+        run: |
+            chmod +x $GITHUB_WORKSPACE/.github/workflows/browser_functions.py
+            chmod +x $GITHUB_WORKSPACE/.github/workflows/define_browser_functions.sh
+            chmod +x $GITHUB_WORKSPACE/.github/workflows/test_script.py
+            chmod +x $GITHUB_WORKSPACE/.github/workflows/define_test_script.sh
+            chmod +x $GITHUB_WORKSPACE/.github/workflows/simulate_interactions.sh
+        
 
       - name: Download latest Autorentool release
         run: |
-          LATEST_RELEASE=$(curl -s https://api.github.com/repos/ProjektAdLer/Autorentool/releases/latest)
-          DOWNLOAD_URL=$(echo $LATEST_RELEASE | jq -r '.assets[] | select(.name | endswith("linux-unpacked.tar.gz")) | .browser_download_url')
-          echo "$DOWNLOAD_URL"
-          wget -q -O AuthoringTool.tar.gz $DOWNLOAD_URL
-          tar -xvzf AuthoringTool.tar.gz
-          #chmod +x AuthoringTool.AppImage
+            LATEST_RELEASE=$(curl -s https://api.github.com/repos/ProjektAdLer/Autorentool/releases/latest)
+            DOWNLOAD_URL=$(echo $LATEST_RELEASE | jq -r '.assets[] | select(.name | endswith("linux-unpacked.tar.gz")) | .browser_download_url')
+            echo "$DOWNLOAD_URL"
+            wget -q -O AuthoringTool.tar.gz $DOWNLOAD_URL
+            tar -xvzf AuthoringTool.tar.gz
+            #chmod +x AuthoringTool.AppImage
 
       - name: Fix some problems
         run: |
-          sudo apt-get update
-          
-          export LIBGL_ALWAYS_SOFTWARE=1
-          
-          sudo apt-get install -y iproute2
-          sudo ip addr add 127.0.0.1 dev lo
-          
-          sudo apt-get install -y libxtst6 xdg-utils libatspi2.0-0 libsecret-1-0 
-          
-          export ELECTRON_DISABLE_SANDBOX=1
-          
-          export LIBGL_ALWAYS_SOFTWARE=1
+            sudo apt-get update
+            
+            export LIBGL_ALWAYS_SOFTWARE=1
+            
+            sudo apt-get install -y iproute2
+            sudo ip addr add 127.0.0.1 dev lo
+            
+            sudo apt-get install -y libxtst6 xdg-utils libatspi2.0-0 libsecret-1-0 
+            
+            export ELECTRON_DISABLE_SANDBOX=1
+            
+            export LIBGL_ALWAYS_SOFTWARE=1
 
       - name: Start and check Xvfb
         run: |
-          Xvfb :99 -screen 0 1920x1080x24 &
-          echo "Waiting for Xvfb to be ready..."
-          for attempt in $(seq 1 30); do
-              if xdpyinfo -display :99 >/dev/null 2>&1; then
-                  echo "Xvfb is ready after $attempt attempt(s)"
-                  break
-              fi
-              sleep 0.5
-          done
-          # xdpyinfo -display :99
-          echo "Xvfb is ready"
-          echo "DISPLAY=:99" >> $GITHUB_ENV
-
+            Xvfb :99 -screen 0 1920x1080x24 &
+            echo "Waiting for Xvfb to be ready..."
+            for attempt in $(seq 1 30); do
+                if xdpyinfo -display :99 >/dev/null 2>&1; then
+                    echo "Xvfb is ready after $attempt attempt(s)"
+                    break
+                fi
+                sleep 0.5
+            done
+            # xdpyinfo -display :99
+            echo "Xvfb is ready"
+            echo "DISPLAY=:99" >> $GITHUB_ENV
+                
       - name: Start screen and recording
         run: |
-          ffmpeg -f x11grab -video_size 1920x1080 -i :99 -codec:v libx264 -r 30 -v verbose screen_recording.mp4 &
-          echo $! > ffmpeg_pid.txt
-
+            ffmpeg -f x11grab -video_size 1920x1080 -i :99 -codec:v libx264 -r 30 -v verbose screen_recording.mp4 &
+            echo $! > ffmpeg_pid.txt
+    
       - name: Run Autorentool
         run: |
-          if ! DISPLAY=:99 xdpyinfo >/dev/null 2>&1; then
-              echo "ERROR: X server is not running properly"
-          else
-              echo "X server is running properly"
-          fi
-          
-          echo "Attempt $attempt of $max_attempts to start Authoring Tool"
-          ./linux-unpacked/authoring-tool --remote-debugging-port=9222 &
-          tool_pid=$!
-          sleep 3  # Wait time to allow for initialization
-          
-          max_attempts=5
-          for attempt in $(seq 1 $max_attempts); do
-              echo "Attempt $attempt of $max_attempts to start Authoring Tool"
-              # Check if the application is running
-              window_id=$(DISPLAY=:99 xdotool search --name "Autorentool v2.1.7" | head -n 1)
-              if [ -n "$window_id" ]; then
-                  echo "Authoring Tool started successfully and loaded correctly on attempt $attempt"
-                  break
-              else
-                  echo "Attempt $attempt failed"
-          
-                  if [ $attempt -eq $max_attempts ]; then
-                      echo "All $max_attempts attempts failed. Aborting pipeline."
-                      exit 1
-                  else
-                      DISPLAY=:99 xdotool key "ctrl+r" sleep 2
-                  fi
-              fi
-          done
-          
-          # Check if the tool is actually running
-          if ! ps -p $tool_pid > /dev/null; then
-              echo "Authoring Tool process is not running. Aborting pipeline."
-              exit 1
-          fi
-          echo "Authoring Tool is running with PID $tool_pid"
-          echo "AUTHORING_TOOL_PID=$tool_pid" >> $GITHUB_ENV
-
+            if ! DISPLAY=:99 xdpyinfo >/dev/null 2>&1; then
+                echo "ERROR: X server is not running properly"
+            else
+                echo "X server is running properly"
+            fi
+            
+            echo "Attempt $attempt of $max_attempts to start Authoring Tool"
+            ./linux-unpacked/authoring-tool --remote-debugging-port=9222 &
+            tool_pid=$!
+            sleep 3  # Wait time to allow for initialization
+            
+            max_attempts=5
+            for attempt in $(seq 1 $max_attempts); do
+                echo "Attempt $attempt of $max_attempts to start Authoring Tool"
+                # Check if the application is running
+                window_id=$(DISPLAY=:99 xdotool search --name "Autorentool v2.1.7" | head -n 1)
+                if [ -n "$window_id" ]; then
+                    echo "Authoring Tool started successfully and loaded correctly on attempt $attempt"
+                    break
+                else
+                    echo "Attempt $attempt failed"
+                
+                    if [ $attempt -eq $max_attempts ]; then
+                        echo "All $max_attempts attempts failed. Aborting pipeline."
+                        exit 1
+                    else
+                        DISPLAY=:99 xdotool key "ctrl+r" sleep 2
+                    fi
+                fi
+            done
+            
+            # Check if the tool is actually running
+            if ! ps -p $tool_pid > /dev/null; then
+                echo "Authoring Tool process is not running. Aborting pipeline."
+                exit 1
+            fi
+            echo "Authoring Tool is running with PID $tool_pid"
+            echo "AUTHORING_TOOL_PID=$tool_pid" >> $GITHUB_ENV
+        
       - name: Get window position
         run: |
-          window_id=$(DISPLAY=:99 xdotool search --name "Autorentool v2.1.7" | head -n 1)
-          if [ -n "$window_id" ]; then
-              window_info=$(xwininfo -id $window_id)
-              window_x=$(echo "$window_info" | grep "Absolute upper-left X" | awk '{print $4}')
-              window_y=$(echo "$window_info" | grep "Absolute upper-left Y" | awk '{print $4}')
-              window_width=$(echo "$window_info" | grep "Width" | awk '{print $2}')
-              window_height=$(echo "$window_info" | grep "Height" | awk '{print $2}')
-              echo "Window position: $window_x, $window_y, $window_width, $window_height"
-          else
-              echo "AuthoringTool window not found"
-              exit 1
-          fi
-          echo "WINDOW_X=$window_x" >> $GITHUB_ENV
-          echo "WINDOW_Y=$window_y" >> $GITHUB_ENV
-          echo "WINDOW_ID=$window_id" >> $GITHUB_ENV
-
-      - name: Simulate interactions
+            window_id=$(DISPLAY=:99 xdotool search --name "Autorentool v2.1.7" | head -n 1)
+            if [ -n "$window_id" ]; then
+                window_info=$(xwininfo -id $window_id)
+                window_x=$(echo "$window_info" | grep "Absolute upper-left X" | awk '{print $4}')
+                window_y=$(echo "$window_info" | grep "Absolute upper-left Y" | awk '{print $4}')
+                window_width=$(echo "$window_info" | grep "Width" | awk '{print $2}')
+                window_height=$(echo "$window_info" | grep "Height" | awk '{print $2}')
+                echo "Window position: $window_x, $window_y, $window_width, $window_height"
+            else
+                echo "AuthoringTool window not found"
+                exit 1
+            fi
+            echo "WINDOW_X=$window_x" >> $GITHUB_ENV
+            echo "WINDOW_Y=$window_y" >> $GITHUB_ENV
+            echo "WINDOW_ID=$window_id" >> $GITHUB_ENV
+    
+      - name: List workspace contents
+        if: false
         run: |
-          chmod +x $GITHUB_WORKSPACE/.github/workflows/simulate_interactions.sh
-          
-          BACKEND_URL="http://${_URL_BACKEND}"
-          COURSENAME="testWorld"
-          USERNAME=$_USER_NAME_ARRAY_1
-          PASSWORD=$_USER_PASSWORD_ARRAY_1
-          SPACENAME="testSpace"
-          ELEMENTNAME="testElement"
-          
-          echo "MOODLE_URL: $MOODLE_URL"
-          echo "COURSENAME: $COURSENAME" 
-          echo "USERNAME: $USERNAME"
-          echo "PASSWORD: $PASSWORD"
-          echo "SPACENAME: $SPACENAME"
-          echo "ELEMENTNAME: $ELEMENTNAME"
-          
-          $GITHUB_WORKSPACE/.github/workflows/simulate_interactions.sh $BACKEND_URL $COURSENAME $USERNAME $PASSWORD $SPACENAME $ELEMENTNAME
-          
-          kill $AUTHORING_TOOL_PID
+            echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
+            ls -aR $GITHUB_WORKSPACE
+    
+      - name: Simulate interactions
+        run: | 
+            BACKEND_URL="http://${_URL_BACKEND}"
+            COURSENAME="testWorld"
+            USERNAME=$_USER_NAME_ARRAY_1
+            PASSWORD=$_USER_PASSWORD_ARRAY_1
+            SPACENAME="testSpace"
+            ELEMENTNAME="testElement"
+            
+            echo "MOODLE_URL: $MOODLE_URL"
+            echo "COURSENAME: $COURSENAME" 
+            echo "USERNAME: $USERNAME"
+            echo "PASSWORD: $PASSWORD"
+            echo "SPACENAME: $SPACENAME"
+            echo "ELEMENTNAME: $ELEMENTNAME"
+            
+            
+            $GITHUB_WORKSPACE/.github/workflows/simulate_interactions.sh $BACKEND_URL $COURSENAME $USERNAME $PASSWORD $SPACENAME $ELEMENTNAME
+            
+            kill $AUTHORING_TOOL_PID
 
       - name: Stop screen recording
         if: always()
         run: |
-          sleep 1
-          kill $(cat ffmpeg_pid.txt)
-          sleep 5  # Give ffmpeg time to finish writing
+            sleep 1
+            kill $(cat ffmpeg_pid.txt)
+            sleep 5  # Give ffmpeg time to finish writing
 
       - name: Upload screen recording
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: screen-recording
-          path: screen_recording.mp4
+            name: screen-recording
+            path: screen_recording.mp4
 
+      - name: Check for errors
+        if: always()
+        run: |
+            if [ -f ./error.log ]; then
+                cat ./error.log
+                exit 1
+            fi
+            
       - name: Check Docker containers
         run: |
-          echo "--------Testing Docker compose up--------"
-          echo "docker ps"
-          docker ps
-          echo "docker ps -a"
-          docker ps -a
-          sleep 1
-          echo "docker logs adlertestenvironment-phpmyadmin-1"
-          docker logs adlertestenvironment-phpmyadmin-1
-          sleep 2
-          echo "-----"
-          echo "docker logs adlertestenvironment-moodle-1"
-          docker logs adlertestenvironment-moodle-1
-          sleep 2
-          echo "-----"
-          echo "docker logs adlertestenvironment-backend-1"
-          docker logs adlertestenvironment-backend-1
-          sleep 2
-          echo "-----"
-          echo "docker logs adlertestenvironment-frontend-1"
-          docker logs adlertestenvironment-frontend-1
-          sleep 2
-          echo "-----"
-          echo "docker logs adlertestenvironment-db_backend-1"
-          docker logs adlertestenvironment-db_backend-1
-          sleep 2
-          echo "-----"
-          echo "docker logs adlertestenvironment-db_moodle-1"
-          docker logs adlertestenvironment-db_moodle-1
-          sleep 2
-          echo "-----"
-          echo "docker network ls"
-          docker network ls
-          echo "-----------------------------------------"    
-
+            echo "--------Testing Docker compose up--------"
+            echo "docker ps"
+            docker ps
+            echo "docker ps -a"
+            docker ps -a
+            sleep 1
+            echo "docker logs adlertestenvironment-phpmyadmin-1"
+            docker logs adlertestenvironment-phpmyadmin-1
+            sleep 2
+            echo "-----"
+            echo "docker logs adlertestenvironment-moodle-1"
+            docker logs adlertestenvironment-moodle-1
+            sleep 2
+            echo "-----"
+            echo "docker logs adlertestenvironment-backend-1"
+            docker logs adlertestenvironment-backend-1
+            sleep 2
+            echo "-----"
+            echo "docker logs adlertestenvironment-frontend-1"
+            docker logs adlertestenvironment-frontend-1
+            sleep 2
+            echo "-----"
+            echo "docker logs adlertestenvironment-db_backend-1"
+            docker logs adlertestenvironment-db_backend-1
+            sleep 2
+            echo "-----"
+            echo "docker logs adlertestenvironment-db_moodle-1"
+            docker logs adlertestenvironment-db_moodle-1
+            sleep 2
+            echo "-----"
+            echo "docker network ls"
+            docker network ls
+            echo "-----------------------------------------"    
+            
       - name: Execute Moodle steps
         run: |
-          # Manager
-          # URL-Kodierung der Werte
-          USERNAME=$(python -c "import urllib.parse; print(urllib.parse.quote('${_USER_NAME_ARRAY_1}'))")
-          PASSWORD=$(python -c "import urllib.parse; print(urllib.parse.quote('${_USER_PASSWORD_ARRAY_1}'))")
-          echo $USERNAME
-          echo $PASSWORD
-          
-          # Token abrufen
-          TEST_URL="${_URL_MOODLE}/login/token.php?username=${USERNAME}&password=${PASSWORD}&service=adler_services"
-          echo "TEST_URL: ${TEST_URL}"
-          TOKEN_RESPONSE=$(curl -s "${TEST_URL}")
-          echo "Token-Response erhalten: $TOKEN_RESPONSE"
-          TOKEN=$(echo $TOKEN_RESPONSE | jq -r '.token')
-          echo "Token erhalten: $TOKEN"
-          
-          # Webservice Seiten Informationen
-          TEST_URL="${_URL_MOODLE}/webservice/rest/server.php?wstoken=${TOKEN}&wsfunction=core_webservice_get_site_info&moodlewsrestformat=json"
-          echo "TEST_URL: ${TEST_URL}"
-          INFORMATION_RESPONSE=$(curl -s "${TEST_URL}")
-          echo "Information erhalten: $INFORMATION_RESPONSE"
-          
-          # Kurs mit Name suchen
-          TEST_URL="${_URL_MOODLE}/webservice/rest/server.php?wstoken=${TOKEN}&wsfunction=core_course_search_courses&criterianame=search&criteriavalue=testWorld&moodlewsrestformat=json"
-          echo "TEST_URL: ${TEST_URL}"
-          COURSES_RESPONSE=$(curl -s "${TEST_URL}")
-          echo "Kurse erhalten: $COURSES_RESPONSE"
-          
-          # Student
-          # URL-Kodierung der Werte
-          USERNAME=$(python -c "import urllib.parse; print(urllib.parse.quote('${_USER_NAME_ARRAY_0}'))")
-          PASSWORD=$(python -c "import urllib.parse; print(urllib.parse.quote('${_USER_PASSWORD_ARRAY_0}'))")
-          echo $USERNAME
-          echo $PASSWORD
-          
-          # Token abrufen
-          TEST_URL="${_URL_MOODLE}/login/token.php?username=${USERNAME}&password=${PASSWORD}&service=adler_services"
-          echo "TEST_URL: ${TEST_URL}"
-          TOKEN_RESPONSE=$(curl -s "${TEST_URL}")
-          echo "Token-Response erhalten: $TOKEN_RESPONSE"
-          TOKEN=$(echo $TOKEN_RESPONSE | jq -r '.token')
-          echo "Token erhalten: $TOKEN"
-          
-          # Webservice Seiten Informationen
-          TEST_URL="${_URL_MOODLE}/webservice/rest/server.php?wstoken=${TOKEN}&wsfunction=core_webservice_get_site_info&moodlewsrestformat=json"
-          echo "TEST_URL: ${TEST_URL}"
-          INFORMATION_RESPONSE=$(curl -s "${TEST_URL}")
-          echo "Information erhalten: $INFORMATION_RESPONSE"
-          
-          # Kurs mit Name suchen
-          TEST_URL="${_URL_MOODLE}/webservice/rest/server.php?wstoken=${TOKEN}&wsfunction=core_course_search_courses&criterianame=search&criteriavalue=testWorld&moodlewsrestformat=json"
-          echo "TEST_URL: ${TEST_URL}"
-          COURSES_RESPONSE=$(curl -s "${TEST_URL}")
-          echo "Kurse erhalten: $COURSES_RESPONSE"
-
+            # Manager
+            # URL-Kodierung der Werte
+            USERNAME=$(python -c "import urllib.parse; print(urllib.parse.quote('${_USER_NAME_ARRAY_1}'))")
+            PASSWORD=$(python -c "import urllib.parse; print(urllib.parse.quote('${_USER_PASSWORD_ARRAY_1}'))")
+            echo $USERNAME
+            echo $PASSWORD
+            
+            # Token abrufen
+            TEST_URL="${_URL_MOODLE}/login/token.php?username=${USERNAME}&password=${PASSWORD}&service=adler_services"
+            echo "TEST_URL: ${TEST_URL}"
+            TOKEN_RESPONSE=$(curl -s "${TEST_URL}")
+            echo "Token-Response erhalten: $TOKEN_RESPONSE"
+            TOKEN=$(echo $TOKEN_RESPONSE | jq -r '.token')
+            echo "Token erhalten: $TOKEN"
+            
+            # Webservice Seiten Informationen
+            TEST_URL="${_URL_MOODLE}/webservice/rest/server.php?wstoken=${TOKEN}&wsfunction=core_webservice_get_site_info&moodlewsrestformat=json"
+            echo "TEST_URL: ${TEST_URL}"
+            INFORMATION_RESPONSE=$(curl -s "${TEST_URL}")
+            echo "Information erhalten: $INFORMATION_RESPONSE"
+            
+            # Kurs mit Name suchen
+            TEST_URL="${_URL_MOODLE}/webservice/rest/server.php?wstoken=${TOKEN}&wsfunction=core_course_search_courses&criterianame=search&criteriavalue=testWorld&moodlewsrestformat=json"
+            echo "TEST_URL: ${TEST_URL}"
+            COURSES_RESPONSE=$(curl -s "${TEST_URL}")
+            echo "Kurse erhalten: $COURSES_RESPONSE"
+            
+            # Student
+            # URL-Kodierung der Werte
+            USERNAME=$(python -c "import urllib.parse; print(urllib.parse.quote('${_USER_NAME_ARRAY_0}'))")
+            PASSWORD=$(python -c "import urllib.parse; print(urllib.parse.quote('${_USER_PASSWORD_ARRAY_0}'))")
+            echo $USERNAME
+            echo $PASSWORD
+            
+            # Token abrufen
+            TEST_URL="${_URL_MOODLE}/login/token.php?username=${USERNAME}&password=${PASSWORD}&service=adler_services"
+            echo "TEST_URL: ${TEST_URL}"
+            TOKEN_RESPONSE=$(curl -s "${TEST_URL}")
+            echo "Token-Response erhalten: $TOKEN_RESPONSE"
+            TOKEN=$(echo $TOKEN_RESPONSE | jq -r '.token')
+            echo "Token erhalten: $TOKEN"
+            
+            # Webservice Seiten Informationen
+            TEST_URL="${_URL_MOODLE}/webservice/rest/server.php?wstoken=${TOKEN}&wsfunction=core_webservice_get_site_info&moodlewsrestformat=json"
+            echo "TEST_URL: ${TEST_URL}"
+            INFORMATION_RESPONSE=$(curl -s "${TEST_URL}")
+            echo "Information erhalten: $INFORMATION_RESPONSE"
+            
+            # Kurs mit Name suchen
+            TEST_URL="${_URL_MOODLE}/webservice/rest/server.php?wstoken=${TOKEN}&wsfunction=core_course_search_courses&criterianame=search&criteriavalue=testWorld&moodlewsrestformat=json"
+            echo "TEST_URL: ${TEST_URL}"
+            COURSES_RESPONSE=$(curl -s "${TEST_URL}")
+            echo "Kurse erhalten: $COURSES_RESPONSE"
+            
       - name: Start screen and recording
         run: |
-          ffmpeg -f x11grab -video_size 1920x1080 -i :99 -codec:v libx264 -r 30 -v verbose moodle_check.mp4 &
-          echo $! > ffmpeg_pid.txt
-
+            ffmpeg -f x11grab -video_size 1920x1080 -i :99 -codec:v libx264 -r 30 -v verbose moodle_check.mp4 &
+            echo $! > ffmpeg_pid.txt
+        
       - name: Enrol Student
         run: |
-          chmod +x $GITHUB_WORKSPACE/.github/workflows/enrol_student.sh
-          chmod +x $GITHUB_WORKSPACE/.github/workflows/enrol_student.py
-          
-          if ! DISPLAY=:99 xdpyinfo >/dev/null 2>&1; then
-              echo "ERROR: X server is not running properly"
-          else
-              echo "X server is running properly"
-          fi
-          
-          MOODLE_URL="http://${_URL_MOODLE}"
-          COURSENAME="testWorld"
-          USERNAME=$_USER_NAME_ARRAY_0
-          PASSWORD=$_USER_PASSWORD_ARRAY_0
-          
-          echo "MOODLE_URL: $MOODLE_URL"
-          echo "COURSENAME: $COURSENAME" 
-          echo "USERNAME: $USERNAME"
-          echo "PASSWORD: $PASSWORD"
-          
-          $GITHUB_WORKSPACE/.github/workflows/enrol_student.sh $MOODLE_URL $COURSENAME $USERNAME $PASSWORD 
-
+            chmod +x $GITHUB_WORKSPACE/.github/workflows/enrol_student.sh
+            chmod +x $GITHUB_WORKSPACE/.github/workflows/enrol_student.py
+            
+            if ! DISPLAY=:99 xdpyinfo >/dev/null 2>&1; then
+                echo "ERROR: X server is not running properly"
+            else
+                echo "X server is running properly"
+            fi
+            
+            MOODLE_URL="http://${_URL_MOODLE}"
+            COURSENAME="testWorld"
+            USERNAME=$_USER_NAME_ARRAY_0
+            PASSWORD=$_USER_PASSWORD_ARRAY_0
+            
+            echo "MOODLE_URL: $MOODLE_URL"
+            echo "COURSENAME: $COURSENAME" 
+            echo "USERNAME: $USERNAME"
+            echo "PASSWORD: $PASSWORD"
+            
+            $GITHUB_WORKSPACE/.github/workflows/enrol_student.sh $MOODLE_URL $COURSENAME $USERNAME $PASSWORD 
+      
       - name: Stop screen recording
         if: always()
         run: |
-          sleep 1
-          kill $(cat ffmpeg_pid.txt)
-          sleep 5  # Give ffmpeg time to finish writing
+            sleep 1
+            kill $(cat ffmpeg_pid.txt)
+            sleep 5  # Give ffmpeg time to finish writing
 
       - name: Upload screen recording
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: moodle_check
-          path: moodle_check.mp4
-
+            name: moodle_check
+            path: moodle_check.mp4
+            
       - name: Start screen and recording
         run: |
-          ffmpeg -f x11grab -video_size 1920x1080 -i :99 -codec:v libx264 -r 30 -v verbose check_3d.mp4 &
-          echo $! > ffmpeg_pid.txt
-
+            ffmpeg -f x11grab -video_size 1920x1080 -i :99 -codec:v libx264 -r 30 -v verbose check_3d.mp4 &
+            echo $! > ffmpeg_pid.txt
+            
       - name: Test in 3D
         run: |
-          chmod +x $GITHUB_WORKSPACE/.github/workflows/test_3d.sh
-          chmod +x $GITHUB_WORKSPACE/.github/workflows/test_3d.py
-          
-          URL_3D="http://${_URL_3D}"
-          COURSENAME="testWorld"
-          USERNAME=$_USER_NAME_ARRAY_0
-          PASSWORD=$_USER_PASSWORD_ARRAY_0
-          SPACENAME="testSpace"
-          ELEMENTNAME="testElement"
-          
-          $GITHUB_WORKSPACE/.github/workflows/test_3d.sh $URL_3D $USERNAME $PASSWORD $COURSENAME $SPACENAME $ELEMENTNAME
+            chmod +x $GITHUB_WORKSPACE/.github/workflows/test_3d.sh
+            chmod +x $GITHUB_WORKSPACE/.github/workflows/test_3d.py
+            
+            URL_3D="http://${_URL_3D}"
+            COURSENAME="testWorld"
+            USERNAME=$_USER_NAME_ARRAY_0
+            PASSWORD=$_USER_PASSWORD_ARRAY_0
+            SPACENAME="testSpace"
+            ELEMENTNAME="testElement"
+            
+            $GITHUB_WORKSPACE/.github/workflows/test_3d.sh $URL_3D $USERNAME $PASSWORD $COURSENAME $SPACENAME $ELEMENTNAME
 
       - name: Stop screen recording
         if: always()
         run: |
-          sleep 1
-          kill $(cat ffmpeg_pid.txt)
-          sleep 5  # Give ffmpeg time to finish writing
+            sleep 1
+            kill $(cat ffmpeg_pid.txt)
+            sleep 5  # Give ffmpeg time to finish writing
 
       - name: Upload screen recording
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: check_3d
-          path: check_3d.mp4
-
+            name: check_3d
+            path: check_3d.mp4
+            
+            
+      
+            
+      - name: Setup tmate session
+        if: false
+        uses: mxschmitt/action-tmate@v3
+        
+    
