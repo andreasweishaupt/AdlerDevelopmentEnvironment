@@ -1,5 +1,8 @@
 #!/bin/bash
 
+chmod +x $GITHUB_WORKSPACE/.github/workflows/test_script.py
+chmod +x $GITHUB_WORKSPACE/.github/workflows/define_test_script.sh
+
 # Laden Sie die FIND_ELEMENT Funktion
 source $GITHUB_WORKSPACE/.github/workflows/define_test_script.sh
 
