@@ -122,17 +122,13 @@ jobs:
         run: $GITHUB_WORKSPACE/.github/workflows/check_docker.sh
             
       - name: Check URL
-        if: false
         run: |
-            echo "curl http://localhost:8086/api/health"
-            curl http://localhost:8086/api/health
-            echo "curl http://127.0.0.1:8086/api/health"
-            curl http://127.0.0.1:8086/api/health
-            echo "curl http://0.0.0.0:8086/api/health"
-            curl http://0.0.0.0:8086/api/health
+            echo "curl http://${_URL_BACKEND}/api/health"
+            curl http://${_URL_BACKEND}/api/health
+            echo "curl ${_URL_BACKEND}/api/health"
+            curl ${_URL_BACKEND}/api/health
             
       - name: Test Moodle
-        if: false
         continue-on-error: true
         run: |
             echo "curl http://localhost:8085"
