@@ -58,41 +58,12 @@ jobs:
             echo "CHROMEDRIVER_ZIP=chromedriver_linux64.zip" >> $GITHUB_ENV
 
       - name: Download Chrome
-        if: false
         run: |
-          curl -L "${CHROME_URL}" -o "/tmp/${CHROME_DEB}" --progress-bar &
-          CURL_PID=$!
-          echo "Chrome download started with PID $CURL_PID"
-          
-          # Warte auf den Download-Prozess
-          while kill -0 $CURL_PID 2>/dev/null; do
-            echo "Waiting for Chrome download to complete..."
-            sleep 10
-          done
-          
-          # Überprüfe, ob der Download erfolgreich war
-          if [ -f "/tmp/${CHROME_DEB}" ]; then
-            echo "Chrome download completed successfully"
-          else
-            echo "Chrome download failed"
-            exit 1
-          fi
-
-      - name: Download Chrome
-        uses: miguelteixeiraa/action-run-in-background@v1
-        with:
-          script: |
-            curl -L "${CHROME_URL}" -o "/tmp/${CHROME_DEB}" --progress-bar
-          readiness-script: |
-            import os
-            chrome_deb_path = '/tmp/${CHROME_DEB}'
-            if os.path.isfile(chrome_deb_path) and os.path.getsize(chrome_deb_path) > 0:
-                print("Chrome deb file downloaded successfully")
-                exit(0)
-            else:
-                print("Chrome deb file not found or empty")
-                exit(1)
-          timeout: 2700  # Timeout in Sekunden
+          curl -L "${CHROME_URL}" -o "/tmp/${CHROME_DEB}" \
+            --progress-bar \
+            -w "DONE" \
+            2> >(sed -u 's/.*\r//' > /tmp/chrome_download_progress.log) &
+          echo "Chrome download started in background"
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -253,25 +224,30 @@ jobs:
             # Install missing dependencies
             sudo apt-get install -y libu2f-udev
             
-            # Download and install Google Chrome
-            # echo "Downloading Google Chrome..."
-            # curl -L "${CHROME_URL}" -o "/tmp/${CHROME_DEB}" --progress-bar
-            echo "Wait for Google Chrome download to finish..."
-            start_time=$(date +%s)
-            timeout=2700  # 45 Minuten Timeout
-            while [ ! -f "/tmp/${CHROME_DEB}" ]; do
-              current_time=$(date +%s)
-              elapsed=$((current_time - start_time))
-              
-              if [ $elapsed -ge $timeout ]; then
-                echo "Timeout: Chrome download did not complete within $timeout seconds"
-                exit 1
+            # Wait for downloading Google Chrome
+            echo "Waiting for Chrome download to complete..."
+            while true; do
+              status=$(tail -n 1 /tmp/chrome_download_progress.log)
+              if [ "$status" = "DONE" ]; then
+                echo "Download completed"
+                break
+              elif [ -n "$status" ]; then
+                echo "Download progress: $status"
+              else
+                echo "Waiting for download to start..."
               fi
-              
-              echo "Waiting for Chrome download to complete... (${elapsed}s elapsed)"
-              sleep 10
+              sleep 2
             done
+        
+            if [ -f "/tmp/${CHROME_DEB}" ]; then
+              file_size=$(du -h "/tmp/${CHROME_DEB}" | cut -f1)
+              echo "Chrome downloaded successfully. File size: $file_size"
+            else
+              echo "Download failed"
+              exit 1
+            fi
             echo "Google Chrome download finished"
+          
             sudo apt-get install -y "/tmp/${CHROME_DEB}"
             
             # Hold the package to prevent automatic updates
