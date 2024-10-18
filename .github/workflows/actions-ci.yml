@@ -61,11 +61,18 @@ jobs:
         run: |
           touch /tmp/chrome_download_progress.log
           (
+            echo "Starting download..." > /tmp/chrome_download_progress.log
             curl -L "${CHROME_URL}" -o "/tmp/${CHROME_DEB}" \
               --progress-bar \
               2>&1 | sed -u 's/^[[:space:]]*//' | sed -u 's/[[:space:]]*$//' | sed -u '/^$/d' | sed -u 's/\r/\n/g' | tee -a /tmp/chrome_download_progress.log
             echo "DONE" >> /tmp/chrome_download_progress.log
           ) &
+          echo "Chrome download started in background"
+          sleep 5
+          ps aux | grep curl
+          sleep 15 
+          cat /tmp/chrome_download_progress.log
+          ls -l /tmp/${CHROME_DEB} || echo "Chrome DEB file not found"
           echo "Chrome download started in background"
           sleep 20 
           cat /tmp/chrome_download_progress.log
