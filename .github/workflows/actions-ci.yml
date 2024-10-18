@@ -60,7 +60,22 @@ jobs:
       - name: Download Chrome
         run: |
           curl -L "${CHROME_URL}" -o "/tmp/${CHROME_DEB}" --progress-bar &
-          echo $! > dlc_bg_pid.txt
+          CURL_PID=$!
+          echo "Chrome download started with PID $CURL_PID"
+          
+          # Warte auf den Download-Prozess
+          while kill -0 $CURL_PID 2>/dev/null; do
+            echo "Waiting for Chrome download to complete..."
+            sleep 10
+          done
+          
+          # Überprüfe, ob der Download erfolgreich war
+          if [ -f "/tmp/${CHROME_DEB}" ]; then
+            echo "Chrome download completed successfully"
+          else
+            echo "Chrome download failed"
+            exit 1
+          fi
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -225,7 +240,10 @@ jobs:
             # echo "Downloading Google Chrome..."
             # curl -L "${CHROME_URL}" -o "/tmp/${CHROME_DEB}" --progress-bar
             echo "Wait for Google Chrome download to finish..."
-            wait $(cat dlc_bg_pid.txt)
+            if [ ! -f "/tmp/${CHROME_DEB}" ]; then
+              echo "Chrome .deb file not found. Download may have failed."
+              exit 1
+            fi
             echo "Google Chrome download finished"
             sudo apt-get install -y "/tmp/${CHROME_DEB}"
             
