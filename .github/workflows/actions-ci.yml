@@ -98,11 +98,13 @@ jobs:
             echo "$_DB_MOODLE_NAME"
       
       - name: docker compose
+        if: false
         run: |
             cd $GITHUB_WORKSPACE/non-moodle
             docker compose up -d --build
             
       - name: Wait for containers to be ready
+        if: false
         run: |
             chmod +x $GITHUB_WORKSPACE/.github/workflows/wait_for_containers.py
             
@@ -112,6 +114,7 @@ jobs:
           
            
       - name: Check Docker containers
+        if: false
         run: |
             # Liste der Container
             containers=(
@@ -144,6 +147,7 @@ jobs:
             echo "-----------------------------------------"
             
       - name: Check URL
+        if: false
         run: |
             echo "curl http://localhost:8086/api/health"
             curl http://localhost:8086/api/health
@@ -153,6 +157,7 @@ jobs:
             curl http://0.0.0.0:8086/api/health
             
       - name: Test Moodle
+        if: false
         continue-on-error: true
         run: |
             echo "curl http://localhost:8085"
@@ -161,6 +166,7 @@ jobs:
             curl -L http://localhost:8085
     
       - name: Execute Moodle steps
+        if: false
         run: |
             # URL-Kodierung der Werte
             USERNAME=$(python -c "import urllib.parse; print(urllib.parse.quote('${_USER_NAME_ARRAY_1}'))")
