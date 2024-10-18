@@ -191,6 +191,26 @@ jobs:
             python -m pip install --upgrade pip
             pip install selenium
 
+
+      - name: Setup Chrome environment variables
+        run: |
+            echo "CHROME_VERSION=110.0.5481.77-1" >> $GITHUB_ENV
+            echo "CHROME_URL=https://mirror.cs.uchicago.edu/google-chrome/pool/main/g/google-chrome-stable/google-chrome-stable_110.0.5481.77-1_amd64.deb" >> $GITHUB_ENV
+            echo "CHROME_DEB=google-chrome-stable_110.0.5481.77-1_amd64.deb" >> $GITHUB_ENV
+            echo "CHROMEDRIVER_URL=https://old.chromedriver.getwebdriver.com/110.0.5481.77/chromedriver_linux64.zip" >> $GITHUB_ENV
+            echo "CHROMEDRIVER_ZIP=chromedriver_linux64.zip" >> $GITHUB_ENV
+
+      - name: Cache Chrome deb
+        uses: actions/cache@v3
+        with:
+          path: /tmp/chrome.deb
+          key: ${{ runner.os }}-chrome-${{ env.CHROME_VERSION }}
+
+      - name: Download Chrome if not cached
+        if: steps.cache-chrome.outputs.cache-hit != 'true'
+        run: |
+          curl -L "${CHROME_URL}" -o "/tmp/chrome.deb" --progress-bar
+
       - name: Install Chrome and ChromeDriver
         run: |
             # Remove existing Chrome installations
@@ -208,7 +228,7 @@ jobs:
             sudo apt-get install -y libu2f-udev
             
             # Download and install Google Chrome
-            echo "Downloading Google Chrome..."
+            # echo "Downloading Google Chrome..."
             curl -L "${CHROME_URL}" -o "/tmp/${CHROME_DEB}" --progress-bar
             sudo apt-get install -y "/tmp/${CHROME_DEB}"
             
@@ -217,24 +237,13 @@ jobs:
             
             # Download and install ChromeDriver
             echo "Downloading ChromeDriver..."
-            curl -L "${CHROMEDRIVER_URL}" -o "/tmp/${CHROMEDRIVER_ZIP}" \
-              -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.5735.90 Safari/537.36" \
-              --progress-bar
+            curl -L "${CHROMEDRIVER_URL}" -o "/tmp/${CHROMEDRIVER_ZIP}" --progress-bar
             unzip -o "/tmp/${CHROMEDRIVER_ZIP}" -d /tmp
             sudo mv /tmp/chromedriver /usr/bin/chromedriver
             sudo chmod +x /usr/bin/chromedriver
             
             # Verify installation
             chromedriver --version
-        env:
-            CHROME_VERSION: "114.0.5735.90"
-            CHROME_DEB_BACKUP: "google-chrome-stable_114.0.5735.90-1_amd64.deb"
-            CHROME_DEB: "google-chrome-stable_110.0.5481.77-1_amd64.deb"
-            CHROME_URL_BACKUP: "https://mirror.cs.uchicago.edu/google-chrome/pool/main/g/google-chrome-stable/google-chrome-stable_114.0.5735.90-1_amd64.deb"
-            CHROME_URL: "https://mirror.cs.uchicago.edu/google-chrome/pool/main/g/google-chrome-stable/google-chrome-stable_110.0.5481.77-1_amd64.deb"
-            CHROMEDRIVER_ZIP: "chromedriver_linux64.zip"
-            CHROMEDRIVER_URL_BACKUP: "https://old.chromedriver.getwebdriver.com/114.0.5735.90/chromedriver_linux64.zip"
-            CHROMEDRIVER_URL: "https://old.chromedriver.getwebdriver.com/110.0.5481.77/chromedriver_linux64.zip"
 
       - name: Make skripts executable
         run: |
