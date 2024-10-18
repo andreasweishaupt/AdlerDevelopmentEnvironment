@@ -71,7 +71,7 @@ jobs:
           cat -e /tmp/chrome_download_progress.log
           echo "-----"
           echo "Last 5 lines:"
-          tail -n 5 /tmp/chrome_download_progress.log
+          tr '\r' '\n' < /tmp/chrome_download_progress.log | tail -n 5
           echo "-----"
 
       - name: Set up Python
