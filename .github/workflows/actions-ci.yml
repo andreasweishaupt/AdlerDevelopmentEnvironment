@@ -63,7 +63,7 @@ jobs:
           (
             curl -L "${CHROME_URL}" -o "/tmp/${CHROME_DEB}" \
               --progress-bar \
-              2>&1 | tee -a /dev/null | sed -u 's/\r/\n/g' >> /tmp/chrome_download_progress.log
+              2>&1 | tee -a - | sed -u 's/\r/\n/g' >> /tmp/chrome_download_progress.log
             echo "DONE" >> /tmp/chrome_download_progress.log
           ) &
       
