@@ -123,18 +123,14 @@ jobs:
             
       - name: Check URL
         run: |
-            echo "curl http://${_URL_BACKEND}/api/health"
-            curl http://${_URL_BACKEND}/api/health
-            echo "curl ${_URL_BACKEND}/api/health"
-            curl ${_URL_BACKEND}/api/health
+            echo "curl -s ${_URL_BACKEND}/api/health"
+            curl -s ${_URL_BACKEND}/api/health
             
       - name: Test Moodle
         continue-on-error: true
         run: |
-            echo "curl http://localhost:8085"
-            curl http://localhost:8085
-            echo "curl -L http://localhost:8085"
-            curl -L http://localhost:8085
+            echo "curl -s -L ${_URL_MOODLE}"
+            curl -s -L ${_URL_MOODLE}
     
       - name: Execute Moodle steps
         if: false
