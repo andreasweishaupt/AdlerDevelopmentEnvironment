@@ -61,7 +61,7 @@ jobs:
         run: |
           touch /tmp/chrome_download_progress.log
           (
-            stdbuf -oL curl -L "${CHROME_URL}" -o "/tmp/${CHROME_DEB}" --progress-bar 2>&1 | tee /tmp/chrome_download_progress.log > /dev/null
+            curl -L "${CHROME_URL}" -o "/tmp/${CHROME_DEB}" --progress-bar 2>&1 | tee /tmp/chrome_download_progress.log > /dev/null
             echo "DONE" >> /tmp/chrome_download_progress.log
           ) &
       
@@ -232,7 +232,7 @@ jobs:
             # Wait for downloading Google Chrome
             echo "Waiting for Chrome download to complete..."
             while true; do
-              status=$(tail -n 1 /tmp/chrome_download_progress.log)
+              status=$(tr '\r' '\n' < /tmp/chrome_download_progress.log tail -n 1)
               if [ "$status" = "DONE" ]; then
                 echo "Download completed"
                 break
