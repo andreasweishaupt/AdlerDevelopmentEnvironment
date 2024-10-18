@@ -68,7 +68,7 @@ jobs:
           echo "Chrome download started in background"
           sleep 10 
           echo "Whole log:"
-          cat /tmp/chrome_download_progress.log
+          cat -e /tmp/chrome_download_progress.log
           echo "-----"
           echo "Last 5 lines:"
           tail -n 5 /tmp/chrome_download_progress.log
