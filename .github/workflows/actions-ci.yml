@@ -59,10 +59,12 @@ jobs:
 
       - name: Download Chrome
         run: |
-          curl -L "${CHROME_URL}" -o "/tmp/${CHROME_DEB}" \
-            --progress-bar \
-            -w "DONE" \
-            2> >(sed -u 's/.*\r//' > /tmp/chrome_download_progress.log) &
+          (
+            curl -L "${CHROME_URL}" -o "/tmp/${CHROME_DEB}" \
+              --progress-bar \
+              2>&1 | tee /tmp/chrome_download_progress.log;
+            echo "DONE" >> /tmp/chrome_download_progress.log
+          ) &
           echo "Chrome download started in background"
           sleep 20 
           cat /tmp/chrome_download_progress.log
@@ -113,36 +115,32 @@ jobs:
            
       - name: Check Docker containers
         run: |
+            # Liste der Container
+            containers=(
+              "adlertestenvironment-phpmyadmin-1"
+              "adlertestenvironment-moodle-1"
+              "adlertestenvironment-backend-1"
+              "adlertestenvironment-frontend-1"
+              "adlertestenvironment-db_backend-1"
+              "adlertestenvironment-db_moodle-1"
+            )
+            
+            # Logs im Hintergrund abrufen und in Dateien schreiben
+            for container in "${containers[@]}"; do
+              docker logs $container > "/tmp/${container}_logs.txt" 2>&1 &
+            done
+          
             echo "--------Testing Docker compose up--------"
-            echo "docker ps"
-            docker ps
             echo "docker ps -a"
             docker ps -a
             sleep 3
-            echo "docker logs adlertestenvironment-phpmyadmin-1"
-            docker logs adlertestenvironment-phpmyadmin-1
-            sleep 5
-            echo "-----"
-            echo "docker logs adlertestenvironment-moodle-1"
-            docker logs adlertestenvironment-moodle-1
-            sleep 5
-            echo "-----"
-            echo "docker logs adlertestenvironment-backend-1"
-            docker logs adlertestenvironment-backend-1
-            sleep 5
-            echo "-----"
-            echo "docker logs adlertestenvironment-frontend-1"
-            docker logs adlertestenvironment-frontend-1
-            sleep 5
-            echo "-----"
-            echo "docker logs adlertestenvironment-db_backend-1"
-            docker logs adlertestenvironment-db_backend-1
-            sleep 5
-            echo "-----"
-            echo "docker logs adlertestenvironment-db_moodle-1"
-            docker logs adlertestenvironment-db_moodle-1
-            sleep 5
-            echo "-----"
+            echo "---------------Docker logs---------------"
+            # Logs nacheinander ausgeben
+            for container in "${containers[@]}"; do
+              echo "docker logs $container"
+              cat "/tmp/${container}_logs.txt"
+              echo "-----"
+            done
             echo "docker network ls"
             docker network ls
             echo "-----------------------------------------"
