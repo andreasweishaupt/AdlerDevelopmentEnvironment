@@ -62,12 +62,12 @@ jobs:
           (
             curl -L "${CHROME_URL}" -o "/tmp/${CHROME_DEB}" \
               --progress-bar \
-              2>&1 | tee /tmp/chrome_download_progress.log;
+              2>&1 | sed 's/^[[:space:]]*//' | sed 's/[[:space:]]*$//' | sed '/^$/d' | while IFS= read -r line; do
+                echo "$line" >> /tmp/chrome_download_progress.log
+              done
             echo "DONE" >> /tmp/chrome_download_progress.log
           ) &
           echo "Chrome download started in background"
-          sleep 20 
-          cat /tmp/chrome_download_progress.log
 
       - name: Set up Python
         uses: actions/setup-python@v5
