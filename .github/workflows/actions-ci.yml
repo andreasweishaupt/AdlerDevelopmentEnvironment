@@ -61,13 +61,12 @@ jobs:
         run: |
           touch /tmp/chrome_download_progress.log
           (
-            curl -L "${CHROME_URL}" -o "/tmp/${CHROME_DEB}" \
-              --progress-bar 2>&1 > sed -u 's/\r/\n/g' >> /tmp/chrome_download_progress.log
+            curl -L "${CHROME_URL}" -o "/tmp/${CHROME_DEB}" 2>&1 > sed -u 's/\r/\n/g' >> /tmp/chrome_download_progress.log
             echo "DONE" >> /tmp/chrome_download_progress.log
           ) &
       
           echo "Chrome download started in background"
-          sleep 20 
+          sleep 10 
           echo "Whole log:"
           cat /tmp/chrome_download_progress.log
           echo "-----"
