@@ -68,6 +68,8 @@ jobs:
             echo "DONE" >> /tmp/chrome_download_progress.log
           ) &
           echo "Chrome download started in background"
+          sleep 20 
+          cat /tmp/chrome_download_progress.log
 
       - name: Set up Python
         uses: actions/setup-python@v5
