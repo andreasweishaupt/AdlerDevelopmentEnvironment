@@ -59,10 +59,19 @@ jobs:
 
       - name: Make skripts executable
         run: |
-            chmod +x $GITHUB_WORKSPACE/.github/workflows/test_script.py
-            chmod +x $GITHUB_WORKSPACE/.github/workflows/define_test_script.sh
-            chmod +x $GITHUB_WORKSPACE/.github/workflows/simulate_interactions.sh
-            chmod +x $GITHUB_WORKSPACE/.github/workflows/check_docker.sh
+            # Finde alle Skripte und mache sie ausführbar
+            while IFS= read -r -d '' script; do
+              chmod +x "$script"
+              script_name=$(basename "$script")
+              script_name_no_ext="${script_name%.*}"
+              env_var_name="script_${script_name_no_ext//./_}"
+              echo "$env_var_name=$script" >> $GITHUB_ENV
+              echo "Made executable and created env var for: $script as $env_var_name"
+            done < <(find $GITHUB_WORKSPACE/.github/workflows/scripts -type f \( -name "*.sh" -o -name "*.py" -o -name "*.bash" \) -print0)
+        
+            # Gib alle erstellten Umgebungsvariablen aus
+            echo "Created environment variables:"
+            grep "^script_" $GITHUB_ENV
 
       - name: Download Chrome
         run: |
@@ -349,7 +358,7 @@ jobs:
             echo "ELEMENTNAME: $ELEMENTNAME"
             
             
-            $GITHUB_WORKSPACE/.github/workflows/simulate_interactions.sh $BACKEND_URL $COURSENAME $USERNAME $PASSWORD $SPACENAME $ELEMENTNAME
+            $GITHUB_WORKSPACE/.github/workflows/scripts/simulate_interactions.sh $BACKEND_URL $COURSENAME $USERNAME $PASSWORD $SPACENAME $ELEMENTNAME
             
             kill $AUTHORING_TOOL_PID
 
