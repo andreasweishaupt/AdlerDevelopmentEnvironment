@@ -225,6 +225,7 @@ jobs:
             # Wait for downloading Google Chrome
             echo "Waiting for Chrome download to complete..."
             while true; do
+              break
               status=$(tr '\r' '\n' < /tmp/chrome_download_progress.log | tail -n 1)
               if [ "$status" = "DONE" ]; then
                 echo "Download completed"
@@ -244,14 +245,14 @@ jobs:
             fi
             echo "Google Chrome download finished"
           
-            sudo apt-get install -y "/tmp/${CHROME_DEB}"
+            #sudo apt-get install -y "/tmp/${CHROME_DEB}"
             
             # Hold the package to prevent automatic updates
-            sudo apt-mark hold google-chrome-stable
+            #sudo apt-mark hold google-chrome-stable
             
             # Download and install ChromeDriver
             echo "Downloading ChromeDriver..."
-            curl -L "${CHROMEDRIVER_URL}" -o "/tmp/${CHROMEDRIVER_ZIP}" --progress-bar
+            wget -q --user-agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.5735.90 Safari/537.36" "${CHROMEDRIVER_URL}" -O "/tmp/${CHROMEDRIVER_ZIP}"
             unzip -o "/tmp/${CHROMEDRIVER_ZIP}" -d /tmp
             sudo mv /tmp/chromedriver /usr/bin/chromedriver
             sudo chmod +x /usr/bin/chromedriver
