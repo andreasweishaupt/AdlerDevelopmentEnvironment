@@ -225,7 +225,7 @@ jobs:
             # Wait for downloading Google Chrome
             echo "Waiting for Chrome download to complete..."
             while true; do
-              status=$(tr '\r' '\n' < /tmp/chrome_download_progress.log tail -n 1)
+              status=$(tr '\r' '\n' < /tmp/chrome_download_progress.log | tail -n 1)
               if [ "$status" = "DONE" ]; then
                 echo "Download completed"
                 break
