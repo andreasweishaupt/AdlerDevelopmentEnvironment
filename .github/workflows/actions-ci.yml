@@ -133,7 +133,6 @@ jobs:
             curl -s -L ${_URL_MOODLE}
     
       - name: Execute Moodle steps
-        if: false
         run: |
             # URL-Kodierung der Werte
             USERNAME=$(python -c "import urllib.parse; print(urllib.parse.quote('${_USER_NAME_ARRAY_1}'))")
@@ -160,11 +159,6 @@ jobs:
             echo "TEST_URL: ${TEST_URL}"
             COURSES_RESPONSE=$(curl -s "${TEST_URL}")
             echo "Kurse erhalten: $COURSES_RESPONSE"
-            
-            
-      - name: Setup tmate session
-        if: false
-        uses: mxschmitt/action-tmate@v3
             
       - name: Install dependencies
         run: |
@@ -219,7 +213,6 @@ jobs:
             # Wait for downloading Google Chrome
             echo "Waiting for Chrome download to complete..."
             while true; do
-              break
               status=$(tr '\r' '\n' < /tmp/chrome_download_progress.log | tail -n 1)
               if [ "$status" = "DONE" ]; then
                 echo "Download completed"
@@ -239,7 +232,7 @@ jobs:
             fi
             echo "Google Chrome download finished"
           
-            #sudo apt-get install -y "/tmp/${CHROME_DEB}"
+            sudo apt-get install -y "/tmp/${CHROME_DEB}"
             
             # Hold the package to prevent automatic updates
             #sudo apt-mark hold google-chrome-stable
