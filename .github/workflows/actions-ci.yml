@@ -57,6 +57,13 @@ jobs:
             echo "CHROMEDRIVER_URL=https://old.chromedriver.getwebdriver.com/110.0.5481.77/chromedriver_linux64.zip" >> $GITHUB_ENV
             echo "CHROMEDRIVER_ZIP=chromedriver_linux64.zip" >> $GITHUB_ENV
 
+      - name: Make skripts executable
+        run: |
+            chmod +x $GITHUB_WORKSPACE/.github/workflows/test_script.py
+            chmod +x $GITHUB_WORKSPACE/.github/workflows/define_test_script.sh
+            chmod +x $GITHUB_WORKSPACE/.github/workflows/simulate_interactions.sh
+            chmod +x $GITHUB_WORKSPACE/.github/workflows/check_docker.sh
+
       - name: Download Chrome
         run: |
           touch /tmp/chrome_download_progress.log
@@ -98,13 +105,11 @@ jobs:
             echo "$_DB_MOODLE_NAME"
       
       - name: docker compose
-        if: false
         run: |
             cd $GITHUB_WORKSPACE/non-moodle
             docker compose up -d --build
             
       - name: Wait for containers to be ready
-        if: false
         run: |
             chmod +x $GITHUB_WORKSPACE/.github/workflows/wait_for_containers.py
             
@@ -114,37 +119,7 @@ jobs:
           
            
       - name: Check Docker containers
-        if: false
-        run: |
-            # Liste der Container
-            containers=(
-              "adlertestenvironment-phpmyadmin-1"
-              "adlertestenvironment-moodle-1"
-              "adlertestenvironment-backend-1"
-              "adlertestenvironment-frontend-1"
-              "adlertestenvironment-db_backend-1"
-              "adlertestenvironment-db_moodle-1"
-            )
-            
-            # Logs im Hintergrund abrufen und in Dateien schreiben
-            for container in "${containers[@]}"; do
-              docker logs $container > "/tmp/${container}_logs.txt" 2>&1 &
-            done
-          
-            echo "--------Testing Docker compose up--------"
-            echo "docker ps -a"
-            docker ps -a
-            sleep 3
-            echo "---------------Docker logs---------------"
-            # Logs nacheinander ausgeben
-            for container in "${containers[@]}"; do
-              echo "docker logs $container"
-              cat "/tmp/${container}_logs.txt"
-              echo "-----"
-            done
-            echo "docker network ls"
-            docker network ls
-            echo "-----------------------------------------"
+        run: $GITHUB_WORKSPACE/.github/workflows/check_docker.sh
             
       - name: Check URL
         if: false
@@ -265,15 +240,6 @@ jobs:
             
             # Verify installation
             chromedriver --version
-
-      - name: Make skripts executable
-        run: |
-            chmod +x $GITHUB_WORKSPACE/.github/workflows/browser_functions.py
-            chmod +x $GITHUB_WORKSPACE/.github/workflows/define_browser_functions.sh
-            chmod +x $GITHUB_WORKSPACE/.github/workflows/test_script.py
-            chmod +x $GITHUB_WORKSPACE/.github/workflows/define_test_script.sh
-            chmod +x $GITHUB_WORKSPACE/.github/workflows/simulate_interactions.sh
-        
 
       - name: Download latest Autorentool release
         run: |
@@ -428,40 +394,7 @@ jobs:
             fi
             
       - name: Check Docker containers
-        run: |
-            echo "--------Testing Docker compose up--------"
-            echo "docker ps"
-            docker ps
-            echo "docker ps -a"
-            docker ps -a
-            sleep 1
-            echo "docker logs adlertestenvironment-phpmyadmin-1"
-            docker logs adlertestenvironment-phpmyadmin-1
-            sleep 2
-            echo "-----"
-            echo "docker logs adlertestenvironment-moodle-1"
-            docker logs adlertestenvironment-moodle-1
-            sleep 2
-            echo "-----"
-            echo "docker logs adlertestenvironment-backend-1"
-            docker logs adlertestenvironment-backend-1
-            sleep 2
-            echo "-----"
-            echo "docker logs adlertestenvironment-frontend-1"
-            docker logs adlertestenvironment-frontend-1
-            sleep 2
-            echo "-----"
-            echo "docker logs adlertestenvironment-db_backend-1"
-            docker logs adlertestenvironment-db_backend-1
-            sleep 2
-            echo "-----"
-            echo "docker logs adlertestenvironment-db_moodle-1"
-            docker logs adlertestenvironment-db_moodle-1
-            sleep 2
-            echo "-----"
-            echo "docker network ls"
-            docker network ls
-            echo "-----------------------------------------"    
+        run: $GITHUB_WORKSPACE/.github/workflows/check_docker.sh
             
       - name: Execute Moodle steps
         run: |
