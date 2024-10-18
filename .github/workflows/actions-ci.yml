@@ -174,7 +174,8 @@ jobs:
                 libgtk-3-0 libnotify4 libgconf-2-4 libnss3 libxss1 libasound2 libgbm1 \
                 libx11-xcb1 libxcb-dri3-0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 \
                 libxcb-randr0 libxcb-render-util0 libxcb-shape0 libxcb-xfixes0 libxcb-xinerama0 libxcb-xkb1 \
-                x11-utils libxkbcommon-x11-0
+                x11-utils libxkbcommon-x11-0 \
+                libu2f-udev
             python -m pip install --upgrade pip
             pip install selenium
 
@@ -191,9 +192,6 @@ jobs:
             
             # Update package lists
             sudo apt-get update
-            
-            # Install missing dependencies
-            sudo apt-get install -y libu2f-udev
             
             # Wait for downloading Google Chrome
             echo "Waiting for Chrome download to complete..."
