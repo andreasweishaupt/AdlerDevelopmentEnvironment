@@ -179,6 +179,29 @@ jobs:
             python -m pip install --upgrade pip
             pip install selenium
 
+      - name: Download latest Autorentool release
+        run: |
+            LATEST_RELEASE=$(curl -s https://api.github.com/repos/ProjektAdLer/Autorentool/releases/latest)
+            DOWNLOAD_URL=$(echo $LATEST_RELEASE | jq -r '.assets[] | select(.name | endswith("linux-unpacked.tar.gz")) | .browser_download_url')
+            echo "$DOWNLOAD_URL"
+            wget -q -O AuthoringTool.tar.gz $DOWNLOAD_URL
+            tar -xvzf AuthoringTool.tar.gz
+            #chmod +x AuthoringTool.AppImage
+
+      - name: Fix some problems
+        run: |
+            sudo apt-get update
+            
+            export LIBGL_ALWAYS_SOFTWARE=1
+            
+            sudo apt-get install -y iproute2
+            sudo ip addr add 127.0.0.1 dev lo
+            
+            sudo apt-get install -y libxtst6 xdg-utils libatspi2.0-0 libsecret-1-0 
+            
+            export ELECTRON_DISABLE_SANDBOX=1
+            
+            export LIBGL_ALWAYS_SOFTWARE=1
 
       - name: Install Chrome and ChromeDriver
         run: |
@@ -230,30 +253,6 @@ jobs:
             
             # Verify installation
             chromedriver --version
-
-      - name: Download latest Autorentool release
-        run: |
-            LATEST_RELEASE=$(curl -s https://api.github.com/repos/ProjektAdLer/Autorentool/releases/latest)
-            DOWNLOAD_URL=$(echo $LATEST_RELEASE | jq -r '.assets[] | select(.name | endswith("linux-unpacked.tar.gz")) | .browser_download_url')
-            echo "$DOWNLOAD_URL"
-            wget -q -O AuthoringTool.tar.gz $DOWNLOAD_URL
-            tar -xvzf AuthoringTool.tar.gz
-            #chmod +x AuthoringTool.AppImage
-
-      - name: Fix some problems
-        run: |
-            sudo apt-get update
-            
-            export LIBGL_ALWAYS_SOFTWARE=1
-            
-            sudo apt-get install -y iproute2
-            sudo ip addr add 127.0.0.1 dev lo
-            
-            sudo apt-get install -y libxtst6 xdg-utils libatspi2.0-0 libsecret-1-0 
-            
-            export ELECTRON_DISABLE_SANDBOX=1
-            
-            export LIBGL_ALWAYS_SOFTWARE=1
 
       - name: Start and check Xvfb
         run: |
