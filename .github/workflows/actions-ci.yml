@@ -59,12 +59,11 @@ jobs:
 
       - name: Download Chrome
         run: |
+          touch /tmp/chrome_download_progress.log
           (
             curl -L "${CHROME_URL}" -o "/tmp/${CHROME_DEB}" \
               --progress-bar \
-              2>&1 | sed 's/^[[:space:]]*//' | sed 's/[[:space:]]*$//' | sed '/^$/d' | while IFS= read -r line; do
-                echo "$line" >> /tmp/chrome_download_progress.log
-              done
+              2>&1 | sed -u 's/^[[:space:]]*//' | sed -u 's/[[:space:]]*$//' | sed -u '/^$/d' | sed -u 's/\r/\n/g' > /tmp/chrome_download_progress.log
             echo "DONE" >> /tmp/chrome_download_progress.log
           ) &
           echo "Chrome download started in background"
