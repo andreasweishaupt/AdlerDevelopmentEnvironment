@@ -231,10 +231,8 @@ jobs:
               if [ "$status" = "DONE" ]; then
                 echo "Download completed"
                 break
-              elif [ -n "$status" ]; then
-                echo "Download progress: $status"
               else
-                echo "Waiting for download to start..."
+                echo "Download progress: $status"
               fi
               sleep 2
             done
