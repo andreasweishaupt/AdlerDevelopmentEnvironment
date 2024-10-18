@@ -1,6 +1,6 @@
 #!/bin/bash
 
-containers=($(docker ps -aq --format "{{.Names}}"))
+containers=($(docker ps --format "{{.Names}}"))
 
 # Logs im Hintergrund abrufen und in Dateien schreiben
 echo "--------Running Docker containers--------"
