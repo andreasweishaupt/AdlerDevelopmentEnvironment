@@ -258,8 +258,7 @@ jobs:
             
             # Download and install ChromeDriver
             echo "Downloading ChromeDriver..."
-            curl -L "${CHROMEDRIVER_URL}" -o "/tmp/${CHROMEDRIVER_ZIP}" \
-              -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.5735.90 Safari/537.36"
+            curl -L "${CHROMEDRIVER_URL}" -o "/tmp/${CHROMEDRIVER_ZIP}" --user-agent "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.5735.90 Safari/537.36"
             unzip -o "/tmp/${CHROMEDRIVER_ZIP}" -d /tmp
             sudo mv /tmp/chromedriver /usr/bin/chromedriver
             sudo chmod +x /usr/bin/chromedriver
