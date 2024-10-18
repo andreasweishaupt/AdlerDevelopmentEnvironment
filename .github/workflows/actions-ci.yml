@@ -63,10 +63,8 @@ jobs:
           (
             curl -L "${CHROME_URL}" -o "/tmp/${CHROME_DEB}" \
               --progress-bar \
-              2>&1 | while IFS= read -r line; do echo "$(date '+%Y-%m-%d %H:%M:%S') $line" >> /tmp/chrome_download_progress.log; done
-      
-            # Füge DONE ans Ende der Log-Datei hinzu, wenn der Download abgeschlossen ist
-            echo "$(date '+%Y-%m-%d %H:%M:%S') DONE" >> /tmp/chrome_download_progress.log
+              2>&1 | tee -a /tmp/chrome_download_progress.log
+            echo "DONE" >> /tmp/chrome_download_progress.log
           ) &
       
           echo "Chrome download started in background"
