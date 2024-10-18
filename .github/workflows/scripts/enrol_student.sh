@@ -35,4 +35,4 @@ echo "Gefundene Kurs-ID: $COURSE_ID"
 
 # Auf Login-Seite navigieren und einloggen
 
-python3 $GITHUB_WORKSPACE/.github/workflows/enrol_student.py "$moodleurl" "$username" "$password" "$COURSE_ID"
+python3 "$script_enrol_student_py" "$moodleurl" "$username" "$password" "$COURSE_ID"

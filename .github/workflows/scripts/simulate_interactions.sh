@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Laden Sie die FIND_ELEMENT Funktion
-source $GITHUB_WORKSPACE/.github/workflows/define_test_script.sh
+source "$script_define_test_script_sh"
 
 backendurl=$1
 coursename=$2

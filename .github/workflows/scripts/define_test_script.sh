@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Pfad zum Python-Skript
-PYTHON_SCRIPT="$GITHUB_WORKSPACE/.github/workflows/test_script.py"
+PYTHON_SCRIPT="$script_test_script_py"
 
 # Funktion zum Finden eines Elements
 FIND_ELEMENT() {

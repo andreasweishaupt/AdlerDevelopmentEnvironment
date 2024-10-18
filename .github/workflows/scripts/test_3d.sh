@@ -16,4 +16,4 @@ echo "password: $password"
 echo "spacename: $spacename"
 echo "elementname: $elementname"
 
-python3 $GITHUB_WORKSPACE/.github/workflows/test_3d.py "$url_3d" "$username" "$password" "$coursename" "$spacename" "$elementname"
+python3 $script_test_3d_py "$url_3d" "$username" "$password" "$coursename" "$spacename" "$elementname"

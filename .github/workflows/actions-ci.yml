@@ -57,14 +57,13 @@ jobs:
             echo "CHROMEDRIVER_URL=https://old.chromedriver.getwebdriver.com/110.0.5481.77/chromedriver_linux64.zip" >> $GITHUB_ENV
             echo "CHROMEDRIVER_ZIP=chromedriver_linux64.zip" >> $GITHUB_ENV
 
-      - name: Make skripts executable
+      - name: Make scripts executable
         run: |
             # Finde alle Skripte und mache sie ausführbar
             while IFS= read -r -d '' script; do
               chmod +x "$script"
               script_name=$(basename "$script")
-              script_name_no_ext="${script_name%.*}"
-              env_var_name="script_${script_name_no_ext//./_}"
+              env_var_name="script_${script_name//./_}"
               echo "$env_var_name=$script" >> $GITHUB_ENV
               echo "Made executable and created env var for: $script as $env_var_name"
             done < <(find $GITHUB_WORKSPACE/.github/workflows/scripts -type f \( -name "*.sh" -o -name "*.py" -o -name "*.bash" \) -print0)
@@ -119,16 +118,13 @@ jobs:
             docker compose up -d --build
             
       - name: Wait for containers to be ready
-        run: |
-            chmod +x $GITHUB_WORKSPACE/.github/workflows/wait_for_containers.py
-            
-            python3 $GITHUB_WORKSPACE/.github/workflows/wait_for_containers.py
+        run: python3 $script_wait_for_containers_py
         env:
             PYTHONUNBUFFERED: 1
           
            
       - name: Check Docker containers
-        run: $GITHUB_WORKSPACE/.github/workflows/check_docker.sh
+        run: $script_check_docker
             
       - name: Check URL
         run: |
@@ -358,7 +354,7 @@ jobs:
             echo "ELEMENTNAME: $ELEMENTNAME"
             
             
-            $GITHUB_WORKSPACE/.github/workflows/scripts/simulate_interactions.sh $BACKEND_URL $COURSENAME $USERNAME $PASSWORD $SPACENAME $ELEMENTNAME
+            $script_simulate_interactions_sh $BACKEND_URL $COURSENAME $USERNAME $PASSWORD $SPACENAME $ELEMENTNAME
             
             kill $AUTHORING_TOOL_PID
 
@@ -385,7 +381,7 @@ jobs:
             fi
             
       - name: Check Docker containers
-        run: $GITHUB_WORKSPACE/.github/workflows/check_docker.sh
+        run: $script_check_docker
             
       - name: Execute Moodle steps
         run: |
@@ -450,9 +446,6 @@ jobs:
         
       - name: Enrol Student
         run: |
-            chmod +x $GITHUB_WORKSPACE/.github/workflows/enrol_student.sh
-            chmod +x $GITHUB_WORKSPACE/.github/workflows/enrol_student.py
-            
             if ! DISPLAY=:99 xdpyinfo >/dev/null 2>&1; then
                 echo "ERROR: X server is not running properly"
             else
@@ -469,7 +462,7 @@ jobs:
             echo "USERNAME: $USERNAME"
             echo "PASSWORD: $PASSWORD"
             
-            $GITHUB_WORKSPACE/.github/workflows/enrol_student.sh $MOODLE_URL $COURSENAME $USERNAME $PASSWORD 
+            $script_enrol_student_sh $MOODLE_URL $COURSENAME $USERNAME $PASSWORD 
       
       - name: Stop screen recording
         if: always()
@@ -492,9 +485,6 @@ jobs:
             
       - name: Test in 3D
         run: |
-            chmod +x $GITHUB_WORKSPACE/.github/workflows/test_3d.sh
-            chmod +x $GITHUB_WORKSPACE/.github/workflows/test_3d.py
-            
             URL_3D="http://${_URL_3D}"
             COURSENAME="testWorld"
             USERNAME=$_USER_NAME_ARRAY_0
@@ -502,7 +492,7 @@ jobs:
             SPACENAME="testSpace"
             ELEMENTNAME="testElement"
             
-            $GITHUB_WORKSPACE/.github/workflows/test_3d.sh $URL_3D $USERNAME $PASSWORD $COURSENAME $SPACENAME $ELEMENTNAME
+            $script_test_3d_sh $URL_3D $USERNAME $PASSWORD $COURSENAME $SPACENAME $ELEMENTNAME
 
       - name: Stop screen recording
         if: always()
