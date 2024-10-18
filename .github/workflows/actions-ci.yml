@@ -62,7 +62,7 @@ jobs:
           touch /tmp/chrome_download_progress.log
           (
             curl -L "${CHROME_URL}" -o "/tmp/${CHROME_DEB}" \
-              --progress-bar > sed -u 's/\r/\n/g' >> /tmp/chrome_download_progress.log
+              --progress-bar 2>&1 > sed -u 's/\r/\n/g' >> /tmp/chrome_download_progress.log
             echo "DONE" >> /tmp/chrome_download_progress.log
           ) &
       
