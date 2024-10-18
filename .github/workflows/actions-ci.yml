@@ -61,7 +61,7 @@ jobs:
         run: |
           touch /tmp/chrome_download_progress.log
           (
-            curl -L "${CHROME_URL}" -o "/tmp/${CHROME_DEB}" --progress-bar 2>&1 | tee /tmp/chrome_download_progress.log > /dev/null
+            stdbuf -oL curl -L "${CHROME_URL}" -o "/tmp/${CHROME_DEB}" --progress-bar 2>&1 | tee /tmp/chrome_download_progress.log > /dev/null
             echo "DONE" >> /tmp/chrome_download_progress.log
           ) &
       
