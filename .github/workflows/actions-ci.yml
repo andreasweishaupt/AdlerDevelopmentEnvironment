@@ -34,30 +34,37 @@ jobs:
           repository: ProjektAdLer/AdlerDevelopmentEnvironment
           path: AdlerDevelopmentEnvironment
           submodules: 'true'
+
+      - name: Prepare .env file
+        run: |
+          mkdir -p cleaned_env
+          awk '
+          BEGIN { FS=": "; OFS="=" }
+          {
+            if ($0 ~ /^[[:space:]]*#/ || NF == 0) {
+              print $0;  # Kommentare und leere Zeilen unverändert ausgeben
+            } else if (index($0, ":") > 0 && index($2, ",") > 0) {
+              split($2, values, ",");
+              for (i in values) {
+                print $1 "_ARRAY_" (i-1) OFS values[i];
+              }
+            } else {
+              print $0;  # Andere Zeilen unverändert ausgeben
+            }
+          }
+          ' AdlerDevelopmentEnvironment/non-moodle/.env > cleaned_env/.env
           
+          # Entferne Kommentare am Ende der Zeilen
+          sed -i 's/[[:space:]]*#.*$//' cleaned_env/.env
+          
+          # Zeige den Inhalt der bereinigten .env-Datei
+          cat cleaned_env/.env
+
       - name: Load environment variables
         uses: xom9ikk/dotenv@v2.3.0
         with:
-            path: AdlerDevelopmentEnvironment/non-moodle
-            load-mode: strict
-            
-      - name: Load multi-value environment variables
-        run: |
-            _USER_NAME_ARRAY=($(grep _USER_NAME AdlerDevelopmentEnvironment/non-moodle/.env | cut -d ':' -f2- | sed 's/^[[:space:]]*//' | tr ',' ' '))
-            _USER_PASSWORD_ARRAY=($(grep _USER_PASSWORD AdlerDevelopmentEnvironment/non-moodle/.env | cut -d ':' -f2- | sed 's/^[[:space:]]*//' | tr ',' ' '))
-            _USER_ROLE_ARRAY=($(grep _USER_ROLE AdlerDevelopmentEnvironment/non-moodle/.env | cut -d ':' -f2- | sed 's/^[[:space:]]*//' | tr ',' ' '))
-            
-            echo "_USER_NAME_ARRAY_0=${_USER_NAME_ARRAY[0]}" >> $GITHUB_ENV
-            echo "_USER_NAME_ARRAY_1=${_USER_NAME_ARRAY[1]}" >> $GITHUB_ENV
-            echo "_USER_PASSWORD_ARRAY_0=${_USER_PASSWORD_ARRAY[0]}" >> $GITHUB_ENV
-            echo "_USER_PASSWORD_ARRAY_1=${_USER_PASSWORD_ARRAY[1]}" >> $GITHUB_ENV
-            echo "_USER_ROLE_ARRAY_0=${_USER_ROLE_ARRAY[0]}" >> $GITHUB_ENV
-            echo "_USER_ROLE_ARRAY_1=${_USER_ROLE_ARRAY[1]}" >> $GITHUB_ENV
-            
-            # Debug output
-            echo "User names: ${_USER_NAME_ARRAY}"
-            echo "First user name: ${_USER_NAME_ARRAY_0}"
-            echo "Second user name: ${_USER_NAME_ARRAY_1}"
+          path: cleaned_env
+          load-mode: strict
 
       - name: Setup Chrome environment variables
         run: |
@@ -103,29 +110,13 @@ jobs:
             pip install docker selenium
 
       - name: Check Environment
-        env:
-            _MOODLE_USER: ${{ env._MOODLE_USER }}
         run: |
-            echo "MOODLE_USER"
-            echo "$_MOODLE_USER"
-            echo "MOODLE_PW"
-            echo "$_MOODLE_PW"
-            echo "USER_NAME"
-            echo "$_USER_NAME_ARRAY"
-            echo "First user name: ${_USER_NAME_ARRAY_0}"
-            echo "Second user name: ${_USER_NAME_ARRAY_1}"
-            echo "USER_PASSWORD"
-            echo "$_USER_PASSWORD"
-            echo "USER_ROLE"
-            echo "$_USER_ROLE"
-            echo "DB_ROOT_PW"
-            echo "$_DB_ROOT_PW"
-            echo "DB_MOODLE_PW"
-            echo "$_DB_MOODLE_PW"
-            echo "DB_MOODLE_USER"
-            echo "$_DB_MOODLE_USER"
-            echo "DB_MOODLE_NAME"
-            echo "$_DB_MOODLE_NAME"
+            echo "Alle benutzerdefinierten Umgebungsvariablen:"
+            env | grep '^_' | sort
+            echo "Alle Skript-Umgebungsvariablen:"
+            env | grep script_ | sort
+            echo "Alle Umgebungsvariablen:"
+            env | sort
       
       - name: docker compose
         run: |
