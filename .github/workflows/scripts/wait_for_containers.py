@@ -11,8 +11,7 @@ def check_container_log(container_name, success_pattern):
             logs = container.logs(tail=100).decode("utf-8")
             return success_pattern in logs
         except docker.errors.NotFound:
-            print(f"Container {container_name} not found")
-            return False
+            return None
         time.sleep(2)  # Wait before retrying
     print(f"Failed to fetch logs for {container_name} after {max_attempts} attempts")
     return False
@@ -28,7 +27,7 @@ containers = {
 }
 
 start_time = time.time()
-timeout = 120  # 2 minutes timeout
+timeout = 180  # 3 minutes timeout
 ready_containers = set()
 
 while len(ready_containers) < len(containers):
@@ -36,11 +35,15 @@ while len(ready_containers) < len(containers):
     for container, pattern in containers.items():
         if container in ready_containers:
             print(f"  - {container}: Bereit")
-        elif check_container_log(container, pattern):
-            print(f"  - {container}: Gerade bereit geworden")
-            ready_containers.add(container)
         else:
-            print(f"  - {container}: Noch nicht bereit")
+            result = check_container_log(container, pattern)
+            if result is None:
+                print(f"  - {container}: Noch nicht gestartet")
+            elif result:
+                print(f"  - {container}: Gerade bereit geworden")
+                ready_containers.add(container)
+            else:
+                print(f"  - {container}: Noch nicht bereit")
 
     if len(ready_containers) == len(containers):
         print("\nAlle Container sind bereit!")
