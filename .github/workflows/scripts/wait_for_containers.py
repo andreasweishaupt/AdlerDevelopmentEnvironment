@@ -1,27 +1,17 @@
-import subprocess
 import time
+import docker
 
+client = docker.from_env()
 
 def check_container_log(container_name, success_pattern):
     max_attempts = 3
     for attempt in range(max_attempts):
         try:
-            logs = subprocess.run(
-                ["docker", "logs", "--follow", container_name],
-                capture_output=True,
-                text=True,
-                check=True,
-                timeout=5
-            ).stdout
-            # Ausgabe nur der letzten 5 Zeilen
-            # last_five_lines = '\n'.join(logs.splitlines()[-5:])
-            # print(f"Logs for {container_name} (last 5 lines):")
-            # print(last_five_lines)
+            container = client.containers.get(container_name)
+            logs = container.logs(tail=100).decode("utf-8")
             return success_pattern in logs
-        except subprocess.TimeoutExpired:
-            print(f"Timeout while fetching logs for {container_name}. Attempt {attempt + 1} of {max_attempts}")
-        except subprocess.CalledProcessError as e:
-            print(f"Error fetching logs for {container_name}: {e}")
+        except docker.errors.NotFound:
+            print(f"Container {container_name} not found")
             return False
         time.sleep(2)  # Wait before retrying
     print(f"Failed to fetch logs for {container_name} after {max_attempts} attempts")
