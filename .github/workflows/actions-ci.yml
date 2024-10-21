@@ -120,8 +120,8 @@ jobs:
       - name: docker compose
         run: |
             cd $GITHUB_WORKSPACE/non-moodle
-            docker compose up -d --build
             
+            docker compose up -d --build &
       - name: Wait for containers to be ready
         run: python3 $script_wait_for_containers_py
         env:
