@@ -21,21 +21,31 @@ jobs:
     runs-on: ubuntu-22.04
     
     steps:
-      - name: Checkout repository
-        # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout workflow files
         uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            .github/workflows
+          sparse-checkout-cone-mode: false
+
+      - name: Checkout AdlerDevelopmentEnvironment repository
+        uses: actions/checkout@v4
+        with:
+          repository: ProjektAdLer/AdlerDevelopmentEnvironment
+          path: AdlerDevelopmentEnvironment
+          submodules: 'true'
           
       - name: Load environment variables
         uses: xom9ikk/dotenv@v2.3.0
         with:
-            path: non-moodle
+            path: AdlerDevelopmentEnvironment/non-moodle
             load-mode: strict
             
       - name: Load multi-value environment variables
         run: |
-            _USER_NAME_ARRAY=($(grep _USER_NAME non-moodle/.env | cut -d ':' -f2- | sed 's/^[[:space:]]*//' | tr ',' ' '))
-            _USER_PASSWORD_ARRAY=($(grep _USER_PASSWORD non-moodle/.env | cut -d ':' -f2- | sed 's/^[[:space:]]*//' | tr ',' ' '))
-            _USER_ROLE_ARRAY=($(grep _USER_ROLE non-moodle/.env | cut -d ':' -f2- | sed 's/^[[:space:]]*//' | tr ',' ' '))
+            _USER_NAME_ARRAY=($(grep _USER_NAME AdlerDevelopmentEnvironment/non-moodle/.env | cut -d ':' -f2- | sed 's/^[[:space:]]*//' | tr ',' ' '))
+            _USER_PASSWORD_ARRAY=($(grep _USER_PASSWORD AdlerDevelopmentEnvironment/non-moodle/.env | cut -d ':' -f2- | sed 's/^[[:space:]]*//' | tr ',' ' '))
+            _USER_ROLE_ARRAY=($(grep _USER_ROLE AdlerDevelopmentEnvironment/non-moodle/.env | cut -d ':' -f2- | sed 's/^[[:space:]]*//' | tr ',' ' '))
             
             echo "_USER_NAME_ARRAY_0=${_USER_NAME_ARRAY[0]}" >> $GITHUB_ENV
             echo "_USER_NAME_ARRAY_1=${_USER_NAME_ARRAY[1]}" >> $GITHUB_ENV
@@ -119,7 +129,7 @@ jobs:
       
       - name: docker compose
         run: |
-            cd $GITHUB_WORKSPACE/non-moodle
+            cd $GITHUB_WORKSPACE/AdlerDevelopmentEnvironment/non-moodle
             
             docker compose up -d --build &
 
