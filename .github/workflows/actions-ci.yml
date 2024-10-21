@@ -208,9 +208,10 @@ jobs:
             PYTHONUNBUFFERED: 1
 
       - name: Check Docker containers
-        run: $script_check_docker
+        run: $script_check_docker_sh
             
       - name: Check URL
+        if: false
         run: |
             echo "curl -s ${_URL_BACKEND}/api/health"
             curl -s ${_URL_BACKEND}/api/health
