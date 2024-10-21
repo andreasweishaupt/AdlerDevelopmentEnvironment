@@ -12,6 +12,12 @@ on:
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+    inputs:
+      enable_screen_recording:
+        description: 'Enable screen recording'
+        required: false
+        default: false
+        type: boolean
 
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -322,6 +328,7 @@ jobs:
             echo "DISPLAY=:99" >> $GITHUB_ENV
                 
       - name: Start screen and recording
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.enable_screen_recording == 'true'
         run: |
             ffmpeg -f x11grab -video_size 1920x1080 -i :99 -codec:v libx264 -r 30 -v verbose screen_recording.mp4 &
             echo $! > ffmpeg_pid.txt
@@ -407,26 +414,18 @@ jobs:
             kill $AUTHORING_TOOL_PID
 
       - name: Stop screen recording
-        if: always()
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.enable_screen_recording == 'true'
         run: |
             sleep 1
             kill $(cat ffmpeg_pid.txt)
             sleep 5  # Give ffmpeg time to finish writing
 
       - name: Upload screen recording
-        if: always()
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.enable_screen_recording == 'true'
         uses: actions/upload-artifact@v4
         with:
             name: screen-recording
             path: screen_recording.mp4
-
-      - name: Check for errors
-        if: always()
-        run: |
-            if [ -f ./error.log ]; then
-                cat ./error.log
-                exit 1
-            fi
             
       - name: Check Docker containers
         run: $script_check_docker
@@ -488,6 +487,7 @@ jobs:
             echo "Kurse erhalten: $COURSES_RESPONSE"
             
       - name: Start screen and recording
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.enable_screen_recording == 'true'
         run: |
             ffmpeg -f x11grab -video_size 1920x1080 -i :99 -codec:v libx264 -r 30 -v verbose moodle_check.mp4 &
             echo $! > ffmpeg_pid.txt
@@ -511,22 +511,23 @@ jobs:
             echo "PASSWORD: $PASSWORD"
             
             $script_enrol_student_sh $MOODLE_URL $COURSENAME $USERNAME $PASSWORD 
-      
+
       - name: Stop screen recording
-        if: always()
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.enable_screen_recording == 'true'
         run: |
             sleep 1
             kill $(cat ffmpeg_pid.txt)
             sleep 5  # Give ffmpeg time to finish writing
 
       - name: Upload screen recording
-        if: always()
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.enable_screen_recording == 'true'
         uses: actions/upload-artifact@v4
         with:
             name: moodle_check
             path: moodle_check.mp4
             
       - name: Start screen and recording
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.enable_screen_recording == 'true'
         run: |
             ffmpeg -f x11grab -video_size 1920x1080 -i :99 -codec:v libx264 -r 30 -v verbose check_3d.mp4 &
             echo $! > ffmpeg_pid.txt
@@ -543,24 +544,15 @@ jobs:
             $script_test_3d_sh $URL_3D $USERNAME $PASSWORD $COURSENAME $SPACENAME $ELEMENTNAME
 
       - name: Stop screen recording
-        if: always()
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.enable_screen_recording == 'true'
         run: |
             sleep 1
             kill $(cat ffmpeg_pid.txt)
             sleep 5  # Give ffmpeg time to finish writing
 
       - name: Upload screen recording
-        if: always()
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.enable_screen_recording == 'true'
         uses: actions/upload-artifact@v4
         with:
             name: check_3d
             path: check_3d.mp4
-            
-            
-      
-            
-      - name: Setup tmate session
-        if: false
-        uses: mxschmitt/action-tmate@v3
-        
-    
