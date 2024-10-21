@@ -87,10 +87,10 @@ jobs:
         with:
             python-version: '3.x'
 
-      - name: Install dependencies
+      - name: Install python dependencies
         run: |
             python -m pip install --upgrade pip
-            pip install docker
+            pip install docker selenium
 
       - name: Check Environment
         env:
@@ -122,12 +122,81 @@ jobs:
             cd $GITHUB_WORKSPACE/non-moodle
             
             docker compose up -d --build &
+
+      - name: Install dependencies
+        run: |
+            lscpu
+            sudo apt-get update
+            sudo apt-get install -y wget xvfb xdotool ffmpeg \
+                libgtk-3-0 libnotify4 libgconf-2-4 libnss3 libxss1 libasound2 libgbm1 \
+                libx11-xcb1 libxcb-dri3-0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 \
+                libxcb-randr0 libxcb-render-util0 libxcb-shape0 libxcb-xfixes0 libxcb-xinerama0 libxcb-xkb1 \
+                x11-utils libxkbcommon-x11-0 \
+                libu2f-udev
+
+      - name: Download latest Autorentool release
+        if: false
+        run: |
+            LATEST_RELEASE=$(curl -s https://api.github.com/repos/ProjektAdLer/Autorentool/releases/latest)
+            DOWNLOAD_URL=$(echo $LATEST_RELEASE | jq -r '.assets[] | select(.name | endswith("linux-unpacked.tar.gz")) | .browser_download_url')
+            echo "$DOWNLOAD_URL"
+            wget -q -O AuthoringTool.tar.gz $DOWNLOAD_URL
+            tar -xvzf AuthoringTool.tar.gz
+            #chmod +x AuthoringTool.AppImage
+
+      - name: Checkout Autorentool repository
+        uses: actions/checkout@v4
+        with:
+          repository: ProjektAdLer/Autorentool
+          path: Autorentool
+          submodules: 'true'
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.100'
+
+      - name: Cache NuGet Packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: Linux-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            Linux-nuget
+
+      - name: Set up npm
+        uses: actions/setup-node@v4
+        with:
+          node-version: '16'
+
+      - name: Install electronize
+        run: dotnet tool restore
+        working-directory: ./Autorentool
+
+      - name: Install npm dependencies
+        run: npm install
+        working-directory: ./Autorentool/AuthoringTool
+
+      - name: Run Tailwind build
+        run: npm run tailwind-build
+        working-directory: ./Autorentool/AuthoringTool
+
+      - name: Build AuthoringTool binary
+        run: |
+            dotnet electronize build /target linux
+            mv ./bin/Desktop_Publish/linux-unpacked $GITHUB_WORKSPACE/linux-unpacked
+        working-directory: ./Autorentool/AuthoringTool
+
+      - name: List workspace contents
+        run: |
+            echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
+            ls -aR $GITHUB_WORKSPACE
+
       - name: Wait for containers to be ready
         run: python3 $script_wait_for_containers_py
         env:
             PYTHONUNBUFFERED: 1
-          
-           
+
       - name: Check Docker containers
         run: $script_check_docker
             
@@ -169,28 +238,6 @@ jobs:
             echo "TEST_URL: ${TEST_URL}"
             COURSES_RESPONSE=$(curl -s "${TEST_URL}")
             echo "Kurse erhalten: $COURSES_RESPONSE"
-            
-      - name: Install dependencies
-        run: |
-            lscpu
-            sudo apt-get update
-            sudo apt-get install -y wget xvfb xdotool ffmpeg \
-                libgtk-3-0 libnotify4 libgconf-2-4 libnss3 libxss1 libasound2 libgbm1 \
-                libx11-xcb1 libxcb-dri3-0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 \
-                libxcb-randr0 libxcb-render-util0 libxcb-shape0 libxcb-xfixes0 libxcb-xinerama0 libxcb-xkb1 \
-                x11-utils libxkbcommon-x11-0 \
-                libu2f-udev
-            python -m pip install --upgrade pip
-            pip install selenium
-
-      - name: Download latest Autorentool release
-        run: |
-            LATEST_RELEASE=$(curl -s https://api.github.com/repos/ProjektAdLer/Autorentool/releases/latest)
-            DOWNLOAD_URL=$(echo $LATEST_RELEASE | jq -r '.assets[] | select(.name | endswith("linux-unpacked.tar.gz")) | .browser_download_url')
-            echo "$DOWNLOAD_URL"
-            wget -q -O AuthoringTool.tar.gz $DOWNLOAD_URL
-            tar -xvzf AuthoringTool.tar.gz
-            #chmod +x AuthoringTool.AppImage
 
       - name: Fix some problems
         run: |
@@ -335,12 +382,6 @@ jobs:
             echo "WINDOW_X=$window_x" >> $GITHUB_ENV
             echo "WINDOW_Y=$window_y" >> $GITHUB_ENV
             echo "WINDOW_ID=$window_id" >> $GITHUB_ENV
-    
-      - name: List workspace contents
-        if: false
-        run: |
-            echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
-            ls -aR $GITHUB_WORKSPACE
     
       - name: Simulate interactions
         run: | 
