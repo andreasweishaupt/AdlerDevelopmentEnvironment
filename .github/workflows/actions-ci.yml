@@ -215,19 +215,17 @@ jobs:
       - name: Check Docker containers
         run: $script_check_docker_sh
             
-      - name: Check URL
-        if: false
+      - name: Check Backend Health
         run: |
             echo "curl -s ${_URL_BACKEND}/api/health"
             curl -s ${_URL_BACKEND}/api/health
             
       - name: Test Moodle
-        continue-on-error: true
         run: |
             echo "curl -s -L ${_URL_MOODLE}"
             curl -s -L ${_URL_MOODLE}
     
-      - name: Execute Moodle steps
+      - name: Test Moodle API steps
         run: |
             # URL-Kodierung der Werte
             USERNAME=$(python -c "import urllib.parse; print(urllib.parse.quote('${_USER_NAME_ARRAY_1}'))")
@@ -384,8 +382,10 @@ jobs:
         
       - name: Get window position
         run: |
-            window_id=$(DISPLAY=:99 xdotool search --name "Autorentool v2.1.7" | head -n 1)
+            window_id=$(DISPLAY=:99 xdotool search --name "^Autorentool" | head -n 1)
             if [ -n "$window_id" ]; then
+                window_name=$(xdotool getwindowname $window_id)
+                echo "Found window: $window_name"
                 window_info=$(xwininfo -id $window_id)
                 window_x=$(echo "$window_info" | grep "Absolute upper-left X" | awk '{print $4}')
                 window_y=$(echo "$window_info" | grep "Absolute upper-left Y" | awk '{print $4}')
