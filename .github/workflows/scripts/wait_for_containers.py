@@ -7,7 +7,7 @@ def check_container_log(container_name, success_pattern):
     for attempt in range(max_attempts):
         try:
             logs = subprocess.run(
-                ["docker", "logs", container_name],
+                ["docker", "logs", "--follow", container_name],
                 capture_output=True,
                 text=True,
                 check=True,
@@ -33,9 +33,9 @@ containers = {
     "adlertestenvironment-moodle-1": "finished adler setup/update script",
     "adlertestenvironment-frontend-1": "Configuration complete; ready for start up",
     "adlertestenvironment-db_backend-1": "ready for connections.",
+    "adlertestenvironment-phpmyadmin-1": "resuming normal operations",
     "adlertestenvironment-db_moodle-1": "ready for connections."
 }
-# "adlertestenvironment-phpmyadmin-1": "resuming normal operations",
 
 start_time = time.time()
 timeout = 120  # 2 minutes timeout
