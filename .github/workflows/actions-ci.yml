@@ -1,4 +1,3 @@
-# This is a basic workflow to help you get started with Actions
 
 name: CI
 
@@ -19,8 +18,6 @@ on:
         default: false
         type: boolean
 
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
           
   build-backend-and-run-authoring-tool:
@@ -63,7 +60,6 @@ jobs:
           # Entferne Kommentare am Ende der Zeilen
           sed -i 's/[[:space:]]*#.*$//' cleaned_env/.env
           
-          # Zeige den Inhalt der bereinigten .env-Datei
           cat cleaned_env/.env
 
       - name: Load environment variables
@@ -82,7 +78,7 @@ jobs:
 
       - name: Make scripts executable
         run: |
-            # Finde alle Skripte und mache sie ausführbar
+            # Finde alle Skripte im Verzeichnis scripts und mache sie ausführbar
             while IFS= read -r -d '' script; do
               chmod +x "$script"
               script_name=$(basename "$script")
@@ -95,14 +91,26 @@ jobs:
             echo "Created environment variables:"
             grep "^script_" $GITHUB_ENV
 
-      - name: Download Chrome
+      - name: Cache Chrome download
+        uses: actions/cache@v4
+        id: chrome-cache
+        with:
+          path: /tmp/${CHROME_DEB}
+          key: ${{ runner.os }}-chrome-${{ env.CHROME_URL }}
+
+      - name: Handle Chrome download or cache
         run: |
           touch /tmp/chrome_download_progress.log
-          (
-            curl -L "${CHROME_URL}" -o "/tmp/${CHROME_DEB}" --progress-bar 2>&1 | tee /tmp/chrome_download_progress.log > /dev/null
-            echo "DONE" >> /tmp/chrome_download_progress.log
-          ) &
-      
+          if [ "${{ steps.chrome-cache.outputs.cache-hit }}" == 'true' ]; then
+            echo "Chrome loaded from cache"
+            echo "DONE" > /tmp/chrome_download_progress.log
+          else
+            echo "Downloading Chrome..."
+            (
+              curl -L "${CHROME_URL}" -o "/tmp/${CHROME_DEB}" --progress-bar 2>&1 | tee /tmp/chrome_download_progress.log > /dev/null
+              echo "DONE" >> /tmp/chrome_download_progress.log
+            ) &
+          fi
           tr '\r' '\n' < /tmp/chrome_download_progress.log | tail -n 1
 
       - name: Set up Python
