@@ -23,23 +23,24 @@ def get_driver():
 def find_element_coordinates(identifier, identifier_type, index=0):
     driver = get_driver()
     max_retries = 3
+    timeout = 3
     for attempt in range(max_retries):
         try:
             print(f"Attempt {attempt + 1} to find element with {identifier_type}: {identifier}, index: {index}")
             if identifier_type == "class":
-                elements = WebDriverWait(driver, 5).until(
+                elements = WebDriverWait(driver, timeout).until(
                     EC.presence_of_all_elements_located((By.CLASS_NAME, identifier))
                 )
             elif identifier_type == "src":
-                elements = WebDriverWait(driver, 5).until(
+                elements = WebDriverWait(driver, timeout).until(
                     EC.presence_of_all_elements_located((By.XPATH, f"//img[contains(@src, '{identifier}')]"))
                 )
             elif identifier_type == "identifier":
-                elements = WebDriverWait(driver, 5).until(
+                elements = WebDriverWait(driver, timeout).until(
                     EC.presence_of_all_elements_located((By.XPATH, f"//*[contains(@identifier, '{identifier}')]"))
                 )
             elif identifier_type == "title":
-                elements = WebDriverWait(driver, 5).until(
+                elements = WebDriverWait(driver, timeout).until(
                     EC.presence_of_all_elements_located((By.XPATH, f"//*[contains(@title, '{identifier}')]"))
                 )
             elif identifier_type == "type":
@@ -47,11 +48,11 @@ def find_element_coordinates(identifier, identifier_type, index=0):
                     EC.presence_of_all_elements_located((By.XPATH, f"//*[@type='{identifier}']"))
                 )
             elif identifier_type == "tag":
-                elements = WebDriverWait(driver, 5).until(
+                elements = WebDriverWait(driver, timeout).until(
                     EC.presence_of_all_elements_located((By.TAG_NAME, identifier))
                 )
             elif identifier_type == "buttontext":
-                buttons = WebDriverWait(driver, 5).until(
+                buttons = WebDriverWait(driver, timeout).until(
                     EC.presence_of_all_elements_located((By.XPATH, "//button[not(ancestor::*[contains(@style,'display:none') or contains(@style,'display: none')])]"))
                 )
                 elements = [button for button in buttons if identifier.lower() in button.text.lower()]
