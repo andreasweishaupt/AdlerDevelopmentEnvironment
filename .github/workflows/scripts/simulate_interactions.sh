@@ -111,11 +111,11 @@ DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 0.1 click 1 sleep 
 
 echo third radio button
 coords=($(FIND_ELEMENT "type" "radio" 2))
-coords[0]=$((coords[0] + 60))
+coords[0]=$((coords[0]+60))
 DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 0.1 click 1
 DISPLAY=:99 xdotool sleep 0.1 key "ctrl+a" key "BackSpace" sleep 0.1
 DISPLAY=:99 xdotool type "Auf jeden Fall!!"
-coords[0]=$((coords[0] - 60))
+coords[0]=$((coords[0]-60))
 DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 0.1 click 1 sleep 0.1
 
 echo Click on Erstellen
