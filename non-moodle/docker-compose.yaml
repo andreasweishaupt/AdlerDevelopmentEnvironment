@@ -3,7 +3,7 @@ services:
     build:
       context: github.com/ProjektAdLer/moodle-docker.git
       args:
-        PLUGIN_VERSION: 3.2.0
+        PLUGIN_VERSION: 4.0.1
         MOODLE_VERSION: 4.3
     ports:
       - '8085:8080'
@@ -30,7 +30,7 @@ services:
     restart: unless-stopped
 
   db_moodle:
-    image: docker.io/bitnami/mariadb:10.6
+    image: docker.io/bitnami/mariadb:10.11
     environment:
       MARIADB_USER: ${_DB_MOODLE_USER}
       MARIADB_PASSWORD: ${_DB_MOODLE_PW}
@@ -43,7 +43,7 @@ services:
     restart: unless-stopped
 
   db_backend:
-    image: docker.io/bitnami/mariadb:10.6
+    image: docker.io/bitnami/mariadb:10.11
     environment:
       MARIADB_USER: ${_DB_BACKEND_USER}
       MARIADB_PASSWORD: ${_DB_BACKEND_PW}
