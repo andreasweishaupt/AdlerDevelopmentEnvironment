@@ -550,7 +550,7 @@ jobs:
         run: |
             ffmpeg -f x11grab -video_size 1920x1080 -i :99 -codec:v libx264 -r 30 -v verbose check_3d.mp4 &
             echo $! > ffmpeg_pid.txt
-            echo "3D_RECORDING_STARTED=true" >> $GITHUB_ENV
+            echo "ENGINE_RECORDING_STARTED=true" >> $GITHUB_ENV
             
       - name: Test in 3D
         run: |
@@ -564,14 +564,14 @@ jobs:
             $script_test_3d_sh $URL_3D $USERNAME $PASSWORD $COURSENAME $SPACENAME $ELEMENTNAME
 
       - name: Stop screen recording
-        if: always() && github.event_name == 'workflow_dispatch' && github.event.inputs.enable_screen_recording == 'true' && env.3D_RECORDING_STARTED == 'true'
+        if: always() && github.event_name == 'workflow_dispatch' && github.event.inputs.enable_screen_recording == 'true' && env.ENGINE_RECORDING_STARTED == 'true'
         run: |
             sleep 1
             kill $(cat ffmpeg_pid.txt)
             sleep 5  # Give ffmpeg time to finish writing
 
       - name: Upload screen recording
-        if: always() && github.event_name == 'workflow_dispatch' && github.event.inputs.enable_screen_recording == 'true' && env.3D_RECORDING_STARTED == 'true'
+        if: always() && github.event_name == 'workflow_dispatch' && github.event.inputs.enable_screen_recording == 'true' && env.ENGINE_RECORDING_STARTED == 'true'
         uses: actions/upload-artifact@v4
         with:
             name: check_3d
