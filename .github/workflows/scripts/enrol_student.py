@@ -67,6 +67,7 @@ def enrol_student(moodleurl, username, password, course_id):
 			)
 			print("Enrolment completed successfully")
 			print("Success message:", success_message.text)
+			time.sleep(2)
 			return True
 		except TimeoutException:
 			print("Enrolment failed: Success message not found")
