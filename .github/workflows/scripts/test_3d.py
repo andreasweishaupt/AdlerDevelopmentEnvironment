@@ -57,7 +57,7 @@ def test_3d(url_3d, username, password, course_name, space_name, element_name):
             EC.presence_of_element_located((By.CSS_SELECTOR, "[data-testid='logout']")))
 
         lernwelt_button = WebDriverWait(driver, timeout).until(
-            EC.element_to_be_clickable((By.XPATH, "//button[.//p[contains(text(), 'Zum Lernwelt-Menü')]]"))
+            EC.element_to_be_clickable((By.XPATH, "//button[.//p[contains(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'zum lernwelt-menü')]]"))
         )
         lernwelt_button.click()
         print("Clicked on 'zum Lernwelt-Menü' button")
