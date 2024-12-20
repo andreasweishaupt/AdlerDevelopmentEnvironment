@@ -436,6 +436,9 @@ jobs:
         with:
             name: screen-recording
             path: screen_recording.mp4
+
+      - name: Check Docker containers
+        run: $script_check_docker_sh
             
       - name: Check Docker containers
         run: $script_check_docker
