@@ -34,7 +34,7 @@ jobs:
       - name: Checkout AdlerDevelopmentEnvironment repository
         uses: actions/checkout@v4
         with:
-          repository: ProjektAdLer/AdlerDevelopmentEnvironment
+          repository: andreasweishaupt/AdlerDevelopmentEnvironment
           path: AdlerDevelopmentEnvironment
           submodules: 'true'
 
