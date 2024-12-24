@@ -1,0 +1,105 @@
+{
+  "$type": "ATF",
+  "fileVersion": "2.3.0",
+  "amgVersion": "2.2.2",
+  "author": "",
+  "language": "de",
+  "world": {
+    "$type": "LearningWorld",
+    "evaluationLink": "",
+    "enrolmentKey": "",
+    "worldName": "testWorld",
+    "worldUUID": "a7cb903e-ecec-44eb-837c-949b596e00fe",
+    "worldDescription": "",
+    "worldGoals": [
+      ""
+    ],
+    "topics": [],
+    "spaces": [
+      {
+        "$type": "LearningSpace",
+        "spaceGoals": [],
+        "spaceStory": {
+          "$type": "SimpleSpaceStory",
+          "introStory": null,
+          "outroStory": null
+        },
+        "spaceName": "testSpace",
+        "requiredPointsToComplete": 0,
+        "spaceId": 1,
+        "spaceUUID": "dccec02d-49e0-4dfe-ad75-367e552e94ec",
+        "spaceDescription": "",
+        "spaceSlotContents": [
+          1,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "requiredSpacesToEnter": "",
+        "spaceTemplate": "R_20X20_6L",
+        "spaceTemplateStyle": "CampusAschaffenburg"
+      }
+    ],
+    "elements": [
+      {
+        "$type": "AdaptivityElement",
+        "elementId": 1,
+        "elementUUID": "0766878d-338a-4991-af88-bebbdacaa9a7",
+        "elementName": "testElement",
+        "elementDescription": "",
+        "elementGoals": [
+          ""
+        ],
+        "elementCategory": "adaptivity",
+        "elementFileType": "adaptivity",
+        "elementMaxScore": 1,
+        "elementModel": "a_npc_alerobot",
+        "learningSpaceParentId": 1,
+        "adaptivityContent": {
+          "$type": "adaptivityContent",
+          "introText": "",
+          "adaptivityTasks": [
+            {
+              "$type": "adaptivityTask",
+              "taskId": 1,
+              "taskUUID": "98b32240-9502-4813-a04f-37cea0efa421",
+              "taskTitle": "Neue Aufgabe 1",
+              "optional": false,
+              "requiredDifficulty": 100,
+              "adaptivityQuestions": [
+                {
+                  "$type": "adaptivityQuestion",
+                  "questionType": "singleResponse",
+                  "questionId": 1,
+                  "questionUUID": "4e3b1f27-029a-48e3-9cee-ebf11106a687",
+                  "questionDifficulty": 100,
+                  "questionText": "Macht es Spass, Pipelines zu erstellen?",
+                  "adaptivityRules": [],
+                  "choices": [
+                    {
+                      "$type": "AdaptivityQuestionAnswer",
+                      "answerText": "Ja",
+                      "isCorrect": false
+                    },
+                    {
+                      "$type": "AdaptivityQuestionAnswer",
+                      "answerText": "Nein",
+                      "isCorrect": false
+                    },
+                    {
+                      "$type": "AdaptivityQuestionAnswer",
+                      "answerText": "Auf jeden Fall!!",
+                      "isCorrect": true
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
